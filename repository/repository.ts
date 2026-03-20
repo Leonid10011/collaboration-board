@@ -17,26 +17,24 @@ export const listTasks = async () => {
 
 const exampleTask = {
   id: "b1a2c3d4-e5f6-7890-abcd-1234567890ef",
-  project_id: "11111111-1111-1111-1111-111111111111",
-  creator_id: "22222222-2222-2222-2222-222222222222",
-  assignee_id: "33333333-3333-3333-3333-333333333333",
+  project_id: "af305fc9-398a-498f-a59c-4f38ab245fac",
+  creator_id: "e34f5728-e98b-4a14-9e1e-18b43e9d803c",
+  assignee_id: "e34f5728-e98b-4a14-9e1e-18b43e9d803c",
   title: "Frontend-Login bauen",
   description: "Implementiere das Login-Formular für die Web-App.",
   status: "in_progress",
   priority: "high",
 };
 
-export const insertTask = async (title: string) => {
+export const insertTask = async (title: string, id: string) => {
   const dataToSend = {
     ...exampleTask,
+    id,
     title,
   };
 
-  const { data, error } = await supabase
-    .from("tasks")
-    .insert({ title })
-    .select("*")
-    .single();
+  const { data, error } = await supabase.from("tasks").insert([dataToSend]);
+
   if (error) {
     console.error("Error inserting task:", error);
     return null;

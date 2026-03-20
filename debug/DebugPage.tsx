@@ -2,11 +2,12 @@
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
 import { useEffect, useState } from "react";
 import DebugButton from "./DebugButton";
-import { insertProject, listTasks } from "@/repository/repository";
+import { insertProject, insertTask, listTasks } from "@/repository/repository";
 
 export default function DebugPage() {
   const [userId, setUserId] = useState<string | null>(null);
-  const [projectTitle, setProjectTitle] = useState("");
+  const [projectTitle, setProjectTitle] = useState("Default Project");
+  const [taskTitle, setTaskTitle] = useState("Default Task");
 
   useEffect(() => {
     const run = async () => {
@@ -26,6 +27,11 @@ export default function DebugPage() {
   const handleListTasks = async () => {
     const tasks = await listTasks();
     console.log("Tasks:", tasks);
+  };
+
+  const handleInsertTask = async () => {
+    const task = await insertTask(taskTitle, userId!);
+    console.log("Inserted task:", task);
   };
 
   const handleInsertProject = async () => {
@@ -49,6 +55,15 @@ export default function DebugPage() {
           placeholder="Project Title"
         />
         <DebugButton title="Insert Project" onClick={handleInsertProject} />
+      </div>
+      <div className="flex flex-col gap-2">
+        <input
+          className="border-1 p-1 rounded"
+          value={taskTitle}
+          onChange={(e) => setTaskTitle(e.target.value)}
+          placeholder="Task Title"
+        />
+        <DebugButton title="Insert Task" onClick={handleInsertTask} />
       </div>
     </div>
   );
