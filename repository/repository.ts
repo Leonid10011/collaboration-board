@@ -16,8 +16,6 @@ export const listTasks = async () => {
 };
 
 const exampleTask = {
-  id: "b1a2c3d4-e5f6-7890-abcd-1234567890ef",
-  project_id: "af305fc9-398a-498f-a59c-4f38ab245fac",
   creator_id: "e34f5728-e98b-4a14-9e1e-18b43e9d803c",
   assignee_id: "e34f5728-e98b-4a14-9e1e-18b43e9d803c",
   title: "Frontend-Login bauen",
@@ -26,11 +24,16 @@ const exampleTask = {
   priority: "high",
 };
 
-export const insertTask = async (title: string, id: string) => {
+export const insertTask = async (
+  title: string,
+  id: string,
+  projectId: string | null,
+) => {
   const dataToSend = {
     ...exampleTask,
-    id,
+    creator_id: id,
     title,
+    project_id: projectId,
   };
 
   const { data, error } = await supabase.from("tasks").insert([dataToSend]);
@@ -46,7 +49,7 @@ export const insertTask = async (title: string, id: string) => {
 /** PROJECTS */
 
 export const listProjects = async () => {
-  const { data, error } = await supabase.from("projects").select("*");
+  const { data, error } = await supabase.from("projects").select("*").limit(3);
   if (error) {
     console.error("Error fetching projects:", error);
     return [];
