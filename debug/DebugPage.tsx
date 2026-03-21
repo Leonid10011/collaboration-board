@@ -8,6 +8,7 @@ import {
   insertTask,
   listProjects,
   listTasks,
+  updateTask,
 } from "@/repository/repository";
 
 type Project = {
@@ -79,6 +80,18 @@ export default function DebugPage() {
     console.log("Deleted task:", task);
   };
 
+  const handleUpdateTask = async (taskId: string, updates: Partial<Task>) => {
+    const updatedTask = await updateTask(taskId, updates);
+    if (!updatedTask) {
+      console.log("Failed to update task");
+      return;
+    }
+    setListedTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? updatedTask : t)),
+    );
+    console.log("Updated task:", updatedTask);
+  };
+
   const handleTaskClick = (taskId: string) => {
     setSelectedTaskId(taskId);
     console.log(
@@ -129,14 +142,26 @@ export default function DebugPage() {
               <div>{task.title}</div>
               <br />
               <span>{task.id}</span>
+              <br />
+              <span className="text-green-600">{task.status}</span>
+              <br />
               <span>{task.id === selectedTaskId ? " (SELECTED)" : ""}</span>
             </div>
           ))}
         </div>
-        <DebugButton
-          title="Delete Selected Task"
-          onClick={() => selectedTaskId && handleDeleteTask(selectedTaskId)}
-        />
+        <div className="flex flex-row gap-4">
+          <DebugButton
+            title="Delete Selected Task"
+            onClick={() => selectedTaskId && handleDeleteTask(selectedTaskId)}
+          />
+          <DebugButton
+            title="Update Selected Task"
+            onClick={() =>
+              selectedTaskId &&
+              handleUpdateTask(selectedTaskId, { status: "done" })
+            }
+          />
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         <input

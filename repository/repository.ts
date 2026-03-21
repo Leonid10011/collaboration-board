@@ -63,6 +63,32 @@ export const deleteTask = async (taskId: string) => {
   return data;
 };
 
+type Task = {
+  id: string;
+  creator_id: string;
+  assignee_id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  project_id: string;
+};
+
+export const updateTask = async (taskId: string, updates: Partial<Task>) => {
+  const { data, error } = await supabase
+    .from("tasks")
+    .update(updates)
+    .eq("id", taskId)
+    .select()
+    .single();
+  if (error) {
+    console.log("Error updating task:", error);
+    return null;
+  }
+  console.log("Updated task:", data);
+  return data;
+};
+
 /** PROJECTS */
 
 export const listProjects = async () => {
