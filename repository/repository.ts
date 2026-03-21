@@ -58,8 +58,12 @@ export const listProjects = async () => {
 const exampleProject = {
   title: "Collaboration Board",
   description: "Ein Tool zur Zusammenarbeit und Aufgabenverwaltung.",
-  slug: "collaboration-board1234567890",
+  slug: "collaboration-board12345678901",
 };
+
+/**
+ * Creating project requires the creation of ProjectMemberships in order to assign the project to the user. This is handled in the API route, so we only need to insert the project here.
+ */
 export const insertProject = async (title: string, userId: string) => {
   console.log("User id in insertProject:", userId);
   const dataToSend = {
@@ -70,7 +74,13 @@ export const insertProject = async (title: string, userId: string) => {
 
   console.log("Data to send for inserting project:", dataToSend);
 
-  const { data, error } = await supabase.from("projects").insert([dataToSend]);
+  const { data, error } = await supabase.rpc("create_project_with_membership", {
+    p_user_id: userId,
+    p_project_title: dataToSend.title,
+    p_project_description: dataToSend.description,
+    p_project_slug: dataToSend.slug,
+    p_project_role: "admin",
+  });
 
   if (error) {
     console.error("Error inserting project:", error);
