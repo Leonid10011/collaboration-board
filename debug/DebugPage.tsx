@@ -3,6 +3,7 @@ import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
 import { useEffect, useState } from "react";
 import DebugButton from "./DebugButton";
 import {
+  deleteTask,
   insertProject,
   insertTask,
   listProjects,
@@ -16,11 +17,21 @@ type Project = {
   slug: string;
 };
 
+type Task = {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+};
+
 export default function DebugPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [projectTitle, setProjectTitle] = useState("Default Project");
   const [taskTitle, setTaskTitle] = useState("Default Task");
   const [initialProjects, setInitialProjects] = useState<Project[]>([]);
+  const [listedTasks, setListedTasks] = useState<Task[]>([]);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null,
   );
@@ -48,12 +59,34 @@ export default function DebugPage() {
 
   const handleListTasks = async () => {
     const tasks = await listTasks();
+    setListedTasks(tasks);
     console.log("Tasks:", tasks);
   };
 
   const handleInsertTask = async () => {
     const task = await insertTask(taskTitle, userId!, selectedProjectId);
+    if (task) {
+      setListedTasks((prev) => [...prev, task]);
+      console.log("Inserted task:", task);
+    }
     console.log("Inserted task:", task);
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    const task = await deleteTask(taskId);
+    setListedTasks((prev) => prev.filter((p) => p.id !== taskId));
+
+    console.log("Deleted task:", task);
+  };
+
+  const handleTaskClick = (taskId: string) => {
+    setSelectedTaskId(taskId);
+    console.log(
+      "Clicked task ID:",
+      taskId,
+      "Selected task ID:",
+      selectedTaskId,
+    );
   };
 
   const handleInsertProject = async () => {
@@ -84,6 +117,26 @@ export default function DebugPage() {
       </div>
       <div className="grid grid-cols-4 gap-4">
         <DebugButton title="List Tasks" onClick={handleListTasks} />
+      </div>
+      <div className="flex flex-col gap-4 my-4">
+        <div className="grid grid-cols-5 gap-2 p-2">
+          {listedTasks.map((task) => (
+            <div
+              key={task.id}
+              className={`border p-2 rounded bg-gray-100 hover:bg-gray-200 hover:cursor-pointer ${String(task.id) === String(selectedTaskId) ? "bg-blue-200" : ""}`}
+              onClick={() => handleTaskClick(task.id)}
+            >
+              <div>{task.title}</div>
+              <br />
+              <span>{task.id}</span>
+              <span>{task.id === selectedTaskId ? " (SELECTED)" : ""}</span>
+            </div>
+          ))}
+        </div>
+        <DebugButton
+          title="Delete Selected Task"
+          onClick={() => selectedTaskId && handleDeleteTask(selectedTaskId)}
+        />
       </div>
       <div className="flex flex-col gap-2">
         <input

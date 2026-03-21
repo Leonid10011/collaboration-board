@@ -5,7 +5,7 @@ import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
 const supabase = createSupabaseBrowserClient();
 
 export const listTasks = async () => {
-  const { data, error } = await supabase.from("tasks").select("*");
+  const { data, error } = await supabase.from("tasks").select("*").limit(5);
   if (error) {
     console.error("Error fetching tasks:", error);
     return [];
@@ -36,13 +36,30 @@ export const insertTask = async (
     project_id: projectId,
   };
 
-  const { data, error } = await supabase.from("tasks").insert([dataToSend]);
+  const { data, error } = await supabase
+    .from("tasks")
+    .insert([dataToSend])
+    .select()
+    .single();
 
   if (error) {
     console.error("Error inserting task:", error);
     return null;
   }
   console.log("Inserted task:", data);
+  return data;
+};
+
+export const deleteTask = async (taskId: string) => {
+  const { data, error } = await supabase
+    .from("tasks")
+    .delete()
+    .eq("id", taskId);
+  if (error) {
+    console.error("Error deleting task:", error);
+    return null;
+  }
+  console.log("Deleted task:", data);
   return data;
 };
 
