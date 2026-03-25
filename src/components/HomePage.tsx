@@ -1,15 +1,16 @@
+import Header from "./Header";
 import UserInfo from "./homepage/UserInfo";
+import Sidebar from "./Sidebar";
+import TaskBoard from "./TaskBoard";
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold">
-        Welcome to the Collaboration Board!
-      </h1>
-      <UserInfo />
-      <p className="mt-4 text-lg text-gray-600">
-        This is the home page. Use the navigation to explore the app.
-      </p>
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <div className="flex flex-row flex-1">
+        <Sidebar />
+        <TaskBoard />
+      </div>
     </div>
   );
 }
