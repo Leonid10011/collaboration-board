@@ -7,6 +7,11 @@ type MemberStatus = {
   online: boolean;
 };
 
+/**
+ * This component shows profile image, name and online status.
+ * It is mainly used to show members of project in the header
+ */
+
 export default function MemberStatus({ name, img_url, online }: MemberStatus) {
   return (
     <div className="flex flex-row gap-1">
