@@ -9,7 +9,7 @@ export default function UserInfo() {
   //mock members data
 
   return (
-    <div className="flex flex-row px-4 py-2 gap-12">
+    <div className="flex flex-row px-4 gap-12">
       <InfoBlock title="User" content={<span>{user?.name}</span>} />
     </div>
   );
