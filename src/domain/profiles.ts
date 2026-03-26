@@ -1,7 +1,8 @@
 export interface Profile {
   id: string;
   name: string;
-  img_url: string;
+  imgUrl: string;
+  online: boolean;
 }
 
 export interface User extends Profile {
@@ -9,5 +10,6 @@ export interface User extends Profile {
 }
 
 export interface Member extends Profile {
-  online: boolean;
+  projectId: string;
+  projectRole: string;
 }

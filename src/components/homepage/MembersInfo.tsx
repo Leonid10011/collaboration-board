@@ -9,13 +9,17 @@ export default function MemberInfo() {
       id: "124",
       name: "Laura",
       online: true,
-      img_url: "/images/profile_image_01.jpg",
+      imgUrl: "/images/profile_image_01.jpg",
+      projectId: "1",
+      projectRole: "admin",
     },
     {
       id: "123",
       name: "Sabrina",
       online: false,
-      img_url: "/images/profile_image_02.jpg",
+      imgUrl: "/images/profile_image_02.jpg",
+      projectId: "1",
+      projectRole: "editor",
     },
   ]);
 
@@ -28,7 +32,7 @@ export default function MemberInfo() {
             <MemberStatus
               key={m.id}
               name={m.name}
-              img_url={m.img_url}
+              img_url={m.imgUrl}
               online={m.online}
             />
           ))}

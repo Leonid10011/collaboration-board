@@ -4,3 +4,7 @@ export interface Project {
   ownerId: string;
   description?: string;
 }
+
+export interface UserProject extends Project {
+  role: string;
+}

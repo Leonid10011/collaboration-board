@@ -43,7 +43,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           id: result.id,
           name: result.user_name,
           email: data.user.email || "",
-          img_url: "",
+          imgUrl: "",
+          online: false,
         };
         setUser(userData);
       } catch (error) {

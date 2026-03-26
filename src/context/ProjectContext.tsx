@@ -1,24 +1,37 @@
 import { Project } from "@/domain/projects";
 import { listProjects } from "@/repository/repository-projects";
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useUser } from "./UserContext";
+import { getMemberRoleOfProject } from "@/repository/repository-project-memberships";
 
 type ProjectContextType = {
-  title: string | null;
+  projectTitle: string | null;
   changeSelectedProject: (id: string) => void;
+  userRole: string | null;
 };
 
 const ProjectContext = createContext<ProjectContextType | null>(null);
 
-type ProjectContextProviderType = {
+export function useProject() {
+  const context = useContext(ProjectContext);
+  if (!context)
+    throw new Error("useProject must be used within a ProjectProvider.");
+
+  return context;
+}
+
+type ProjectProviderType = {
   children: React.ReactNode;
 };
-export function ProjectContextProvider({
-  children,
-}: ProjectContextProviderType) {
+
+export function ProjectProvider({ children }: ProjectProviderType) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null,
   );
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -33,10 +46,25 @@ export function ProjectContextProvider({
     fetchProjects();
   }, []);
 
+  /* Selected Project */
   const changeSelectedProject = (projectId: string) => {
     setSelectedProjectId(projectId);
   };
 
+  useEffect(() => {
+    if (!selectedProjectId || !user) return;
+    const fetchUserRole = async () => {
+      try {
+        const role = await getMemberRoleOfProject(selectedProjectId, user.id);
+        setUserRole(role);
+      } catch (error) {
+        console.error("Error fetching user role for project:", error);
+        setUserRole(null);
+      }
+    };
+
+    fetchUserRole();
+  }, [selectedProjectId, user]);
   const currentProject = useMemo(() => {
     if (!projects) return null;
     const currentProjectTmp = projects.find((p) => p.id === selectedProjectId);
@@ -47,8 +75,9 @@ export function ProjectContextProvider({
   return (
     <ProjectContext.Provider
       value={{
-        title: currentProject ? currentProject.title : null,
+        projectTitle: currentProject ? currentProject.title : null,
         changeSelectedProject,
+        userRole,
       }}
     >
       {children}

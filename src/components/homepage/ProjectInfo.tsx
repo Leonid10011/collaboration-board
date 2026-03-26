@@ -13,7 +13,7 @@ export default function ProjectInfo() {
         <div className="flex flex-row gap-4 justify-center align-center">
           <span className="text-green-600 text-xl">{role}</span>
           <span className="text-meta text-lg font-semibold">
-            {projectTitle}
+            {projectTitle ? projectTitle : "No Project Selected"}
           </span>
         </div>
       }
