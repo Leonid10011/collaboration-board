@@ -23,7 +23,7 @@ export default function MemberInfo() {
     <InfoBlock
       title="Members"
       content={
-        <div className="flex flex-row gap-1">
+        <div className="flex flex-row gap-2">
           {members.map((m) => (
             <MemberStatus
               key={m.id}

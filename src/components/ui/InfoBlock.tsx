@@ -12,7 +12,7 @@ type InfoBlock = {
 export default function InfoBlock({ title, content }: InfoBlock) {
   return (
     <div className="flex flex-col gap-2">
-      <h3>{title}</h3>
+      <p className="text-xs font-bold">{title}</p>
       {content}
     </div>
   );

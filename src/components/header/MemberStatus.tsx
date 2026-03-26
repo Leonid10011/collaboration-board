@@ -1,4 +1,4 @@
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Circle, CircleIcon } from "lucide-react";
 import Image from "next/image";
 
 type MemberStatus = {
@@ -14,10 +14,16 @@ type MemberStatus = {
 
 export default function MemberStatus({ name, img_url, online }: MemberStatus) {
   return (
-    <div className="flex flex-row gap-1">
-      <Image width={16} height={16} alt="Image" src={img_url} />
-      <span>{name}</span>
-      <CheckCircle color={`${online ? "green" : "red"}`}></CheckCircle>
+    <div className="flex flex-row gap-2 justify-center items-center">
+      <Image
+        width={16}
+        height={16}
+        alt="Image"
+        src={img_url}
+        className="rounded-full"
+      />
+      <span className="font-semibold text-meta">{name}</span>
+      <CircleIcon size={16} color={`${online ? "green" : "red"}`}></CircleIcon>
     </div>
   );
 }

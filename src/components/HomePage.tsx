@@ -1,5 +1,4 @@
 import Header from "./Header";
-import UserInfo from "./homepage/UserInfo";
 import Sidebar from "./Sidebar";
 import TaskBoard from "./TaskBoard";
 
