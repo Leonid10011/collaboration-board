@@ -10,9 +10,11 @@ export default function ProjectInfo() {
     <InfoBlock
       title="Project Info"
       content={
-        <div className="flex flex-row gap-4">
-          <span className="text-green-600">{role}</span>
-          <span className="text-meta">{projectTitle}</span>
+        <div className="flex flex-row gap-4 justify-center align-center">
+          <span className="text-green-600 text-xl">{role}</span>
+          <span className="text-meta text-lg font-semibold">
+            {projectTitle}
+          </span>
         </div>
       }
     />

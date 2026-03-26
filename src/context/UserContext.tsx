@@ -68,7 +68,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase.auth]);
 
   return (
     <UserContext.Provider value={{ user, error }}>
