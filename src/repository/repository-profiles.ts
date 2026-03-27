@@ -19,4 +19,18 @@ const getProfiles = async () => {
   return data;
 };
 
+export const getProfileById = async (id: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) {
+    throw new Error(
+      `Error fetching profile by id: ${"message" in error ? error.message : String(error)}`,
+    );
+  }
+  return data;
+};
+
 export { getProfiles };
