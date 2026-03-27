@@ -9,3 +9,11 @@ export type MembershipWithProfileDB = {
     img_url: string;
   };
 };
+
+export type MembershipDB = {
+  id: string;
+  project_id: string;
+  user_id: string;
+  role: string;
+  created_at: string;
+};
