@@ -1,6 +1,6 @@
 export interface Profile {
   id: string;
-  name: string;
+  userName: string;
   imgUrl: string;
   online: boolean;
 }

@@ -6,7 +6,7 @@ export function mapMembershipWithProfileDBToMember(
 ): Partial<Member> {
   return {
     id: membership.profiles.id,
-    name: membership.profiles.user_name,
+    userName: membership.profiles.user_name,
     imgUrl: membership.profiles.img_url,
     projectId: membership.project_id,
     projectRole: membership.role,

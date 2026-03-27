@@ -41,10 +41,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const result = await getProfileById(data.user.id);
         const userData: User = {
           id: result.id,
-          name: result.user_name,
+          userName: result.user_name,
           email: data.user.email || "",
           imgUrl: "",
-          online: false,
+          online: true,
         };
         setUser(userData);
       } catch (error) {
