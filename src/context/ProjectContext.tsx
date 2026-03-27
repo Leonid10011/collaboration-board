@@ -8,6 +8,7 @@ type ProjectContextType = {
   projectTitle: string | null;
   changeSelectedProject: (id: string) => void;
   userRole: string | null;
+  projects: Project[];
 };
 
 const ProjectContext = createContext<ProjectContextType | null>(null);
@@ -77,6 +78,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
   return (
     <ProjectContext.Provider
       value={{
+        projects,
         projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,
         userRole,
