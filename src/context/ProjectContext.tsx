@@ -2,13 +2,18 @@ import { Project } from "@/domain/projects";
 import { listProjects } from "@/repository/repository-projects";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useUser } from "./UserContext";
-import { getMemberRoleOfProject } from "@/repository/repository-project-memberships";
+import {
+  getMemberRoleOfProject,
+  getMembershipsByUserId,
+} from "@/repository/repository-project-memberships";
+import { Membership } from "@/domain/memberships";
 
 type ProjectContextType = {
   projectTitle: string | null;
   changeSelectedProject: (id: string) => void;
   userRole: string | null;
   projects: Project[];
+  userProjects: Project[];
 };
 
 const ProjectContext = createContext<ProjectContextType | null>(null);
@@ -31,6 +36,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     null,
   );
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userMemberships, setUserMemberships] = useState<Membership[]>([]);
 
   const { user } = useUser();
 
@@ -46,6 +52,20 @@ export function ProjectProvider({ children }: ProjectProviderType) {
 
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    const fetchUserMemberships = async () => {
+      if (!user) return;
+      try {
+        const memberships = await getMembershipsByUserId(user.id);
+        setUserMemberships(memberships);
+      } catch (error) {
+        console.error("Error fetching user memberships:", error);
+      }
+    };
+
+    fetchUserMemberships();
+  }, [user]);
 
   useEffect(() => {
     if (!selectedProjectId || !user) return;
@@ -75,9 +95,21 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     return currentProjectTmp;
   }, [projects, selectedProjectId]);
 
+  /* User Projects */
+  const userProjects = useMemo(() => {
+    if (!user) return [];
+
+    const tmp = projects.filter((project) =>
+      userMemberships.some((membership) => membership.projectId === project.id),
+    );
+
+    return tmp;
+  }, [projects, userMemberships, user]);
+
   return (
     <ProjectContext.Provider
       value={{
+        userProjects,
         projects,
         projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,
