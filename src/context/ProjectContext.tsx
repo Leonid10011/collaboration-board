@@ -46,13 +46,9 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     fetchProjects();
   }, []);
 
-  /* Selected Project */
-  const changeSelectedProject = (projectId: string) => {
-    setSelectedProjectId(projectId);
-  };
-
   useEffect(() => {
     if (!selectedProjectId || !user) return;
+
     const fetchUserRole = async () => {
       try {
         const role = await getMemberRoleOfProject(selectedProjectId, user.id);
@@ -65,7 +61,13 @@ export function ProjectProvider({ children }: ProjectProviderType) {
 
     fetchUserRole();
   }, [selectedProjectId, user]);
-  const currentProject = useMemo(() => {
+
+  /* Selected Project */
+  const changeSelectedProject = (projectId: string) => {
+    setSelectedProjectId(projectId);
+  };
+
+  const selectedProject = useMemo(() => {
     if (!projects) return null;
     const currentProjectTmp = projects.find((p) => p.id === selectedProjectId);
     if (!currentProjectTmp) return null;
@@ -75,7 +77,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
   return (
     <ProjectContext.Provider
       value={{
-        projectTitle: currentProject ? currentProject.title : null,
+        projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,
         userRole,
       }}

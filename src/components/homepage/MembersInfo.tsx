@@ -7,7 +7,7 @@ export default function MemberInfo() {
   const [members, setMembers] = useState<Member[]>([
     {
       id: "124",
-      name: "Laura",
+      userName: "Laura",
       online: true,
       imgUrl: "/images/profile_image_01.jpg",
       projectId: "1",
@@ -15,7 +15,7 @@ export default function MemberInfo() {
     },
     {
       id: "123",
-      name: "Sabrina",
+      userName: "Sabrina",
       online: false,
       imgUrl: "/images/profile_image_02.jpg",
       projectId: "1",
@@ -31,7 +31,7 @@ export default function MemberInfo() {
           {members.map((m) => (
             <MemberStatus
               key={m.id}
-              name={m.name}
+              name={m.userName}
               img_url={m.imgUrl}
               online={m.online}
             />

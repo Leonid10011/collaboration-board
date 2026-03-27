@@ -1,12 +1,14 @@
 "use client";
 
-import { useUser } from "@/context/UserContext";
 import InfoBlock from "../ui/InfoBlock";
 import { ChevronDown } from "lucide-react";
 
-export default function UserInfo() {
-  const { user } = useUser();
+type UserInfoProps = {
+  userName: string | null;
+  online: boolean | null;
+};
 
+export default function UserInfo({ userName, online }: UserInfoProps) {
   //mock members data
 
   return (
@@ -15,11 +17,15 @@ export default function UserInfo() {
         title="User"
         content={
           <div className="flex flex-row gap-2 items-center">
-            <span className="font-medium text-meta">{user?.name} </span>
-            <ChevronDown
-              size={24}
-              className="text-meta cursor-pointer hover:bg-meta/10 rounded"
-            />
+            <span className="font-medium text-meta">
+              {userName ? userName : "Not logged in"}{" "}
+            </span>
+            {online !== null && (
+              <ChevronDown
+                size={24}
+                className="text-meta cursor-pointer hover:bg-meta/10 rounded"
+              />
+            )}
           </div>
         }
       />

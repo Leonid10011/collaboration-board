@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { UserProvider } from "@/context/UserContext";
-import { ProjectProvider } from "@/context/ProjectContext";
+import Providers from "./Providers";
 
 export const metadata: Metadata = {
   title: "Collaboration Board",
@@ -16,9 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ProjectProvider>
-          <UserProvider>{children}</UserProvider>
-        </ProjectProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
