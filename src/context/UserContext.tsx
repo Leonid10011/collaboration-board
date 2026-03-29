@@ -1,13 +1,14 @@
 "use client";
 
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
-import { User } from "@/domain/profiles";
-import { getProfileById } from "@/repository/repository-profiles";
+import { Profile, User } from "@/domain/profiles";
+import { getProfileById, getProfiles } from "@/repository/repository-profiles";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type UserContextType = {
   user: User | null;
   error: string | null;
+  profiles: Profile[] | null;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -44,7 +45,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           userName: result.user_name,
           email: data.user.email || "",
           imgUrl: "",
-          online: true,
+          lastActive: new Date(),
         };
         setUser(userData);
       } catch (error) {
@@ -71,8 +72,30 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     };
   }, [supabase.auth]);
 
+  /**
+   * We need data of all user to allow project admins to add new members to their projects.
+   * Later we will narrow down the list of users with pagination and search functionality, but for now we will fetch all users and store them in the context.
+   */
+  const [allProfiles, setAllProfiles] = useState<Profile[]>([]);
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        setError(null);
+        const data = await getProfiles();
+
+        setAllProfiles(data);
+      } catch (error) {
+        setError(`Profiles could not be loaded: ${error}`);
+        return;
+      }
+    };
+
+    fetchProfiles();
+  }, []);
+
   return (
-    <UserContext.Provider value={{ user, error }}>
+    <UserContext.Provider value={{ user, error, profiles: allProfiles }}>
       {children}
     </UserContext.Provider>
   );
