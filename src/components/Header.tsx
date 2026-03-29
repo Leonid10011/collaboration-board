@@ -11,7 +11,7 @@ export default function Header() {
   const { user } = useUser();
 
   return (
-    <div className="flex flex-row py-2 px-1 border-b-2 border-solid bg-background gap-16">
+    <div className="flex flex-row py-2 px-1 border-b-2 border-solid bg-main-2 gap-16">
       <div className="flex flex-row gap-16">
         <UserInfo
           userName={user ? user.userName : null}
