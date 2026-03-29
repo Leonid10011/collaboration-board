@@ -1,5 +1,6 @@
 type ModalShellProps = {
   title: string;
+  onTitleChange: (value: string) => void;
   children: React.ReactNode;
   onClose: (value: boolean) => void;
   confirmLabel?: string;
@@ -8,6 +9,7 @@ type ModalShellProps = {
 
 export default function ModalShell({
   title,
+  onTitleChange,
   children,
   onClose,
   confirmLabel,
@@ -32,7 +34,7 @@ export default function ModalShell({
         <input
           placeholder={title}
           className="w-full text-4xl font-bold placeholder-gray-300 border-none outline-none bg transparent focus:ring-0 mb-8"
-          onChange={() => {}}
+          onChange={(e) => onTitleChange(e.currentTarget.value)}
         />
         <div className="flex-1 w-full">{children}</div>
         <button
