@@ -2,11 +2,11 @@ export interface Profile {
   id: string;
   userName: string;
   imgUrl: string;
-  online: boolean;
 }
 
 export interface User extends Profile {
   email: string;
+  lastActive: Date;
 }
 
 export interface Member extends Profile {

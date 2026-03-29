@@ -13,10 +13,7 @@ export default function Header() {
   return (
     <div className="flex flex-row py-2 px-1 border-b-2 border-solid bg-main-2 gap-16">
       <div className="flex flex-row gap-16">
-        <UserInfo
-          userName={user ? user.userName : null}
-          online={user ? user.online : null}
-        />
+        <UserInfo userName={user ? user.userName : null} online={true} />
         <ProjectInfo
           projectTitle={projectTitle ? projectTitle : null}
           role={userRole ? userRole : null}
