@@ -13,6 +13,8 @@ import { insertProject } from "@/repository/repository-projects";
 import { Project } from "@/domain/projects";
 import { addMemberToProject } from "@/repository/repository-project-memberships";
 import { create } from "domain";
+import { ProjectSchema } from "@/validation/project-schema";
+import { ProfileSchema } from "@/validation/profile-schema";
 
 type CreateModalOpenProps = {
   onClose: () => void;
@@ -63,7 +65,9 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
         description: projectDescription,
       };
 
-      const newProjectId = await insertProject(projectToAdd);
+      const validatedData = ProjectSchema.parse(projectToAdd);
+
+      const newProjectId = await insertProject(validatedData);
 
       if (!newProjectId) return;
 
