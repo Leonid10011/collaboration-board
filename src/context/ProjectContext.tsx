@@ -10,6 +10,7 @@ import { Membership } from "@/domain/memberships";
 
 type ProjectContextType = {
   projectTitle: string | null;
+  selectedProject: Project | null;
   changeSelectedProject: (id: string) => void;
   userRole: string | null;
   projects: Project[];
@@ -110,6 +111,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     <ProjectContext.Provider
       value={{
         userProjects,
+        selectedProject,
         projects,
         projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,

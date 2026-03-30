@@ -1,20 +1,23 @@
 import { Project } from "@/domain/projects";
+import ProjectItem from "./projectList/ProjectItem";
+import { useProject } from "@/context/ProjectContext";
 
 type ProjectListType = {
   projects: Project[];
 };
 
 export default function ProjectList({ projects }: ProjectListType) {
+  const { changeSelectedProject } = useProject();
+
   return (
     <div className="flex flex-col gap-4">
       {projects.map((p) => (
-        <div
-          className="flex flex-col rounded px-2 py-4 bg-main-1 hover:cursor-pointer"
+        <ProjectItem
           key={p.id}
-        >
-          <h3>{p.title}</h3>
-          <p>{p.description}</p>
-        </div>
+          title={p.title}
+          description={p.description}
+          onClick={() => changeSelectedProject(p.id)}
+        />
       ))}
     </div>
   );
