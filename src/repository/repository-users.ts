@@ -1,9 +1,9 @@
 "use client";
 
-import { Profile } from "@/domain/profiles";
+import { UserDB } from "@/db/supabase/user-db";
 import { createSupabaseBrowserClient } from "../db/supabase/supabase-client";
-import { ProfileDB } from "@/db/supabase/profile-db";
-import { mapProfileDBToProfile } from "@/db/supabase/profile-mapper";
+import { User } from "@/domain/users";
+import { mapUserDBToUser } from "@/db/supabase/user-mapper";
 
 const supabase = createSupabaseBrowserClient();
 
@@ -12,21 +12,21 @@ const supabase = createSupabaseBrowserClient();
 // It is linked to the auth.users table via the id field, which is the same as the user_id in auth.users.
 // This allows us to easily fetch the profile information for a user when we have their user_id from the authentication context.
 
-const getProfiles = async (): Promise<Profile[]> => {
+const getUsers = async (): Promise<User[]> => {
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
-    .returns<ProfileDB[]>();
+    .returns<UserDB[]>();
   if (error) {
     throw new Error(
       `Error fetching profiles: ${"message" in error ? error.message : String(error)}`,
     );
   }
 
-  return data.map(mapProfileDBToProfile);
+  return data.map(mapUserDBToUser);
 };
 
-export const getProfileById = async (id: string) => {
+export const getUserById = async (id: string) => {
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
@@ -41,4 +41,4 @@ export const getProfileById = async (id: string) => {
   return data;
 };
 
-export { getProfiles };
+export { getUsers };
