@@ -13,7 +13,6 @@ import { insertProject } from "@/repository/repository-projects";
 import { Project } from "@/domain/projects";
 import { addMemberToProject } from "@/repository/repository-project-memberships";
 import { ProjectSchema } from "@/validation/project-schema";
-import { showError, showSuccess } from "@/lib/toast";
 
 type CreateModalOpenProps = {
   onClose: () => void;
@@ -74,11 +73,8 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
       addedMembers.forEach(async (m) => {
         await addMemberToProject(newProjectId, m.id, "member");
       });
-
-      showSuccess("Project created.");
     } catch (error) {
       setCreateError(`Error creating Project: ${error}`);
-      showError(`Error creating Project: ${error}`);
     }
   };
 
