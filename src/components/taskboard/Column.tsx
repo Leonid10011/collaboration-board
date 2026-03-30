@@ -1,13 +1,22 @@
 import { Task } from "@/domain/tasks";
+import { User } from "@/domain/users";
 import { Circle, SquarePlus } from "lucide-react";
+import TaskItem from "./column/TaskItem";
+import { showSuccess } from "@/lib/toast";
 
 type ColumnProp = {
   statusColor: string;
   name: string;
   tasks: Task[];
+  userMap: Map<string, User> | null;
 };
 
-export default function Column({ statusColor, name, tasks }: ColumnProp) {
+export default function Column({
+  statusColor,
+  name,
+  tasks,
+  userMap,
+}: ColumnProp) {
   return (
     <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260x] md:min-w-[300px] flex-1 rounded px-4 py-2">
       {/* Column Header*/}
@@ -26,19 +35,22 @@ export default function Column({ statusColor, name, tasks }: ColumnProp) {
           className="hover:cursor-pointer"
         />
       </div>
-      <div className="">
+      <div className="flex flex-col gap-4">
         {/* Tasks */}
         {tasks.map((t) => (
-          <div
+          <TaskItem
             key={t.id}
-            className="flex flex-col rounded px-2 py-4 bg-background mt-4 hover:cursor-pointer"
-            onClick={() => {
-              console.log("Task " + t.id + " onClick");
+            title={t.title}
+            priority={t.priority}
+            user={
+              t.assgineeId && userMap
+                ? (userMap.get(t.assgineeId) ?? null)
+                : null
+            }
+            onAction={() => {
+              showSuccess("Took Task (WIP)");
             }}
-          >
-            <h3>{t.title}</h3>
-            <p>{t.description}</p>
-          </div>
+          />
         ))}
       </div>
     </div>
