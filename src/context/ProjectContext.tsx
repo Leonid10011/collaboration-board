@@ -4,18 +4,21 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useUser } from "./UserContext";
 import {
   getMemberRoleOfProject,
+  getMembershipsByProjectId,
   getMembershipsByUserId,
 } from "@/repository/repository-project-memberships";
 import { Membership } from "@/domain/memberships";
 import { Task } from "@/domain/tasks";
 import { getTasksByProjectId } from "@/repository/repository-tasks";
 import { showError } from "@/lib/toast";
+import { Member, User } from "@/domain/users";
 
 type ProjectContextType = {
   projectTitle: string | null;
   selectedProject: Project | null;
   projectTasks: Task[] | null;
   changeSelectedProject: (id: string) => void;
+  projectMembers: User[] | null;
   userRole: string | null;
   projects: Project[];
   userProjects: Project[];
@@ -43,8 +46,11 @@ export function ProjectProvider({ children }: ProjectProviderType) {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userMemberships, setUserMemberships] = useState<Membership[]>([]);
   const [selectedProjectTasks, setSelectedProjectTasks] = useState<Task[]>([]);
+  const [selectedProjectMemberships, setSelectedProjectMemberships] = useState<
+    Member[]
+  >([]);
 
-  const { user } = useUser();
+  const { user, users } = useUser();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -106,6 +112,23 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     fetchUserRole();
   }, [selectedProjectId, user]);
 
+  useEffect(() => {
+    if (!selectedProjectId) return;
+    const fetchMemberships = async () => {
+      try {
+        const result = await getMembershipsByProjectId(selectedProjectId);
+
+        if (!result) return;
+
+        setSelectedProjectMemberships(result);
+      } catch (error) {
+        console.error("Error");
+      }
+    };
+
+    fetchMemberships();
+  }, [selectedProjectId]);
+
   /* Selected Project */
   const changeSelectedProject = (projectId: string) => {
     setSelectedProjectId(projectId);
@@ -134,6 +157,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
       value={{
         userProjects,
         selectedProject,
+        projectMembers: selectedProjectMemberships,
         projectTasks: selectedProjectTasks,
         projects,
         projectTitle: selectedProject ? selectedProject.title : null,
