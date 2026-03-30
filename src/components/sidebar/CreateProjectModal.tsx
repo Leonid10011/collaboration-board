@@ -12,9 +12,7 @@ import { MemberBadge } from "./createProjectModal/MemberBadge";
 import { insertProject } from "@/repository/repository-projects";
 import { Project } from "@/domain/projects";
 import { addMemberToProject } from "@/repository/repository-project-memberships";
-import { create } from "domain";
 import { ProjectSchema } from "@/validation/project-schema";
-import { ProfileSchema } from "@/validation/profile-schema";
 
 type CreateModalOpenProps = {
   onClose: () => void;
