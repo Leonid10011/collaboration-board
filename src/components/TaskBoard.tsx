@@ -1,37 +1,37 @@
+import { useMemo } from "react";
 import Column from "./taskboard/Column";
+import { useProject } from "@/context/ProjectContext";
+import { Task, TASK_STATUSES, TaskStatus } from "@/domain/tasks";
 
 export default function TaskBoard() {
-  const mockColumns = [
-    {
-      id: 1,
-      statusColor: "gray",
-      name: "Backlog",
-      count: 3,
-    },
-    {
-      id: 2,
-      statusColor: "yellow",
-      name: "In Progress",
-      count: 2,
-    },
-    {
-      id: 3,
-      statusColor: "green",
-      name: "Done",
-      count: 5,
-    },
-  ];
+  const STATUS_COLORS = ["gray", "yellow", "green"] as const;
+
+  const { projectTasks: tasks } = useProject();
+
+  const TaskByStatus = useMemo(() => {
+    const map: Record<TaskStatus, Task[]> = {
+      backlog: [],
+      in_progress: [],
+      done: [],
+    };
+
+    tasks?.forEach((t) => {
+      map[t.status].push(t);
+    });
+
+    return map;
+  }, [tasks]);
 
   return (
     <div className="flex flex-col flex-1 gap-4 px-4 py-2">
       <h1>Task Board</h1>
       <div className="flex flex-row gap-x-8 h-full">
-        {mockColumns.map((c) => (
+        {TASK_STATUSES.map((c, i) => (
           <Column
-            key={c.id}
-            statusColor={c.statusColor}
-            name={c.name}
-            count={c.count}
+            key={i}
+            statusColor={STATUS_COLORS[i]}
+            name={c}
+            tasks={TaskByStatus[c]}
           />
         ))}
       </div>
