@@ -1,6 +1,6 @@
 import { Membership } from "@/domain/memberships";
 import { MembershipDB, MembershipWithProfileDB } from "./membership-db";
-import { Member } from "@/domain/profiles";
+import { Member } from "@/domain/users";
 
 export function mapMembershipWithProfileDBToMember(
   membership: MembershipWithProfileDB,
@@ -10,7 +10,7 @@ export function mapMembershipWithProfileDBToMember(
     userName: membership.profiles.user_name,
     imgUrl: membership.profiles.img_url,
     projectId: membership.project_id,
-    projectRole: membership.role,
+    role: membership.role,
   };
 }
 

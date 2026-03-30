@@ -10,7 +10,7 @@ import {
 } from "@/db/supabase/membership-mapper";
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
 import { Membership } from "@/domain/memberships";
-import { Member } from "@/domain/profiles";
+import { Member } from "@/domain/users";
 
 const supabase = createSupabaseBrowserClient();
 
