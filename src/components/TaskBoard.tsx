@@ -6,7 +6,12 @@ import { Task, TASK_STATUSES, TaskStatus } from "@/domain/tasks";
 export default function TaskBoard() {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
-  const { projectTasks: tasks } = useProject();
+  const { projectTasks: tasks, projectMembers: members } = useProject();
+
+  const memberMap = useMemo(() => {
+    if (!members) return null;
+    return new Map(members.map((m) => [m.id, m]));
+  }, [members]);
 
   const TaskByStatus = useMemo(() => {
     const map: Record<TaskStatus, Task[]> = {
