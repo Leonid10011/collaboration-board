@@ -7,10 +7,14 @@ import {
   getMembershipsByUserId,
 } from "@/repository/repository-project-memberships";
 import { Membership } from "@/domain/memberships";
+import { Task } from "@/domain/tasks";
+import { getTasksByProjectId } from "@/repository/repository-tasks";
+import { showError } from "@/lib/toast";
 
 type ProjectContextType = {
   projectTitle: string | null;
   selectedProject: Project | null;
+  projectTasks: Task[] | null;
   changeSelectedProject: (id: string) => void;
   userRole: string | null;
   projects: Project[];
@@ -38,6 +42,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
   );
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userMemberships, setUserMemberships] = useState<Membership[]>([]);
+  const [selectedProjectTasks, setSelectedProjectTasks] = useState<Task[]>([]);
 
   const { user } = useUser();
 
@@ -53,6 +58,23 @@ export function ProjectProvider({ children }: ProjectProviderType) {
 
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!selectedProjectId) return;
+
+      try {
+        const result = await getTasksByProjectId(selectedProjectId);
+        setSelectedProjectTasks(result);
+        console.log("finidhed fetching tasks: ", result);
+      } catch (error) {
+        if (error instanceof Error) showError(error.message);
+        else showError("Unknown Error occured.");
+      }
+    };
+
+    fetchTasks();
+  }, [selectedProjectId]);
 
   useEffect(() => {
     const fetchUserMemberships = async () => {
@@ -112,6 +134,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
       value={{
         userProjects,
         selectedProject,
+        projectTasks: selectedProjectTasks,
         projects,
         projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,
