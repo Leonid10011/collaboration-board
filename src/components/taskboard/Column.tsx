@@ -27,7 +27,7 @@ const mockTasks = [
 
 export default function Column({ statusColor, name, count }: ColumnProp) {
   return (
-    <div className="flex flex-col bg-foreground h-full min-w-[220px] sm:min-w-[260x] md:min-w-[300px] flex-1 rounded px-4 py-2">
+    <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260x] md:min-w-[300px] flex-1 rounded px-4 py-2">
       {/* Column Header*/}
       <div className="flex flex-row justify-between">
         <div className="flex flex-row gap-2 justify-start items-center">

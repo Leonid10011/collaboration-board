@@ -30,9 +30,9 @@ export const listProjects = async (): Promise<Project[]> => {
 /**
  * Creating project requires the creation of ProjectMemberships in order to assign the project to the user. This is handled in the API route, so we only need to insert the project here.
  *
- * @returns The inserted project data from the database, which includes the generated id and slug.
+ * @returns project_id of the inserted Project.
  */
-export const insertProject = async (project: Project) => {
+export const insertProject = async (project: Omit<Project, "id">) => {
   const dataToSend = {
     title: project.title,
     owner_id: project.ownerId,
@@ -42,13 +42,16 @@ export const insertProject = async (project: Project) => {
       .substring(2, 10)}`,
   };
 
-  const { data, error } = await supabase.rpc("create_project_with_membership", {
-    p_user_id: project.ownerId,
-    p_project_title: dataToSend.title,
-    p_project_description: dataToSend.description,
-    p_project_slug: dataToSend.slug,
-    p_project_role: "admin", // Creating user is always admin of the project
-  });
+  const { data, error } = await supabase
+    .rpc("create_project_with_membership", {
+      p_user_id: project.ownerId,
+      p_project_title: dataToSend.title,
+      p_project_description: dataToSend.description,
+      p_project_slug: dataToSend.slug,
+      p_project_role: "admin", // Creating user is always admin of the project
+    })
+    .single()
+    .returns<string>();
 
   if (error) {
     throw new Error(

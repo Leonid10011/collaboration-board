@@ -8,7 +8,6 @@ export default function MemberInfo() {
     {
       id: "124",
       userName: "Laura",
-      online: true,
       imgUrl: "/images/profile_image_01.jpg",
       projectId: "1",
       projectRole: "admin",
@@ -16,7 +15,6 @@ export default function MemberInfo() {
     {
       id: "123",
       userName: "Sabrina",
-      online: false,
       imgUrl: "/images/profile_image_02.jpg",
       projectId: "1",
       projectRole: "editor",
@@ -33,7 +31,7 @@ export default function MemberInfo() {
               key={m.id}
               name={m.userName}
               img_url={m.imgUrl}
-              online={m.online}
+              online={true}
             />
           ))}
         </div>
