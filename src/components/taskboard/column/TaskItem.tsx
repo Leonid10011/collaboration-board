@@ -26,7 +26,11 @@ export default function TaskItem({
           <Image
             width={32}
             height={32}
-            src={user ? user.imgUrl : "/images/profile_image_01.jpg"}
+            src={
+              user
+                ? "/images/profile_image_01.jpg"
+                : "/images/profile_image_01.jpg"
+            }
             alt={"Profile Pic"}
             className="rounded-full"
           />
