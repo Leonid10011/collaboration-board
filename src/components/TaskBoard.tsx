@@ -1,12 +1,21 @@
-import { useMemo } from "react";
+"use client";
+
+import { useMemo, useState } from "react";
 import Column from "./taskboard/Column";
 import { useProject } from "@/context/ProjectContext";
 import { Task, TASK_STATUSES, TaskStatus } from "@/domain/tasks";
+import CreateTaskModal from "./taskboard/CreateTaskModal";
 
 export default function TaskBoard() {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
   const { projectTasks: tasks, projectMembers: members } = useProject();
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const handleModalOpen = (val: boolean) => {
+    setIsModalOpen(val);
+  };
 
   const memberMap = useMemo(() => {
     if (!members) return null;
@@ -37,9 +46,14 @@ export default function TaskBoard() {
             statusColor={STATUS_COLORS[i]}
             name={c}
             tasks={TaskByStatus[c]}
+            userMap={memberMap}
+            onModalOpen={() => handleModalOpen(true)}
           />
         ))}
       </div>
+      {isModalOpen && (
+        <CreateTaskModal onModalClose={() => handleModalOpen(false)} />
+      )}
     </div>
   );
 }
