@@ -1,6 +1,13 @@
 import { Project } from "@/domain/projects";
 import { listProjects } from "@/repository/repository-projects";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useUser } from "./UserContext";
 import {
   getMemberRoleOfProject,
@@ -9,7 +16,7 @@ import {
 } from "@/repository/repository-project-memberships";
 import { Membership } from "@/domain/memberships";
 import { Task } from "@/domain/tasks";
-import { getTasksByProjectId } from "@/repository/repository-tasks";
+import { getTasksByProjectId, insertTask } from "@/repository/repository-tasks";
 import { showError } from "@/lib/toast";
 import { Member, User } from "@/domain/users";
 
@@ -22,6 +29,7 @@ type ProjectContextType = {
   userRole: string | null;
   projects: Project[];
   userProjects: Project[];
+  addTask: (t: Omit<Task, "id">) => void;
 };
 
 const ProjectContext = createContext<ProjectContextType | null>(null);
@@ -50,7 +58,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     Member[]
   >([]);
 
-  const { user, users } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -65,22 +73,22 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     fetchProjects();
   }, []);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      if (!selectedProjectId) return;
+  const fetchTasks = useCallback(async () => {
+    if (!selectedProjectId) return;
 
-      try {
-        const result = await getTasksByProjectId(selectedProjectId);
-        setSelectedProjectTasks(result);
-        console.log("finidhed fetching tasks: ", result);
-      } catch (error) {
-        if (error instanceof Error) showError(error.message);
-        else showError("Unknown Error occured.");
-      }
-    };
-
-    fetchTasks();
+    try {
+      const result = await getTasksByProjectId(selectedProjectId);
+      setTimeout(() => setSelectedProjectTasks(result), 0);
+      console.log("finidhed fetching tasks: ", result);
+    } catch (error) {
+      if (error instanceof Error) showError(error.message);
+      else showError("Unknown Error occured.");
+    }
   }, [selectedProjectId]);
+
+  useEffect(() => {
+    void fetchTasks().catch(console.error);
+  }, [fetchTasks]);
 
   useEffect(() => {
     const fetchUserMemberships = async () => {
@@ -152,6 +160,28 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     return tmp;
   }, [projects, userMemberships, user]);
 
+  const addTask = async (task: Omit<Task, "id">) => {
+    if (!selectedProject || !user) return;
+
+    const dataToSend: Omit<Task, "id"> = {
+      projectId: task.projectId,
+      creatorId: task.creatorId,
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+    };
+
+    try {
+      const result = await insertTask(dataToSend);
+      if (!result) return;
+
+      fetchTasks();
+    } catch (error) {
+      showError("Error: " + error);
+    }
+  };
+
   return (
     <ProjectContext.Provider
       value={{
@@ -163,6 +193,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
         projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,
         userRole,
+        addTask,
       }}
     >
       {children}

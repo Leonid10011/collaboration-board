@@ -29,7 +29,7 @@ export const getTasksByProjectId = async (
   }
 };
 
-export const insertTask = async (task: Task): Promise<Task> => {
+export const insertTask = async (task: Omit<Task, "id">): Promise<Task> => {
   const dataToSend = {
     project_id: task.projectId,
     creator_id: task.creatorId,
