@@ -9,6 +9,7 @@ type ColumnProp = {
   name: string;
   tasks: Task[];
   userMap: Map<string, User> | null;
+  onModalOpen: () => void;
 };
 
 export default function Column({
@@ -16,7 +17,12 @@ export default function Column({
   name,
   tasks,
   userMap,
+  onModalOpen,
 }: ColumnProp) {
+  const handleClick = (name: string) => {
+    onModalOpen();
+  };
+
   return (
     <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260x] md:min-w-[300px] flex-1 rounded px-4 py-2">
       {/* Column Header*/}
@@ -29,9 +35,7 @@ export default function Column({
         <SquarePlus
           width={32}
           height={32}
-          onClick={() => {
-            console.log("Add Task onClick");
-          }}
+          onClick={() => handleClick(name)}
           className="hover:cursor-pointer"
         />
       </div>
