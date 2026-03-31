@@ -28,3 +28,30 @@ export const getTasksByProjectId = async (
     else throw new Error("Unkown Error processing data from db.");
   }
 };
+
+export const insertTask = async (task: Task): Promise<Task> => {
+  const dataToSend = {
+    project_id: task.projectId,
+    creator_id: task.creatorId,
+    assignee_id: task.assgineeId || null,
+    title: task.title,
+    description: task.description || null,
+    status: task.status,
+    priority: task.priority,
+  };
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .insert(dataToSend)
+    .select()
+    .returns<TaskDB>()
+    .single();
+
+  if (error) {
+    throw new Error(
+      `Error inserting task: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+
+  return mapTaskDBToTask(data);
+};
