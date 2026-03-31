@@ -1,5 +1,5 @@
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectContent,
@@ -8,6 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+
 import {
   TASK_PRIORITIES,
   TASK_STATUSES,
@@ -16,6 +18,8 @@ import {
 } from "@/domain/tasks";
 
 type TaskModalFormProps = {
+  description: string;
+  onDescription: (v: string) => void;
   status: TaskStatus;
   onStatus: (v: TaskStatus) => void;
   priority: TaskPriority;
@@ -23,6 +27,8 @@ type TaskModalFormProps = {
 };
 
 export default function TaskModalForm({
+  description,
+  onDescription,
   status,
   onStatus,
   priority,
@@ -32,10 +38,11 @@ export default function TaskModalForm({
     <FieldGroup>
       <Field>
         <FieldLabel>Description</FieldLabel>
-        <Input
+        <Textarea
           id="input-field-description"
-          type="text"
           placeholder="Enter a Description"
+          value={description}
+          onChange={(e) => onDescription(e.target.value)}
         />
       </Field>
       <Field>
