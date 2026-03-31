@@ -13,6 +13,12 @@ export default function TaskBoard() {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>("backlog");
+
+  const handleNewTaskStatus = (status: TaskStatus) => {
+    setNewTaskStatus(status);
+  };
+
   const handleModalOpen = (val: boolean) => {
     setIsModalOpen(val);
   };
@@ -44,15 +50,20 @@ export default function TaskBoard() {
           <Column
             key={i}
             statusColor={STATUS_COLORS[i]}
-            name={c}
+            status={c}
             tasks={TaskByStatus[c]}
             userMap={memberMap}
             onModalOpen={() => handleModalOpen(true)}
+            onAdd={handleNewTaskStatus}
           />
         ))}
       </div>
       {isModalOpen && (
-        <CreateTaskModal onModalClose={() => handleModalOpen(false)} />
+        <CreateTaskModal
+          onModalClose={() => handleModalOpen(false)}
+          newStatus={newTaskStatus}
+          onStatus={handleNewTaskStatus}
+        />
       )}
     </div>
   );
