@@ -1,4 +1,4 @@
-import { Task } from "@/domain/tasks";
+import { Task, TaskStatus } from "@/domain/tasks";
 import { User } from "@/domain/users";
 import { Circle, SquarePlus } from "lucide-react";
 import TaskItem from "./column/TaskItem";
@@ -6,20 +6,23 @@ import { showSuccess } from "@/lib/toast";
 
 type ColumnProp = {
   statusColor: string;
-  name: string;
+  status: TaskStatus;
   tasks: Task[];
   userMap: Map<string, User> | null;
   onModalOpen: () => void;
+  onAdd: (s: TaskStatus) => void;
 };
 
 export default function Column({
   statusColor,
-  name,
+  status,
   tasks,
   userMap,
   onModalOpen,
+  onAdd,
 }: ColumnProp) {
-  const handleClick = (name: string) => {
+  const handleClick = () => {
+    onAdd(status);
     onModalOpen();
   };
 
@@ -29,13 +32,13 @@ export default function Column({
       <div className="flex flex-row justify-between">
         <div className="flex flex-row gap-2 justify-start items-center">
           <Circle width={24} height={24} color={statusColor} />
-          <span className="text-lg">{name}</span>
+          <span className="text-lg">{status}</span>
           <span className="text-sm">{"(" + tasks.length + ")"}</span>
         </div>
         <SquarePlus
           width={32}
           height={32}
-          onClick={() => handleClick(name)}
+          onClick={handleClick}
           className="hover:cursor-pointer"
         />
       </div>

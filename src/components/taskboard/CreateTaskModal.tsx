@@ -1,25 +1,36 @@
 import { useState } from "react";
 import ModalShell from "../modal/ModalShell";
-import { showSuccess } from "@/lib/toast";
+import { showError, showSuccess } from "@/lib/toast";
 import TaskModalForm from "./createTaskModal/TaskModalForm";
-import { TaskPriority, TaskStatus } from "@/domain/tasks";
+import { Task, TaskPriority, TaskStatus } from "@/domain/tasks";
+import { useProject } from "@/context/ProjectContext";
+import { useUser } from "@/context/UserContext";
+import { insertTask } from "@/repository/repository-tasks";
 
 type CreateTaskItemProps = {
   onModalClose: () => void;
+  newStatus: TaskStatus;
+  onStatus: (s: TaskStatus) => void;
 };
 
-export default function CreateTaskModal({ onModalClose }: CreateTaskItemProps) {
+export default function CreateTaskModal({
+  onModalClose,
+  newStatus,
+  onStatus,
+}: CreateTaskItemProps) {
   const [title, setTitle] = useState<string>("New Task");
-
-  const [status, setStatus] = useState<TaskStatus>("backlog");
+  const [description, setDescription] = useState<string>("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
 
-  const handleStatus = (value: TaskStatus) => {
-    setStatus(value);
-  };
+  const { selectedProject, addTask } = useProject();
+  const { user } = useUser();
 
   const handlePriority = (value: TaskPriority) => {
     setPriority(value);
+  };
+
+  const handleDescription = (value: string) => {
+    setDescription(value);
   };
 
   const handelTitleChange = (text: string) => {
@@ -31,6 +42,19 @@ export default function CreateTaskModal({ onModalClose }: CreateTaskItemProps) {
   };
 
   const handleConfirm = () => {
+    if (!selectedProject || !user) return;
+
+    const dataToSend: Omit<Task, "id"> = {
+      projectId: selectedProject.id,
+      creatorId: user.id,
+      title: title,
+      description: description,
+      status: newStatus,
+      priority: priority,
+    };
+
+    addTask(dataToSend);
+
     showSuccess("Task Added!");
     onModalClose();
   };
@@ -43,8 +67,10 @@ export default function CreateTaskModal({ onModalClose }: CreateTaskItemProps) {
       onConfirm={handleConfirm}
     >
       <TaskModalForm
-        status={status}
-        onStatus={handleStatus}
+        description={description}
+        onDescription={handleDescription}
+        status={newStatus}
+        onStatus={onStatus}
         priority={priority}
         onPriority={handlePriority}
       />
