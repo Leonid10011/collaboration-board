@@ -18,3 +18,15 @@ export const TaskSchemaDB = z.object({
   created_at: DateSchema,
   updated_at: DateSchema,
 });
+
+export const TaskSchema = z.object({
+  projectId: z.uuid(),
+  creatorId: z.uuid(),
+  assgineeId: z.uuid().optional().nullable(),
+  title: z.string().min(1),
+  description: z.string().optional().nullable(),
+  status: z.enum(TASK_STATUSES),
+  priority: z.enum(TASK_PRIORITIES),
+});
+
+export const UpdateTaskSchema = TaskSchema.partial();
