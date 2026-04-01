@@ -5,11 +5,14 @@ import Column from "./taskboard/Column";
 import { useProject } from "@/context/ProjectContext";
 import { Task, TASK_STATUSES, TaskStatus } from "@/domain/tasks";
 import CreateTaskModal from "./taskboard/CreateTaskModal";
+import { useTask } from "@/context/TaskContext";
 
 export default function TaskBoard() {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
-  const { projectTasks: tasks, projectMembers: members } = useProject();
+  const { projectTasks: tasks } = useTask();
+
+  const { projectMembers: members } = useProject();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 

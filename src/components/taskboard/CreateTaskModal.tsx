@@ -1,11 +1,16 @@
 import { useState } from "react";
 import ModalShell from "../modal/ModalShell";
-import { showError, showSuccess } from "@/lib/toast";
+import { showSuccess } from "@/lib/toast";
 import TaskModalForm from "./createTaskModal/TaskModalForm";
-import { Task, TaskPriority, TaskStatus } from "@/domain/tasks";
+import {
+  CreateTaskInput,
+  Task,
+  TaskPriority,
+  TaskStatus,
+} from "@/domain/tasks";
 import { useProject } from "@/context/ProjectContext";
 import { useUser } from "@/context/UserContext";
-import { insertTask } from "@/repository/repository-tasks";
+import { useTask } from "@/context/TaskContext";
 
 type CreateTaskItemProps = {
   onModalClose: () => void;
@@ -22,8 +27,9 @@ export default function CreateTaskModal({
   const [description, setDescription] = useState<string>("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
 
-  const { selectedProject, addTask } = useProject();
+  const { selectedProject } = useProject();
   const { user } = useUser();
+  const { saveTask } = useTask();
 
   const handlePriority = (value: TaskPriority) => {
     setPriority(value);
@@ -44,7 +50,7 @@ export default function CreateTaskModal({
   const handleConfirm = () => {
     if (!selectedProject || !user) return;
 
-    const dataToSend: Omit<Task, "id"> = {
+    const dataToSend: CreateTaskInput = {
       projectId: selectedProject.id,
       creatorId: user.id,
       title: title,
@@ -53,7 +59,7 @@ export default function CreateTaskModal({
       priority: priority,
     };
 
-    addTask(dataToSend);
+    saveTask(dataToSend);
 
     showSuccess("Task Added!");
     onModalClose();
