@@ -5,6 +5,29 @@ import { CreateTaskInput, Task, UpdateTaskInput } from "@/domain/tasks";
 
 const supabase = createSupabaseBrowserClient();
 
+type SupabaseErrorLike = {
+  code?: string;
+  message?: string;
+  details?: string;
+  hint?: string;
+};
+
+const formatSupabaseError = (error: unknown): string => {
+  if (!error || typeof error !== "object") {
+    return String(error);
+  }
+
+  const e = error as SupabaseErrorLike;
+  return [
+    e.code ? `code=${e.code}` : null,
+    e.message ? `message=${e.message}` : null,
+    e.details ? `details=${e.details}` : null,
+    e.hint ? `hint=${e.hint}` : null,
+  ]
+    .filter(Boolean)
+    .join(" | ");
+};
+
 export const getTasksByProjectId = async (
   projectId: string,
 ): Promise<Task[]> => {
@@ -16,7 +39,9 @@ export const getTasksByProjectId = async (
     .returns<TaskDB[]>();
 
   if (error) {
-    throw new Error("Error fetching task data from db.");
+    throw new Error(
+      `Error fetching task data from db: ${formatSupabaseError(error)}`,
+    );
   }
 
   try {
@@ -48,9 +73,7 @@ export const insertTaskRepo = async (task: CreateTaskInput): Promise<Task> => {
     .single();
 
   if (error) {
-    throw new Error(
-      `Error inserting task: ${error instanceof Error ? error.message : String(error)}`,
-    );
+    throw new Error(`Error inserting task: ${formatSupabaseError(error)}`);
   }
 
   return mapTaskDBToTask(data);
@@ -60,9 +83,7 @@ export const deleteTaskRepo = async (taskId: string): Promise<void> => {
   const { error } = await supabase.from("tasks").delete().eq("id", taskId);
 
   if (error) {
-    throw new Error(
-      `Error deleting task: ${error instanceof Error ? error.message : String(error)}`,
-    );
+    throw new Error(`Error deleting task: ${formatSupabaseError(error)}`);
   }
 };
 
@@ -93,9 +114,7 @@ export const updateTaskRepo = async (
     .single();
 
   if (error) {
-    throw new Error(
-      `Error updating task: ${error instanceof Error ? error.message : String(error)}`,
-    );
+    throw new Error(`Error updating task: ${formatSupabaseError(error)}`);
   }
   return mapTaskDBToTask(data);
 };
