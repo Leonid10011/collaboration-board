@@ -84,12 +84,12 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
   };
 
   return (
-    <ModalShell
-      title={projectTitle}
-      onTitleChange={handleTitleChange}
-      onConfirm={handleCreateProject}
-      onClose={onClose}
-    >
+    <ModalShell onConfirm={handleCreateProject} onClose={onClose}>
+      <input
+        placeholder={projectTitle}
+        className="w-full text-4xl font-bold placeholder-gray-300 border-none outline-none bg transparent focus:ring-0 mb-8"
+        onChange={(e) => handleTitleChange(e.currentTarget.value)}
+      />
       <div className="flex flex-col gap-4">
         <TextareaField
           label="Description"
