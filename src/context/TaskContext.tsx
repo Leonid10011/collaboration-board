@@ -24,10 +24,10 @@ type TaskContextType = {
   selectedTask: Task | null;
 
   //Actions
-  selectTask: (task: Task | null) => void;
+  selectTask: (taskId: string) => void;
   saveTask: (task: CreateTaskInput) => void;
   patchTask: (taskId: string, task: UpdateTaskInput) => void;
-  takeTask: (taskId: string) => void;
+  takeTask: (taskId: string, assigneeId?: string) => void;
   removeTask: (taskId: string) => void;
 };
 
@@ -67,8 +67,11 @@ export function TaskProvider({ children }: TaskProviderProps) {
     void fetchTasks().catch(console.error);
   }, [fetchTasks]);
 
-  const handleSetSelectedTask = (task: Task | null) => {
-    setSelectedTask(task);
+  const handleSetSelectedTask = (taskId: string | null) => {
+    const foundTask = projectTasks.find((p) => p.id === taskId);
+
+    if (!foundTask) return;
+    setSelectedTask(foundTask);
   };
 
   const saveTask = async (task: CreateTaskInput): Promise<void> => {
@@ -115,12 +118,13 @@ export function TaskProvider({ children }: TaskProviderProps) {
     }
   };
 
-  const takeTask = async (taskId: string) => {
+  const takeTask = async (taskId: string, assigneeId?: string) => {
     const validated = IdSchema.safeParse(taskId);
     if (!validated.success) throw new Error(validated.error.message);
 
     try {
-      await updateTaskRepo(taskId, { assgineeId: user?.id });
+      const finalAssigneeId = assigneeId ?? user?.id;
+      await updateTaskRepo(taskId, { assgineeId: finalAssigneeId });
       await fetchTasks();
     } catch (error) {
       const message =
