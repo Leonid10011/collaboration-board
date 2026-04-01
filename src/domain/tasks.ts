@@ -14,3 +14,6 @@ export type Task = {
   status: TaskStatus;
   priority: TaskPriority;
 };
+
+export type CreateTaskInput = Omit<Task, "id">;
+export type UpdateTaskInput = Partial<CreateTaskInput>;
