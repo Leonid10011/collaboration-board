@@ -12,6 +12,7 @@ type ColumnProp = {
   userMap: Map<string, User> | null;
   onModalOpen: () => void;
   onAdd: (s: TaskStatus) => void;
+  onUpdateModalOpen: () => void;
 };
 
 export default function Column({
@@ -21,17 +22,32 @@ export default function Column({
   userMap,
   onModalOpen,
   onAdd,
+  onUpdateModalOpen,
 }: ColumnProp) {
   const handleClick = () => {
     onAdd(status);
     onModalOpen();
   };
 
-  const { takeTask } = useTask();
+  const { takeTask, selectTask } = useTask();
+
+  const handleTaskClick = (taskId: string) => {
+    selectTask(taskId);
+    onUpdateModalOpen();
+  };
 
   const handleTakeTask = (taskId: string) => {
     try {
       takeTask(taskId);
+    } catch (error) {
+      showError(`Error ${error}`);
+    }
+  };
+
+  const handleAssignTask = (taskId: string, userId: string) => {
+    try {
+      takeTask(taskId, userId);
+      showSuccess("Task assigned.");
     } catch (error) {
       showError(`Error ${error}`);
     }
@@ -65,7 +81,10 @@ export default function Column({
                 ? (userMap.get(t.assgineeId) ?? null)
                 : null
             }
+            availableUsers={userMap ? [...userMap.values()] : []}
             onAction={() => handleTakeTask(t.id)}
+            onAssign={(userId) => handleAssignTask(t.id, userId)}
+            onUpdate={() => handleTaskClick(t.id)}
           />
         ))}
       </div>

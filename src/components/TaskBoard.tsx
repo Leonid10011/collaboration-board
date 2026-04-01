@@ -6,15 +6,17 @@ import { useProject } from "@/context/ProjectContext";
 import { Task, TASK_STATUSES, TaskStatus } from "@/domain/tasks";
 import CreateTaskModal from "./taskboard/CreateTaskModal";
 import { useTask } from "@/context/TaskContext";
+import UpdateTaskModal from "./taskboard/UpdateTaskModal";
 
 export default function TaskBoard() {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
-  const { projectTasks: tasks } = useTask();
+  const { projectTasks: tasks, selectedTask } = useTask();
 
   const { projectMembers: members } = useProject();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
 
   const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>("backlog");
 
@@ -24,6 +26,16 @@ export default function TaskBoard() {
 
   const handleModalOpen = (val: boolean) => {
     setIsModalOpen(val);
+  };
+
+  const handleUpdateModalOpen = (val: boolean) => {
+    console.log("Update: ", val, selectedTask);
+    setIsUpdateModalOpen(val);
+  };
+
+  const isTaskSelected = (task: Task) => {
+    if (!task) return false;
+    return true;
   };
 
   const memberMap = useMemo(() => {
@@ -57,6 +69,7 @@ export default function TaskBoard() {
             tasks={TaskByStatus[c]}
             userMap={memberMap}
             onModalOpen={() => handleModalOpen(true)}
+            onUpdateModalOpen={() => handleUpdateModalOpen(true)}
             onAdd={handleNewTaskStatus}
           />
         ))}
@@ -66,6 +79,12 @@ export default function TaskBoard() {
           onModalClose={() => handleModalOpen(false)}
           newStatus={newTaskStatus}
           onStatus={handleNewTaskStatus}
+        />
+      )}
+      {isUpdateModalOpen && selectedTask && (
+        <UpdateTaskModal
+          onModalClose={() => handleUpdateModalOpen(false)}
+          task={selectedTask}
         />
       )}
     </div>
