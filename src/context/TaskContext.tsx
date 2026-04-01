@@ -16,6 +16,7 @@ import {
 import { useProject } from "./ProjectContext";
 import { showError } from "@/lib/toast";
 import { IdSchema } from "@/validation/global-schema";
+import { useUser } from "./UserContext";
 
 type TaskContextType = {
   // For current project
@@ -26,6 +27,7 @@ type TaskContextType = {
   selectTask: (task: Task | null) => void;
   saveTask: (task: CreateTaskInput) => void;
   patchTask: (taskId: string, task: UpdateTaskInput) => void;
+  takeTask: (taskId: string) => void;
   removeTask: (taskId: string) => void;
 };
 
@@ -48,6 +50,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
   const [projectTasks, setProjectTasks] = useState<Task[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { user } = useUser();
 
   const fetchTasks = useCallback(async () => {
     if (!selectedProject) return;
@@ -112,6 +115,20 @@ export function TaskProvider({ children }: TaskProviderProps) {
     }
   };
 
+  const takeTask = async (taskId: string) => {
+    const validated = IdSchema.safeParse(taskId);
+    if (!validated.success) throw new Error(validated.error.message);
+
+    try {
+      await updateTaskRepo(taskId, { assgineeId: user?.id });
+      await fetchTasks();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "An error occurred";
+      showError(message);
+    }
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -120,6 +137,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
         selectTask: handleSetSelectedTask,
         saveTask,
         patchTask,
+        takeTask,
         removeTask,
       }}
     >
