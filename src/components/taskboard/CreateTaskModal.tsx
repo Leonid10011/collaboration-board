@@ -2,12 +2,7 @@ import { useState } from "react";
 import ModalShell from "../modal/ModalShell";
 import { showSuccess } from "@/lib/toast";
 import TaskModalForm from "./createTaskModal/TaskModalForm";
-import {
-  CreateTaskInput,
-  Task,
-  TaskPriority,
-  TaskStatus,
-} from "@/domain/tasks";
+import { CreateTaskInput, TaskPriority, TaskStatus } from "@/domain/tasks";
 import { useProject } from "@/context/ProjectContext";
 import { useUser } from "@/context/UserContext";
 import { useTask } from "@/context/TaskContext";
@@ -47,7 +42,7 @@ export default function CreateTaskModal({
     onModalClose();
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!selectedProject || !user) return;
 
     const dataToSend: CreateTaskInput = {
@@ -59,7 +54,7 @@ export default function CreateTaskModal({
       priority: priority,
     };
 
-    saveTask(dataToSend);
+    await saveTask(dataToSend);
 
     showSuccess("Task Added!");
     onModalClose();

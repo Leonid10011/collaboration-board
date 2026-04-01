@@ -29,13 +29,7 @@ export default function TaskBoard() {
   };
 
   const handleUpdateModalOpen = (val: boolean) => {
-    console.log("Update: ", val, selectedTask);
     setIsUpdateModalOpen(val);
-  };
-
-  const isTaskSelected = (task: Task) => {
-    if (!task) return false;
-    return true;
   };
 
   const memberMap = useMemo(() => {
@@ -63,7 +57,7 @@ export default function TaskBoard() {
       <div className="flex flex-row gap-x-8 h-full">
         {TASK_STATUSES.map((c, i) => (
           <Column
-            key={i}
+            key={c}
             statusColor={STATUS_COLORS[i]}
             status={c}
             tasks={TaskByStatus[c]}

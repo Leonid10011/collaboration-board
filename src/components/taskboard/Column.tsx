@@ -36,17 +36,18 @@ export default function Column({
     onUpdateModalOpen();
   };
 
-  const handleTakeTask = (taskId: string) => {
+  const handleTakeTask = async (taskId: string) => {
     try {
-      takeTask(taskId);
+      await takeTask(taskId);
+      showSuccess("Task assigned.");
     } catch (error) {
       showError(`Error ${error}`);
     }
   };
 
-  const handleAssignTask = (taskId: string, userId: string) => {
+  const handleAssignTask = async (taskId: string, userId: string) => {
     try {
-      takeTask(taskId, userId);
+      await takeTask(taskId, userId);
       showSuccess("Task assigned.");
     } catch (error) {
       showError(`Error ${error}`);

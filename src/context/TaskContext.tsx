@@ -24,11 +24,11 @@ type TaskContextType = {
   selectedTask: Task | null;
 
   //Actions
-  selectTask: (taskId: string) => void;
-  saveTask: (task: CreateTaskInput) => void;
-  patchTask: (taskId: string, task: UpdateTaskInput) => void;
-  takeTask: (taskId: string, assigneeId?: string) => void;
-  removeTask: (taskId: string) => void;
+  selectTask: (taskId: string | null) => void;
+  saveTask: (task: CreateTaskInput) => Promise<void>;
+  patchTask: (taskId: string, task: UpdateTaskInput) => Promise<void>;
+  takeTask: (taskId: string, assigneeId?: string) => Promise<void>;
+  removeTask: (taskId: string) => Promise<void>;
 };
 
 export const TaskContext = createContext<TaskContextType | null>(null);
@@ -83,7 +83,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
     try {
       await insertTaskRepo(validated.data);
-      fetchTasks();
+      await fetchTasks();
     } catch (error) {
       throw new Error(`Error: ${error}`);
     }
@@ -95,8 +95,8 @@ export function TaskProvider({ children }: TaskProviderProps) {
       throw new Error(`Error validating taskId: ${validated.error.message}`);
 
     try {
-      deleteTaskRepo(taskId);
-      fetchTasks();
+      await deleteTaskRepo(taskId);
+      await fetchTasks();
     } catch (error) {
       throw new Error(`Error deleting task for taskId ${taskId}: ${error}`);
     }

@@ -1,9 +1,6 @@
 import { useProject } from "@/context/ProjectContext";
-import { useTask } from "@/context/TaskContext";
-import { useUser } from "@/context/UserContext";
 import { TaskPriority } from "@/domain/tasks";
 import { User } from "@/domain/users";
-import { showSuccess } from "@/lib/toast";
 import { User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
