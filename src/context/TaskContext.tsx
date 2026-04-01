@@ -21,10 +21,8 @@ import { useUser } from "./UserContext";
 type TaskContextType = {
   // For current project
   projectTasks: Task[];
-  selectedTask: Task | null;
 
   //Actions
-  selectTask: (taskId: string | null) => void;
   saveTask: (task: CreateTaskInput) => Promise<void>;
   patchTask: (taskId: string, task: UpdateTaskInput) => Promise<void>;
   takeTask: (taskId: string) => Promise<void>;
@@ -51,7 +49,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
   const { selectedProject } = useProject();
 
   const [projectTasks, setProjectTasks] = useState<Task[]>([]);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
   const { user } = useUser();
 
   const fetchTasks = useCallback(async () => {
@@ -68,13 +66,6 @@ export function TaskProvider({ children }: TaskProviderProps) {
   useEffect(() => {
     void fetchTasks().catch(console.error);
   }, [fetchTasks]);
-
-  const handleSetSelectedTask = (taskId: string | null) => {
-    const foundTask = projectTasks.find((p) => p.id === taskId);
-
-    if (!foundTask) return;
-    setSelectedTask(foundTask);
-  };
 
   const saveTask = async (task: CreateTaskInput): Promise<void> => {
     //validation
@@ -166,8 +157,6 @@ export function TaskProvider({ children }: TaskProviderProps) {
     <TaskContext.Provider
       value={{
         projectTasks,
-        selectedTask,
-        selectTask: handleSetSelectedTask,
         saveTask,
         patchTask,
         takeTask,

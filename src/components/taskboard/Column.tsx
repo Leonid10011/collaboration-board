@@ -13,6 +13,7 @@ type ColumnProp = {
   onModalOpen: () => void;
   onAdd: (s: TaskStatus) => void;
   onUpdateModalOpen: () => void;
+  onSelectedTask: (taskId: string) => void;
 };
 
 export default function Column({
@@ -23,16 +24,17 @@ export default function Column({
   onModalOpen,
   onAdd,
   onUpdateModalOpen,
+  onSelectedTask,
 }: ColumnProp) {
   const handleClick = () => {
     onAdd(status);
     onModalOpen();
   };
 
-  const { takeTask, assignTask, unassignTask, selectTask } = useTask();
+  const { takeTask, assignTask, unassignTask } = useTask();
 
   const handleTaskClick = (taskId: string) => {
-    selectTask(taskId);
+    onSelectedTask(taskId);
     onUpdateModalOpen();
   };
 
