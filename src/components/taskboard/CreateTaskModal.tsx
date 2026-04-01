@@ -66,12 +66,12 @@ export default function CreateTaskModal({
   };
 
   return (
-    <ModalShell
-      title={title}
-      onTitleChange={handelTitleChange}
-      onClose={handleClose}
-      onConfirm={handleConfirm}
-    >
+    <ModalShell onClose={handleClose} onConfirm={handleConfirm}>
+      <input
+        placeholder={title}
+        className="w-full text-4xl font-bold placeholder-gray-300 border-none outline-none bg transparent focus:ring-0 mb-8"
+        onChange={(e) => handelTitleChange(e.currentTarget.value)}
+      />
       <TaskModalForm
         description={description}
         onDescription={handleDescription}
