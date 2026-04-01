@@ -29,7 +29,7 @@ export default function Column({
     onModalOpen();
   };
 
-  const { takeTask, selectTask } = useTask();
+  const { takeTask, assignTask, unassignTask, selectTask } = useTask();
 
   const handleTaskClick = (taskId: string) => {
     selectTask(taskId);
@@ -47,15 +47,24 @@ export default function Column({
 
   const handleAssignTask = async (taskId: string, userId: string) => {
     try {
-      await takeTask(taskId, userId);
+      await assignTask(taskId, userId);
       showSuccess("Task assigned.");
     } catch (error) {
       showError(`Error ${error}`);
     }
   };
 
+  const handleUnassignTask = async (taskId: string) => {
+    try {
+      await unassignTask(taskId);
+      showSuccess("Task unassigned.");
+    } catch (error) {
+      showError(`Error ${error}`);
+    }
+  };
+
   return (
-    <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260x] md:min-w-[300px] flex-1 rounded px-4 py-2">
+    <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260px] md:min-w-[300px] flex-1 rounded px-4 py-2">
       {/* Column Header*/}
       <div className="flex flex-row justify-between">
         <div className="flex flex-row gap-2 justify-start items-center">
@@ -85,6 +94,7 @@ export default function Column({
             availableUsers={userMap ? [...userMap.values()] : []}
             onAction={() => handleTakeTask(t.id)}
             onAssign={(userId) => handleAssignTask(t.id, userId)}
+            onUnassign={() => handleUnassignTask(t.id)}
             onUpdate={() => handleTaskClick(t.id)}
           />
         ))}

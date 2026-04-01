@@ -12,6 +12,7 @@ type TaskItemProps = {
   availableUsers: User[];
   onAction: () => void;
   onAssign: (userId: string) => void;
+  onUnassign: () => void;
   onUpdate: () => void;
 };
 
@@ -22,6 +23,7 @@ export default function TaskItem({
   availableUsers,
   onAction,
   onAssign,
+  onUnassign,
   onUpdate,
 }: TaskItemProps) {
   const [isAssignOpen, setIsAssignOpen] = useState(false);
@@ -32,7 +34,8 @@ export default function TaskItem({
   const canOpenAssign = isAdmin;
   const avatarClassName = `rounded-full ${isAdmin ? "hover:cursor-pointer" : ""}`;
 
-  const handleAvatarClick = () => {
+  const handleAvatarClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!canOpenAssign) return;
     setIsAssignOpen((prev) => !prev);
   };
@@ -87,8 +90,26 @@ export default function TaskItem({
           )}
 
           {isAssignOpen && (
-            <div className="absolute top-10 right-0 z-20 w-48 rounded-md border border-white/10 bg-main-2 p-2 shadow-lg">
+            <div
+              className="absolute top-10 right-0 z-20 w-48 rounded-md border border-white/10 bg-main-2 p-2 shadow-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
               <p className="px-2 pb-1 text-xs text-gray-300">Assign user</p>
+              {user && (
+                <>
+                  <button
+                    type="button"
+                    className="w-full rounded px-2 py-1 text-left text-sm text-red-300 hover:bg-main-1"
+                    onClick={() => {
+                      onUnassign();
+                      setIsAssignOpen(false);
+                    }}
+                  >
+                    Unassign
+                  </button>
+                  <div className="my-1 h-px bg-white/10" />
+                </>
+              )}
               <div className="max-h-44 overflow-y-auto">
                 {availableUsers.length > 0 ? (
                   availableUsers.map((candidate) => (

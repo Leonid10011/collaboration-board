@@ -27,7 +27,9 @@ type TaskContextType = {
   selectTask: (taskId: string | null) => void;
   saveTask: (task: CreateTaskInput) => Promise<void>;
   patchTask: (taskId: string, task: UpdateTaskInput) => Promise<void>;
-  takeTask: (taskId: string, assigneeId?: string) => Promise<void>;
+  takeTask: (taskId: string) => Promise<void>;
+  assignTask: (taskId: string, userId: string) => Promise<void>;
+  unassignTask: (taskId: string) => Promise<void>;
   removeTask: (taskId: string) => Promise<void>;
 };
 
@@ -118,13 +120,40 @@ export function TaskProvider({ children }: TaskProviderProps) {
     }
   };
 
-  const takeTask = async (taskId: string, assigneeId?: string) => {
+  const takeTask = async (taskId: string) => {
     const validated = IdSchema.safeParse(taskId);
     if (!validated.success) throw new Error(validated.error.message);
 
     try {
-      const finalAssigneeId = assigneeId ?? user?.id;
-      await updateTaskRepo(taskId, { assgineeId: finalAssigneeId });
+      await updateTaskRepo(taskId, { assgineeId: user?.id });
+      await fetchTasks();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "An error occurred";
+      showError(message);
+    }
+  };
+
+  const assignTask = async (taskId: string, userId: string) => {
+    const validated = IdSchema.safeParse(taskId);
+    if (!validated.success) throw new Error(validated.error.message);
+
+    try {
+      await updateTaskRepo(taskId, { assgineeId: userId });
+      await fetchTasks();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "An error occurred";
+      showError(message);
+    }
+  };
+
+  const unassignTask = async (taskId: string) => {
+    const validated = IdSchema.safeParse(taskId);
+    if (!validated.success) throw new Error(validated.error.message);
+
+    try {
+      await updateTaskRepo(taskId, { assgineeId: null });
       await fetchTasks();
     } catch (error) {
       const message =
@@ -142,6 +171,8 @@ export function TaskProvider({ children }: TaskProviderProps) {
         saveTask,
         patchTask,
         takeTask,
+        assignTask,
+        unassignTask,
         removeTask,
       }}
     >
