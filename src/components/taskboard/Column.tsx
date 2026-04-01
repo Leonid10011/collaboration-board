@@ -2,7 +2,8 @@ import { Task, TaskStatus } from "@/domain/tasks";
 import { User } from "@/domain/users";
 import { Circle, SquarePlus } from "lucide-react";
 import TaskItem from "./column/TaskItem";
-import { showSuccess } from "@/lib/toast";
+import { showError, showSuccess } from "@/lib/toast";
+import { useTask } from "@/context/TaskContext";
 
 type ColumnProp = {
   statusColor: string;
@@ -24,6 +25,16 @@ export default function Column({
   const handleClick = () => {
     onAdd(status);
     onModalOpen();
+  };
+
+  const { takeTask } = useTask();
+
+  const handleTakeTask = (taskId: string) => {
+    try {
+      takeTask(taskId);
+    } catch (error) {
+      showError(`Error ${error}`);
+    }
   };
 
   return (
@@ -54,9 +65,7 @@ export default function Column({
                 ? (userMap.get(t.assgineeId) ?? null)
                 : null
             }
-            onAction={() => {
-              showSuccess("Took Task (WIP)");
-            }}
+            onAction={() => handleTakeTask(t.id)}
           />
         ))}
       </div>
