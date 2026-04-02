@@ -1,43 +1,71 @@
-import { useProject } from "@/context/ProjectContext";
 import { TaskPriority } from "@/domain/tasks";
-import { User } from "@/domain/users";
 import { User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import AssignPopup from "./taskItem/AssignPopup";
+import PriorityPopup from "./taskItem/PriorityPopup";
 
 type TaskItemProps = {
   title: string;
   priority: TaskPriority;
-  user: User | null;
-  availableUsers: User[];
+  priorityOptions: readonly TaskPriority[];
+  assignedUserName: string | null;
+  assignedUserImageUrl: string | null;
+  availableAssignees: { id: string; label: string }[];
   onAction: () => void;
   onAssign: (userId: string) => void;
   onUnassign: () => void;
   onUpdate: () => void;
+  onPriority: (priority: TaskPriority) => void;
+  canAssign: boolean;
 };
 
 export default function TaskItem({
   title,
   priority,
-  user,
-  availableUsers,
+  priorityOptions,
+  assignedUserName,
+  assignedUserImageUrl,
+  availableAssignees,
   onAction,
   onAssign,
   onUnassign,
   onUpdate,
+  onPriority,
+  canAssign,
 }: TaskItemProps) {
   const [isAssignOpen, setIsAssignOpen] = useState(false);
   const assignRef = useRef<HTMLDivElement | null>(null);
-  const { userRole } = useProject();
 
-  const isAdmin = userRole === "admin";
-  const canOpenAssign = isAdmin;
-  const avatarClassName = `rounded-full ${isAdmin ? "hover:cursor-pointer" : ""}`;
+  const [isPriorityOpen, setIsPriorityOpen] = useState<boolean>(false);
+  const priorityRef = useRef<HTMLDivElement | null>(null);
+
+  const avatarClassName = `rounded-full ${canAssign ? "hover:cursor-pointer" : ""}`;
 
   const handleAvatarClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!canOpenAssign) return;
+    if (!canAssign) return;
     setIsAssignOpen((prev) => !prev);
+  };
+
+  const handlePriorityClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsPriorityOpen((prev) => !prev);
+  };
+
+  const handleUnassign = () => {
+    onUnassign();
+    setIsAssignOpen(false);
+  };
+
+  const handleAssign = (_id: string) => {
+    onAssign(_id);
+    setIsAssignOpen(false);
+  };
+
+  const handlePriority = (_priority: TaskPriority) => {
+    onPriority(_priority);
+    setIsPriorityOpen(false);
   };
 
   useEffect(() => {
@@ -57,6 +85,23 @@ export default function TaskItem({
     };
   }, [isAssignOpen]);
 
+  useEffect(() => {
+    const onOutsideClick = (event: MouseEvent) => {
+      if (!priorityRef.current) return;
+      if (!priorityRef.current.contains(event.target as Node)) {
+        setIsPriorityOpen(false);
+      }
+    };
+
+    if (isPriorityOpen) {
+      document.addEventListener("mousedown", onOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", onOutsideClick);
+    };
+  }, [isPriorityOpen]);
+
   return (
     <div className="relative bg-main-1">
       <div
@@ -65,13 +110,21 @@ export default function TaskItem({
       >
         <div className="flex flex-col gap-6">
           <h3 className="text-xl font-semibold">{title}</h3>
-          <span>{priority}</span>
+          <div className="relative hover:cursor-pointer" ref={priorityRef}>
+            <span onClick={handlePriorityClick}>{priority}</span>
+            {isPriorityOpen && (
+              <PriorityPopup
+                priorityOptions={priorityOptions}
+                onPriority={handlePriority}
+              />
+            )}
+          </div>
         </div>
         <div
           className="relative flex flex-col gap-2 items-center"
           ref={assignRef}
         >
-          {user ? (
+          {assignedUserImageUrl ? (
             <Image
               width={32}
               height={32}
@@ -84,58 +137,22 @@ export default function TaskItem({
             <UserIcon
               width={32}
               height={32}
-              className={`rounded-full hover:bg-gray-700/50 p-1 ${isAdmin ? "hover:cursor-pointer" : ""}`}
+              className={`rounded-full hover:bg-gray-700/50 p-1 ${canAssign ? "hover:cursor-pointer" : ""}`}
               onClick={handleAvatarClick}
             />
           )}
 
           {isAssignOpen && (
-            <div
-              className="absolute top-10 right-0 z-20 w-48 rounded-md border border-white/10 bg-main-2 p-2 shadow-lg"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <p className="px-2 pb-1 text-xs text-gray-300">Assign user</p>
-              {user && (
-                <>
-                  <button
-                    type="button"
-                    className="w-full rounded px-2 py-1 text-left text-sm text-red-300 hover:bg-main-1"
-                    onClick={() => {
-                      onUnassign();
-                      setIsAssignOpen(false);
-                    }}
-                  >
-                    Unassign
-                  </button>
-                  <div className="my-1 h-px bg-white/10" />
-                </>
-              )}
-              <div className="max-h-44 overflow-y-auto">
-                {availableUsers.length > 0 ? (
-                  availableUsers.map((candidate) => (
-                    <button
-                      key={candidate.id}
-                      type="button"
-                      className="w-full rounded px-2 py-1 text-left text-sm hover:bg-main-1"
-                      onClick={() => {
-                        onAssign(candidate.id);
-                        setIsAssignOpen(false);
-                      }}
-                    >
-                      {candidate.userName}
-                    </button>
-                  ))
-                ) : (
-                  <p className="px-2 py-1 text-sm text-gray-400">
-                    No members available
-                  </p>
-                )}
-              </div>
-            </div>
+            <AssignPopup
+              assignedUserName={assignedUserName}
+              onUnassign={handleUnassign}
+              onAssign={handleAssign}
+              availableAssignees={availableAssignees}
+            />
           )}
 
           <span className="text-sm">
-            {user ? user.userName : "Not assigned"}
+            {assignedUserName ? assignedUserName : "Not assigned"}
           </span>
         </div>
       </div>
