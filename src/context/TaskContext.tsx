@@ -1,4 +1,9 @@
-import { CreateTaskInput, Task, UpdateTaskInput } from "@/domain/tasks";
+import {
+  CreateTaskInput,
+  Task,
+  TaskPriority,
+  UpdateTaskInput,
+} from "@/domain/tasks";
 import {
   deleteTaskRepo,
   getTasksByProjectId,
@@ -29,6 +34,7 @@ type TaskContextType = {
   assignTask: (taskId: string, userId: string) => Promise<void>;
   unassignTask: (taskId: string) => Promise<void>;
   removeTask: (taskId: string) => Promise<void>;
+  changePriority: (taskId: string, priority: TaskPriority) => Promise<void>;
 };
 
 export const TaskContext = createContext<TaskContextType | null>(null);
@@ -153,6 +159,17 @@ export function TaskProvider({ children }: TaskProviderProps) {
     }
   };
 
+  const changePriority = async (taskId: string, p: TaskPriority) => {
+    try {
+      await updateTaskRepo(taskId, { priority: p });
+      await fetchTasks();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "An error occured";
+      throw new Error(message);
+    }
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -163,6 +180,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
         assignTask,
         unassignTask,
         removeTask,
+        changePriority,
       }}
     >
       {children}
