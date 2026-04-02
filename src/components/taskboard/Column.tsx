@@ -1,9 +1,15 @@
-import { Task, TaskStatus } from "@/domain/tasks";
+import {
+  Task,
+  TASK_PRIORITIES,
+  TaskPriority,
+  TaskStatus,
+} from "@/domain/tasks";
 import { User } from "@/domain/users";
 import { Circle, SquarePlus } from "lucide-react";
 import TaskItem from "./column/TaskItem";
 import { showError, showSuccess } from "@/lib/toast";
 import { useTask } from "@/context/TaskContext";
+import { useProject } from "@/context/ProjectContext";
 
 type ColumnProp = {
   statusColor: string;
@@ -31,7 +37,9 @@ export default function Column({
     onModalOpen();
   };
 
-  const { takeTask, assignTask, unassignTask } = useTask();
+  const { takeTask, assignTask, unassignTask, changePriority } = useTask();
+
+  const { userRole } = useProject();
 
   const handleTaskClick = (taskId: string) => {
     onSelectedTask(taskId);
@@ -65,6 +73,19 @@ export default function Column({
     }
   };
 
+  const handleChangePriority = async (
+    taskId: string,
+    taskPriority: TaskPriority,
+  ) => {
+    try {
+      showSuccess("Changing priority ... ");
+      await changePriority(taskId, taskPriority);
+      showSuccess("Priotiy changed.");
+    } catch (error) {
+      showError(`Error ${error}`);
+    }
+  };
+
   return (
     <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260px] md:min-w-[300px] flex-1 rounded px-4 py-2">
       {/* Column Header*/}
@@ -88,16 +109,33 @@ export default function Column({
             key={t.id}
             title={t.title}
             priority={t.priority}
-            user={
+            priorityOptions={TASK_PRIORITIES}
+            assignedUserName={
               t.assgineeId && userMap
-                ? (userMap.get(t.assgineeId) ?? null)
+                ? (userMap.get(t.assgineeId)?.userName ?? null)
                 : null
             }
-            availableUsers={userMap ? [...userMap.values()] : []}
+            assignedUserImageUrl={
+              t.assgineeId && userMap
+                ? (userMap.get(t.assgineeId)?.imgUrl ?? null)
+                : null
+            }
+            availableAssignees={
+              userMap
+                ? [...userMap.values()].map((u) => ({
+                    id: u.id,
+                    label: u.userName,
+                  }))
+                : []
+            }
             onAction={() => handleTakeTask(t.id)}
             onAssign={(userId) => handleAssignTask(t.id, userId)}
             onUnassign={() => handleUnassignTask(t.id)}
             onUpdate={() => handleTaskClick(t.id)}
+            onPriority={(taskPriority: TaskPriority) =>
+              handleChangePriority(t.id, taskPriority)
+            }
+            canAssign={userRole === "admin"}
           />
         ))}
       </div>
