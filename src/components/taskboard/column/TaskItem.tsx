@@ -5,6 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import AssignPopup from "./taskItem/AssignPopup";
 import PriorityPopup from "./taskItem/PriorityPopup";
 import { toUpper } from "@/lib/utils";
+import {
+  Card,
+  CardAction,
+  CardItem,
+  CardSplit,
+  CardTitle,
+} from "@/components/ui/card/Card";
 
 type TaskItemProps = {
   title: string;
@@ -28,11 +35,11 @@ export default function TaskItem({
   assignedUserName,
   assignedUserImageUrl,
   availableAssignees,
-  onAction,
   onAssign,
   onUnassign,
   onUpdate,
   onPriority,
+  onAction,
   canAssign,
 }: TaskItemProps) {
   const [isAssignOpen, setIsAssignOpen] = useState(false);
@@ -104,27 +111,28 @@ export default function TaskItem({
   }, [isPriorityOpen]);
 
   return (
-    <div className="relative bg-main-1">
-      <div
-        className="flex flex-row p-4 w-full justify-between"
-        onClick={onUpdate}
-      >
-        <div className="flex flex-col gap-2">
-          <h3 className="text-lg font-medium">{title}</h3>
-          <div className="relative hover:cursor-pointer" ref={priorityRef}>
-            <span onClick={handlePriorityClick} className="text-sm">
+    <Card className="relative">
+      <CardSplit onClick={onUpdate}>
+        {/*Left */}
+        <div className="flex flex-col">
+          <CardItem>
+            <CardTitle>{title}</CardTitle>
+          </CardItem>
+          <CardItem className="relative" ref={priorityRef}>
+            <div onClick={handlePriorityClick} className="text-sm">
               {toUpper(priority)}
-            </span>
+            </div>
             {isPriorityOpen && (
               <PriorityPopup
                 priorityOptions={priorityOptions}
                 onPriority={handlePriority}
               />
             )}
-          </div>
+          </CardItem>
         </div>
+        {/* Right */}
         <div
-          className="relative flex flex-col gap-2 items-center"
+          className="relative flex flex-col gap-2 items-center w-[80px]"
           ref={assignRef}
         >
           {assignedUserImageUrl ? (
@@ -154,19 +162,22 @@ export default function TaskItem({
             />
           )}
 
-          <span className="text-sm">
-            {assignedUserName ? assignedUserName : "Not assigned"}
-          </span>
+          {assignedUserName ? (
+            <CardItem onClick={(e) => e.stopPropagation()}>
+              {assignedUserName}
+            </CardItem>
+          ) : (
+            <CardAction
+              onClick={(e) => {
+                e.stopPropagation();
+                onAction();
+              }}
+            >
+              Take
+            </CardAction>
+          )}
         </div>
-      </div>
-      <div className="flex flex-row flex-1 justify-end p-4">
-        <div
-          className="p-2 bg-main-2 rounded-md hover:cursor-pointer hover:shadow-sm"
-          onClick={onAction}
-        >
-          Take Task
-        </div>
-      </div>
-    </div>
+      </CardSplit>
+    </Card>
   );
 }
