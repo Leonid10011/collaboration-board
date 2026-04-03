@@ -4,14 +4,17 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useUser } from "./UserContext";
 import {
   getMemberRoleOfProject,
+  getMembershipsByProjectId,
   getMembershipsByUserId,
 } from "@/repository/repository-project-memberships";
 import { Membership } from "@/domain/memberships";
+import { Member, User } from "@/domain/users";
 
 type ProjectContextType = {
   projectTitle: string | null;
   selectedProject: Project | null;
   changeSelectedProject: (id: string) => void;
+  projectMembers: User[] | null;
   userRole: string | null;
   projects: Project[];
   userProjects: Project[];
@@ -38,8 +41,18 @@ export function ProjectProvider({ children }: ProjectProviderType) {
   );
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userMemberships, setUserMemberships] = useState<Membership[]>([]);
+  const [selectedProjectMemberships, setSelectedProjectMemberships] = useState<
+    Member[]
+  >([]);
 
   const { user } = useUser();
+
+  const selectedProject = useMemo(() => {
+    if (!projects) return null;
+    const currentProjectTmp = projects.find((p) => p.id === selectedProjectId);
+    if (!currentProjectTmp) return null;
+    return currentProjectTmp;
+  }, [projects, selectedProjectId]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -84,17 +97,27 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     fetchUserRole();
   }, [selectedProjectId, user]);
 
+  useEffect(() => {
+    if (!selectedProjectId) return;
+    const fetchMemberships = async () => {
+      try {
+        const result = await getMembershipsByProjectId(selectedProjectId);
+
+        if (!result) return;
+
+        setSelectedProjectMemberships(result);
+      } catch (error) {
+        throw new Error(`Error: ${error}`);
+      }
+    };
+
+    fetchMemberships();
+  }, [selectedProjectId]);
+
   /* Selected Project */
   const changeSelectedProject = (projectId: string) => {
     setSelectedProjectId(projectId);
   };
-
-  const selectedProject = useMemo(() => {
-    if (!projects) return null;
-    const currentProjectTmp = projects.find((p) => p.id === selectedProjectId);
-    if (!currentProjectTmp) return null;
-    return currentProjectTmp;
-  }, [projects, selectedProjectId]);
 
   /* User Projects */
   const userProjects = useMemo(() => {
@@ -112,6 +135,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
       value={{
         userProjects,
         selectedProject,
+        projectMembers: selectedProjectMemberships,
         projects,
         projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,

@@ -1,62 +1,142 @@
+import {
+  Task,
+  TASK_PRIORITIES,
+  TaskPriority,
+  TaskStatus,
+} from "@/domain/tasks";
+import { User } from "@/domain/users";
 import { Circle, SquarePlus } from "lucide-react";
+import TaskItem from "./column/TaskItem";
+import { showError, showSuccess } from "@/lib/toast";
+import { useTask } from "@/context/TaskContext";
+import { useProject } from "@/context/ProjectContext";
 
 type ColumnProp = {
   statusColor: string;
-  name: string;
-  count: number;
+  status: TaskStatus;
+  tasks: Task[];
+  userMap: Map<string, User> | null;
+  onModalOpen: () => void;
+  onAdd: (s: TaskStatus) => void;
+  onUpdateModalOpen: () => void;
+  onSelectedTask: (taskId: string) => void;
 };
 
-/* Example Tasks. Will be replaced with context data */
-const mockTasks = [
-  {
-    id: 1,
-    title: "Task 1",
-    description: "Description for Task 1",
-  },
-  {
-    id: 2,
-    title: "Task 2",
-    description: "Description for Task 2",
-  },
-  {
-    id: 3,
-    title: "Task 3",
-    description: "Description for Task 3",
-  },
-];
+export default function Column({
+  statusColor,
+  status,
+  tasks,
+  userMap,
+  onModalOpen,
+  onAdd,
+  onUpdateModalOpen,
+  onSelectedTask,
+}: ColumnProp) {
+  const handleClick = () => {
+    onAdd(status);
+    onModalOpen();
+  };
 
-export default function Column({ statusColor, name, count }: ColumnProp) {
+  const { takeTask, assignTask, unassignTask, changePriority } = useTask();
+
+  const { userRole } = useProject();
+
+  const handleTaskClick = (taskId: string) => {
+    onSelectedTask(taskId);
+    onUpdateModalOpen();
+  };
+
+  const handleTakeTask = async (taskId: string) => {
+    try {
+      await takeTask(taskId);
+      showSuccess("Task assigned.");
+    } catch (error) {
+      showError(`Error ${error}`);
+    }
+  };
+
+  const handleAssignTask = async (taskId: string, userId: string) => {
+    try {
+      await assignTask(taskId, userId);
+      showSuccess("Task assigned.");
+    } catch (error) {
+      showError(`Error ${error}`);
+    }
+  };
+
+  const handleUnassignTask = async (taskId: string) => {
+    try {
+      await unassignTask(taskId);
+      showSuccess("Task unassigned.");
+    } catch (error) {
+      showError(`Error ${error}`);
+    }
+  };
+
+  const handleChangePriority = async (
+    taskId: string,
+    taskPriority: TaskPriority,
+  ) => {
+    try {
+      showSuccess("Changing priority ... ");
+      await changePriority(taskId, taskPriority);
+      showSuccess("Priotiy changed.");
+    } catch (error) {
+      showError(`Error ${error}`);
+    }
+  };
+
   return (
-    <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260x] md:min-w-[300px] flex-1 rounded px-4 py-2">
+    <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260px] md:min-w-[300px] flex-1 rounded px-4 py-2">
       {/* Column Header*/}
       <div className="flex flex-row justify-between">
         <div className="flex flex-row gap-2 justify-start items-center">
           <Circle width={24} height={24} color={statusColor} />
-          <span className="text-lg">{name}</span>
-          <span className="text-sm">{"(" + count + ")"}</span>
+          <span className="text-lg">{status}</span>
+          <span className="text-sm">{"(" + tasks.length + ")"}</span>
         </div>
         <SquarePlus
           width={32}
           height={32}
-          onClick={() => {
-            console.log("Add Task onClick");
-          }}
+          onClick={handleClick}
           className="hover:cursor-pointer"
         />
       </div>
-      <div className="">
+      <div className="flex flex-col gap-4">
         {/* Tasks */}
-        {mockTasks.map((t) => (
-          <div
+        {tasks.map((t) => (
+          <TaskItem
             key={t.id}
-            className="flex flex-col rounded px-2 py-4 bg-background mt-4 hover:cursor-pointer"
-            onClick={() => {
-              console.log("Task " + t.id + " onClick");
-            }}
-          >
-            <h3>{t.title}</h3>
-            <p>{t.description}</p>
-          </div>
+            title={t.title}
+            priority={t.priority}
+            priorityOptions={TASK_PRIORITIES}
+            assignedUserName={
+              t.assgineeId && userMap
+                ? (userMap.get(t.assgineeId)?.userName ?? null)
+                : null
+            }
+            assignedUserImageUrl={
+              t.assgineeId && userMap
+                ? (userMap.get(t.assgineeId)?.imgUrl ?? null)
+                : null
+            }
+            availableAssignees={
+              userMap
+                ? [...userMap.values()].map((u) => ({
+                    id: u.id,
+                    label: u.userName,
+                  }))
+                : []
+            }
+            onAction={() => handleTakeTask(t.id)}
+            onAssign={(userId) => handleAssignTask(t.id, userId)}
+            onUnassign={() => handleUnassignTask(t.id)}
+            onUpdate={() => handleTaskClick(t.id)}
+            onPriority={(taskPriority: TaskPriority) =>
+              handleChangePriority(t.id, taskPriority)
+            }
+            canAssign={userRole === "admin"}
+          />
         ))}
       </div>
     </div>
