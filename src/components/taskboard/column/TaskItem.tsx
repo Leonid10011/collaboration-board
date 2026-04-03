@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import AssignPopup from "./taskItem/AssignPopup";
 import PriorityPopup from "./taskItem/PriorityPopup";
+import { toUpper } from "@/lib/utils";
 
 type TaskItemProps = {
   title: string;
@@ -108,10 +109,12 @@ export default function TaskItem({
         className="flex flex-row p-4 w-full justify-between"
         onClick={onUpdate}
       >
-        <div className="flex flex-col gap-6">
-          <h3 className="text-xl font-semibold">{title}</h3>
+        <div className="flex flex-col gap-2">
+          <h3 className="text-lg font-medium">{title}</h3>
           <div className="relative hover:cursor-pointer" ref={priorityRef}>
-            <span onClick={handlePriorityClick}>{priority}</span>
+            <span onClick={handlePriorityClick} className="text-sm">
+              {toUpper(priority)}
+            </span>
             {isPriorityOpen && (
               <PriorityPopup
                 priorityOptions={priorityOptions}
