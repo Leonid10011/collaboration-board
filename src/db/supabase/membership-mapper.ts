@@ -1,16 +1,19 @@
 import { Membership } from "@/domain/memberships";
-import { MembershipDB, MembershipWithProfileDB } from "./membership-db";
+import { MembershipDB, MemberWithProfileDB } from "./membership-db";
 import { Member } from "@/domain/users";
 
-export function mapMembershipWithProfileDBToMember(
-  membership: MembershipWithProfileDB,
-): Partial<Member> {
+export function mapMemberWithProfileDBToMember(
+  member: MemberWithProfileDB,
+): Member {
   return {
-    id: membership.profiles.id,
-    userName: membership.profiles.user_name,
-    imgUrl: membership.profiles.img_url,
-    projectId: membership.project_id,
-    role: membership.role,
+    id: member.user_id,
+    userId: member.user_id,
+    userName: member.profiles.user_name,
+    imgUrl: member.profiles.img_url,
+    lastActive: new Date(member.profiles.last_active),
+    projectId: member.project_id,
+    role: member.role,
+    createdAt: new Date(),
   };
 }
 

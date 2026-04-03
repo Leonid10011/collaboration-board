@@ -8,9 +8,12 @@ export type Task = {
   id: string;
   projectId: string;
   creatorId: string;
-  assgineeId?: string;
+  assgineeId?: string | null;
   title: string;
-  description?: string;
+  description?: string | null;
   status: TaskStatus;
   priority: TaskPriority;
 };
+
+export type CreateTaskInput = Omit<Task, "id">;
+export type UpdateTaskInput = Partial<CreateTaskInput>;

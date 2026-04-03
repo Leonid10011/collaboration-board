@@ -1,12 +1,50 @@
-import { useMemo } from "react";
+"use client";
+
+import { useMemo, useState } from "react";
 import Column from "./taskboard/Column";
 import { useProject } from "@/context/ProjectContext";
 import { Task, TASK_STATUSES, TaskStatus } from "@/domain/tasks";
+import CreateTaskModal from "./taskboard/CreateTaskModal";
+import { useTask } from "@/context/TaskContext";
+import UpdateTaskModal from "./taskboard/UpdateTaskModal";
 
 export default function TaskBoard() {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
-  const { projectTasks: tasks } = useProject();
+  const { projectTasks: tasks } = useTask();
+  const { projectMembers: members } = useProject();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
+  const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>("backlog");
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  const handleNewTaskStatus = (status: TaskStatus) => {
+    setNewTaskStatus(status);
+  };
+
+  const handleModalOpen = (val: boolean) => {
+    setIsModalOpen(val);
+  };
+
+  const handleUpdateModalOpen = (val: boolean) => {
+    setIsUpdateModalOpen(val);
+  };
+
+  const handleUpdateModalClose = () => {
+    setSelectedTask(null);
+    setIsUpdateModalOpen(false);
+  };
+
+  const handleSelectedTask = (taskId: string) => {
+    const tmp = tasks.find((t) => t.id === taskId);
+    if (!tmp) return;
+    setSelectedTask(tmp);
+  };
+
+  const memberMap = useMemo(() => {
+    if (!members) return null;
+    return new Map(members.map((m) => [m.id, m]));
+  }, [members]);
 
   const TaskByStatus = useMemo(() => {
     const map: Record<TaskStatus, Task[]> = {
@@ -28,13 +66,31 @@ export default function TaskBoard() {
       <div className="flex flex-row gap-x-8 h-full">
         {TASK_STATUSES.map((c, i) => (
           <Column
-            key={i}
+            key={c}
             statusColor={STATUS_COLORS[i]}
-            name={c}
+            status={c}
             tasks={TaskByStatus[c]}
+            userMap={memberMap}
+            onModalOpen={() => handleModalOpen(true)}
+            onUpdateModalOpen={() => handleUpdateModalOpen(true)}
+            onAdd={handleNewTaskStatus}
+            onSelectedTask={handleSelectedTask}
           />
         ))}
       </div>
+      {isModalOpen && (
+        <CreateTaskModal
+          onModalClose={() => handleModalOpen(false)}
+          newStatus={newTaskStatus}
+          onStatus={handleNewTaskStatus}
+        />
+      )}
+      {isUpdateModalOpen && selectedTask && (
+        <UpdateTaskModal
+          onModalClose={handleUpdateModalClose}
+          selectedTask={selectedTask}
+        />
+      )}
     </div>
   );
 }

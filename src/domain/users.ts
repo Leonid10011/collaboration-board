@@ -5,7 +5,6 @@ export interface User {
   userName: string;
   imgUrl: string;
   lastActive: Date;
-  email: string;
 }
 
 export interface Member extends User, Membership {}

@@ -44,7 +44,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const userData: User = {
           id: result.id,
           userName: result.user_name,
-          email: data.user.email || "",
           imgUrl: "",
           lastActive: new Date(),
         };

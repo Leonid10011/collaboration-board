@@ -7,6 +7,5 @@ export function mapUserDBToUser(user: UserDB): User {
     userName: user.user_name,
     imgUrl: user.img_url,
     lastActive: new Date(),
-    email: user.email,
   };
 }
