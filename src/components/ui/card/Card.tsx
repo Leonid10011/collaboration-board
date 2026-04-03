@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { SurfaceItem } from "../surface/SurfaceItem";
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -28,15 +29,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardItem({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn(
-        "text-sm rounded-md hover:cursor-pointer transition-colors duration-150 hover:bg-black/5 py-1 px-2",
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <SurfaceItem className={cn("text-sm", className)} {...props} />;
 }
 
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
