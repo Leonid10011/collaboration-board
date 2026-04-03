@@ -22,6 +22,7 @@ import { useProject } from "./ProjectContext";
 import { showError } from "@/lib/toast";
 import { IdSchema } from "@/validation/global-schema";
 import { useUser } from "./UserContext";
+import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
 
 type TaskContextType = {
   // For current project
@@ -57,6 +58,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
   const [projectTasks, setProjectTasks] = useState<Task[]>([]);
 
   const { user } = useUser();
+  const supabase = createSupabaseBrowserClient();
 
   const fetchTasks = useCallback(async () => {
     if (!selectedProject) return;
@@ -68,6 +70,34 @@ export function TaskProvider({ children }: TaskProviderProps) {
       showError(`Error loading Tasks. ${error}`);
     }
   }, [selectedProject]);
+
+  useEffect(() => {
+    // realtime subscription
+
+    if (!selectedProject?.id) return;
+
+    const channel = supabase
+      .channel("db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "tasks",
+          filter: `project_id=eq.${selectedProject.id}`,
+        },
+        async () => {
+          console.log("UPDATE!");
+          await fetchTasks();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      console.log("REMOVED");
+      supabase.removeChannel(channel);
+    };
+  }, [selectedProject?.id, fetchTasks, supabase]);
 
   useEffect(() => {
     void fetchTasks().catch(console.error);
@@ -111,7 +141,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
     try {
       await updateTaskRepo(taskId, validated.data);
-      fetchTasks();
+      //fetchTasks();
     } catch (error) {
       throw new Error(`Error updating task: ${error}`);
     }
