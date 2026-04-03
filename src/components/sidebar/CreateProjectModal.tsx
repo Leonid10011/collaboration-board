@@ -6,7 +6,7 @@ import { useUser } from "@/context/UserContext";
 import SearchInputField from "../ui/composed/SearchInputField";
 
 import { Field, FieldLabel } from "../ui/field";
-
+import { Profile } from "@/domain/profiles";
 import { useState } from "react";
 import { MemberBadge } from "./createProjectModal/MemberBadge";
 import { insertProject } from "@/repository/repository-projects";
@@ -14,18 +14,17 @@ import { Project } from "@/domain/projects";
 import { addMemberToProject } from "@/repository/repository-project-memberships";
 import { ProjectSchema } from "@/validation/project-schema";
 import { showError, showSuccess } from "@/lib/toast";
-import { User } from "@/domain/users";
 
 type CreateModalOpenProps = {
   onClose: () => void;
 };
 
 export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
-  const { users, user } = useUser();
+  const { profiles, user } = useUser();
 
   const [projectTitle, setProjectTitle] = useState<string>("New Project");
   const [projectDescription, setProjectDescription] = useState<string>("");
-  const [addedMembers, setAddedMembers] = useState<User[]>([]);
+  const [addedMembers, setAddedMembers] = useState<Profile[]>([]);
 
   const [createError, setCreateError] = useState<string | null>(null);
 
@@ -37,10 +36,10 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
     setProjectDescription(text);
   };
 
-  const handleAddMember = (user: User) => {
-    if (!user.id) return;
+  const handleAddMember = (profile: Profile) => {
+    if (!profile.id) return;
 
-    const profileToAdd = users?.find((p) => p.id === user.id);
+    const profileToAdd = profiles?.find((p) => p.id === profile.id);
     if (
       profileToAdd &&
       !addedMembers.some((member) => member.id === profileToAdd.id)
@@ -84,12 +83,12 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
   };
 
   return (
-    <ModalShell onConfirm={handleCreateProject} onClose={onClose}>
-      <input
-        placeholder={projectTitle}
-        className="w-full text-4xl font-bold placeholder-gray-300 border-none outline-none bg transparent focus:ring-0 mb-8"
-        onChange={(e) => handleTitleChange(e.currentTarget.value)}
-      />
+    <ModalShell
+      title={projectTitle}
+      onTitleChange={handleTitleChange}
+      onConfirm={handleCreateProject}
+      onClose={onClose}
+    >
       <div className="flex flex-col gap-4">
         <TextareaField
           label="Description"
@@ -101,7 +100,7 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
         <Field>
           <FieldLabel htmlFor="textarea-message">{"Add Members"}</FieldLabel>
           <SearchInputField
-            items={users}
+            items={profiles}
             getId={(p) => p.id}
             getTextField={(p) => p.userName}
             onSelect={handleAddMember}
@@ -109,7 +108,7 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
         </Field>
         <div className="flex flex-row flex-wrap gap-2">
           {addedMembers.map((m) => (
-            <MemberBadge key={m.id} user={m} onDelete={handleRemoveMember} />
+            <MemberBadge key={m.id} profile={m} onDelete={handleRemoveMember} />
           ))}
         </div>
         {createError && <div className="text-red-500 p-2">{createError}</div>}

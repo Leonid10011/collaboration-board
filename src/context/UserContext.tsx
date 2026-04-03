@@ -1,15 +1,14 @@
 "use client";
 
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
-import { User } from "@/domain/users";
-import { getUserById, getUsers } from "@/repository/repository-users";
-
+import { Profile, User } from "@/domain/profiles";
+import { getProfileById, getProfiles } from "@/repository/repository-profiles";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type UserContextType = {
   user: User | null;
   error: string | null;
-  users: User[] | null;
+  profiles: Profile[] | null;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -40,10 +39,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       // If no error, then we have the user data in the  `data` variable.
       // Now we can get the profile and store it in the context as well.
       try {
-        const result = await getUserById(data.user.id);
+        const result = await getProfileById(data.user.id);
         const userData: User = {
           id: result.id,
           userName: result.user_name,
+          email: data.user.email || "",
           imgUrl: "",
           lastActive: new Date(),
         };
@@ -76,26 +76,26 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
    * We need data of all user to allow project admins to add new members to their projects.
    * Later we will narrow down the list of users with pagination and search functionality, but for now we will fetch all users and store them in the context.
    */
-  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [allProfiles, setAllProfiles] = useState<Profile[]>([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchProfiles = async () => {
       try {
         setError(null);
-        const data = await getUsers();
+        const data = await getProfiles();
 
-        setAllUsers(data);
+        setAllProfiles(data);
       } catch (error) {
         setError(`Profiles could not be loaded: ${error}`);
         return;
       }
     };
 
-    fetchUsers();
+    fetchProfiles();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, error, users: allUsers }}>
+    <UserContext.Provider value={{ user, error, profiles: allProfiles }}>
       {children}
     </UserContext.Provider>
   );

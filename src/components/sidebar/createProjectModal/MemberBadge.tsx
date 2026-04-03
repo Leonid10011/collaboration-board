@@ -1,17 +1,17 @@
-import { User } from "@/domain/users";
+import { Profile } from "@/domain/profiles";
 
 type MemberBadgeProps = {
-  user: User;
+  profile: Profile;
   onDelete: (id: string) => void;
 };
 
-export function MemberBadge({ user, onDelete }: MemberBadgeProps) {
+export function MemberBadge({ profile, onDelete }: MemberBadgeProps) {
   return (
     <div className="flex flex-row gap-4 py-2 px-4 rounded-md shadow-md bg-main-2">
-      <span>{user.userName}</span>
+      <span>{profile.userName}</span>
       <span
         className="rounded px-2 hover:bg-main-1 hover:cursor-pointer"
-        onClick={() => onDelete(user.id)}
+        onClick={() => onDelete(profile.id)}
       >
         x
       </span>

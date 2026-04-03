@@ -1,13 +1,16 @@
 "use client";
 
-import { MembershipDB, MemberWithProfileDB } from "@/db/supabase/membership-db";
+import {
+  MembershipDB,
+  MembershipWithProfileDB,
+} from "@/db/supabase/membership-db";
 import {
   mapMembershipDBToMembership,
-  mapMemberWithProfileDBToMember,
+  mapMembershipWithProfileDBToMember,
 } from "@/db/supabase/membership-mapper";
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
 import { Membership } from "@/domain/memberships";
-import { Member } from "@/domain/users";
+import { Member } from "@/domain/profiles";
 
 const supabase = createSupabaseBrowserClient();
 
@@ -18,17 +21,24 @@ const supabase = createSupabaseBrowserClient();
  */
 export async function getMembershipsByProjectId(
   projectId: string,
-): Promise<Member[]> {
+): Promise<Partial<Member>[]> {
   const result = await supabase
     .from("project_memberships")
-    .select("*, profiles (id, user_name, last_active, img_url)")
+    .select("*, profiles (id, user_name)")
     .eq("project_id", projectId)
+    .returns<MembershipWithProfileDB[]>();
 
-    .returns<MemberWithProfileDB[]>();
+  const memberships =
+    result.data?.map((membership) => ({
+      ...membership,
+      profiles: {
+        id: membership.profiles.id,
+        user_name: membership.profiles.user_name,
+        img_url: membership.profiles.img_url,
+      },
+    })) || [];
 
-  const memberships = result.data || [];
-
-  return memberships.map(mapMemberWithProfileDBToMember);
+  return memberships.map(mapMembershipWithProfileDBToMember);
 }
 
 export async function getMembershipsByUserId(
