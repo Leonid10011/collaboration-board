@@ -10,7 +10,7 @@ export default function ProjectList({ projects }: ProjectListType) {
   const { changeSelectedProject } = useProject();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-1">
       {projects.map((p) => (
         <ProjectItem
           key={p.id}

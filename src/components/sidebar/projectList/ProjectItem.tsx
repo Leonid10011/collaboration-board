@@ -1,3 +1,6 @@
+import { SurfaceRow } from "@/components/ui/surface/SurfaceItem";
+import { Book } from "lucide-react";
+
 type ProjectProps = {
   title: string;
   description?: string;
@@ -10,12 +13,10 @@ export default function ProjectItem({
   onClick,
 }: ProjectProps) {
   return (
-    <div
-      className="flex flex-col rounded px-2 py-4 bg-main-1 hover:cursor-pointer"
-      onClick={onClick}
-    >
+    <SurfaceRow className="text-sm" onClick={onClick}>
+      <Book height={16} width={16} className="mr-2" />
       <h3>{title}</h3>
       <p>{description}</p>
-    </div>
+    </SurfaceRow>
   );
 }
