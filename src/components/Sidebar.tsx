@@ -3,6 +3,8 @@ import InfoBlock from "./ui/InfoBlock";
 import ProjectList from "./sidebar/ProjectList";
 import { useState } from "react";
 import CreateModalOpen from "./sidebar/CreateProjectModal";
+import { SurfaceRow } from "./ui/surface/SurfaceItem";
+import { Plus } from "lucide-react";
 
 export default function Sidebar() {
   const { userProjects } = useProject();
@@ -21,12 +23,10 @@ export default function Sidebar() {
       <InfoBlock
         title="Actions"
         content={
-          <button
-            className="px-2 py-4 bg-main-2 rounded text-start hover:cursor-pointer"
-            onClick={handleCreateProjectClick}
-          >
-            Create Project
-          </button>
+          <SurfaceRow className="text-sm" onClick={handleCreateProjectClick}>
+            <Plus size={16} />
+            <span>Create Project</span>
+          </SurfaceRow>
         }
       />
       <InfoBlock
