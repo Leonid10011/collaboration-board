@@ -1,4 +1,4 @@
-import { Task, TaskPriority } from "@/domain/tasks";
+import { Task, TaskPriority, TaskStatus } from "@/domain/tasks";
 import ModalShell from "../modal/ModalShell";
 import UpdateTaskModalForm from "./updateTaskModal/UpdateTaskModalForm";
 import { useState } from "react";
@@ -25,6 +25,7 @@ export default function UpdateTaskModal({
     selectedTask.description ? selectedTask.description : "",
   );
   const [priority, setPriority] = useState<TaskPriority>(selectedTask.priority);
+  const [status, setStatus] = useState<TaskStatus>(selectedTask.status);
 
   const handleConfirm = async () => {
     try {
@@ -32,6 +33,7 @@ export default function UpdateTaskModal({
         title: title,
         description: description,
         priority: priority,
+        status: status,
       });
       showSuccess("Task Updated!");
     } catch (error) {
@@ -53,6 +55,8 @@ export default function UpdateTaskModal({
           onDescriptionChange={setDescription}
           priority={priority}
           onPriorityChange={setPriority}
+          status={status}
+          onStatusChange={setStatus}
         />
       </ModalShell>
     </>

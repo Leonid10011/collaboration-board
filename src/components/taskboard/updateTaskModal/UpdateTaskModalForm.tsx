@@ -8,7 +8,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { TASK_PRIORITIES, TaskPriority } from "@/domain/tasks";
+import {
+  TASK_PRIORITIES,
+  TASK_STATUSES,
+  TaskPriority,
+  TaskStatus,
+} from "@/domain/tasks";
 import { toUpper } from "@/lib/utils";
 
 type UpdateTaskModalForm = {
@@ -18,6 +23,8 @@ type UpdateTaskModalForm = {
   onDescriptionChange: (text: string) => void;
   priority: TaskPriority;
   onPriorityChange: (value: TaskPriority) => void;
+  status: TaskStatus;
+  onStatusChange: (value: TaskStatus) => void;
 };
 
 export default function UpdateTaskModalForm({
@@ -27,6 +34,8 @@ export default function UpdateTaskModalForm({
   onDescriptionChange,
   priority,
   onPriorityChange,
+  status,
+  onStatusChange,
 }: UpdateTaskModalForm) {
   return (
     <FieldGroup>
@@ -54,6 +63,21 @@ export default function UpdateTaskModalForm({
             {TASK_PRIORITIES.map((p) => (
               <SelectItem key={p} value={p}>
                 {toUpper(p)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </Field>
+      <Field>
+        <FieldLabel>Status</FieldLabel>
+        <Select onValueChange={onStatusChange}>
+          <SelectTrigger className="w-full max-w-48">
+            <SelectValue placeholder={toUpper(status)} />
+          </SelectTrigger>
+          <SelectContent position="popper">
+            {TASK_STATUSES.map((s) => (
+              <SelectItem key={s} value={s}>
+                {toUpper(s)}
               </SelectItem>
             ))}
           </SelectContent>
