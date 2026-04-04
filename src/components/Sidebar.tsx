@@ -20,19 +20,15 @@ export default function Sidebar() {
 
   return (
     <div className="flex flex-col px-2 py-4 min-w-[200px] gap-4 border-r-2 border-solid bg-main-2">
-      <InfoBlock
-        title="Actions"
-        content={
-          <SurfaceRow className="text-sm" onClick={handleCreateProjectClick}>
-            <Plus size={16} />
-            <span>Create Project</span>
-          </SurfaceRow>
-        }
-      />
-      <InfoBlock
-        title="Projects"
-        content={<ProjectList projects={userProjects} />}
-      />
+      <InfoBlock title="Actions">
+        <SurfaceRow className="text-sm" onClick={handleCreateProjectClick}>
+          <Plus size={16} />
+          <span>Create Project</span>
+        </SurfaceRow>
+      </InfoBlock>
+      <InfoBlock title="Projects">
+        <ProjectList projects={userProjects} />
+      </InfoBlock>
       {isModalOpen && (
         <CreateModalOpen onClose={() => handleModalOpen(false)} />
       )}

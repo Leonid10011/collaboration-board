@@ -2,6 +2,7 @@
 
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
 import { User } from "@/domain/users";
+import { showError } from "@/lib/toast";
 import { getUserById, getUsers } from "@/repository/repository-users";
 
 import { createContext, useContext, useEffect, useState } from "react";
@@ -10,6 +11,7 @@ type UserContextType = {
   user: User | null;
   error: string | null;
   users: User[] | null;
+  signout: () => Promise<void>;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -94,8 +96,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     fetchUsers();
   }, []);
 
+  const signout = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      showError(`Logout failed: ${error.message}`);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, error, users: allUsers }}>
+    <UserContext.Provider value={{ user, error, users: allUsers, signout }}>
       {children}
     </UserContext.Provider>
   );
