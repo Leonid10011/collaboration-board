@@ -18,20 +18,17 @@ export default function MemberInfo() {
   ]);
 
   return (
-    <InfoBlock
-      title="Members"
-      content={
-        <div className="flex flex-row gap-2">
-          {members.map((m) => (
-            <MemberStatus
-              key={m.id}
-              name={m.userName}
-              img_url={m.imgUrl}
-              online={true}
-            />
-          ))}
-        </div>
-      }
-    />
+    <InfoBlock title="Members">
+      <div className="flex flex-row gap-2">
+        {members.map((m) => (
+          <MemberStatus
+            key={m.id}
+            name={m.userName}
+            img_url={m.imgUrl}
+            online={true}
+          />
+        ))}
+      </div>
+    </InfoBlock>
   );
 }
