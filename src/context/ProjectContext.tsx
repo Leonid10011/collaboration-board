@@ -1,5 +1,5 @@
 import { Project } from "@/domain/projects";
-import { listProjects } from "@/repository/repository-projects";
+import { deleteProject, listProjects } from "@/repository/repository-projects";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useUser } from "./UserContext";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/repository/repository-project-memberships";
 import { Membership } from "@/domain/memberships";
 import { Member, User } from "@/domain/users";
+import { showSuccess } from "@/lib/toast";
 
 type ProjectContextType = {
   projectTitle: string | null;
@@ -18,6 +19,7 @@ type ProjectContextType = {
   userRole: string | null;
   projects: Project[];
   userProjects: Project[];
+  removeProject: (id: string) => Promise<void>;
 };
 
 const ProjectContext = createContext<ProjectContextType | null>(null);
@@ -130,6 +132,27 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     return tmp;
   }, [projects, userMemberships, user]);
 
+  const removeProject = async (projectId: string) => {
+    try {
+      await deleteProject(projectId);
+
+      const fetchProjects = async () => {
+        try {
+          const result = await listProjects();
+          setProjects(result);
+        } catch (error) {
+          console.error("Error fetching projects:", error);
+        }
+      };
+
+      fetchProjects();
+
+      showSuccess("Project deleted.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <ProjectContext.Provider
       value={{
@@ -140,6 +163,7 @@ export function ProjectProvider({ children }: ProjectProviderType) {
         projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,
         userRole,
+        removeProject,
       }}
     >
       {children}
