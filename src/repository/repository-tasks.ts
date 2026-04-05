@@ -37,7 +37,7 @@ export const getTasksByProjectId = async (
     .eq("project_id", projectId)
     .order("created_at", { ascending: true })
     .order("id", { ascending: true })
-    .limit(10)
+    .limit(30)
     .returns<TaskDB[]>();
 
   if (error) {
