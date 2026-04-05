@@ -1,5 +1,9 @@
-import { Project } from "@/domain/projects";
-import { deleteProject, listProjects } from "@/repository/repository-projects";
+import { Project, UpdateProjectInput } from "@/domain/projects";
+import {
+  deleteProject,
+  listProjects,
+  updateProject,
+} from "@/repository/repository-projects";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useUser } from "./UserContext";
 import {
@@ -10,9 +14,9 @@ import {
 import { Membership } from "@/domain/memberships";
 import { Member, User } from "@/domain/users";
 import { showSuccess } from "@/lib/toast";
+import { UpdateProjectSchema } from "@/validation/project-schema";
 
 type ProjectContextType = {
-  projectTitle: string | null;
   selectedProject: Project | null;
   changeSelectedProject: (id: string) => void;
   projectMembers: User[] | null;
@@ -20,6 +24,7 @@ type ProjectContextType = {
   projects: Project[];
   userProjects: Project[];
   removeProject: (id: string) => Promise<void>;
+  patchProject: (id: string, update: UpdateProjectInput) => Promise<void>;
 };
 
 const ProjectContext = createContext<ProjectContextType | null>(null);
@@ -116,6 +121,35 @@ export function ProjectProvider({ children }: ProjectProviderType) {
     fetchMemberships();
   }, [selectedProjectId]);
 
+  const patchProject = async (
+    projectId: string,
+    update: UpdateProjectInput,
+  ) => {
+    const validated = UpdateProjectSchema.safeParse(update);
+
+    if (!validated.success)
+      throw new Error(
+        `Error validating data for project with id ${projectId}. ${validated.error.message}`,
+      );
+
+    try {
+      await updateProject(projectId, validated.data);
+
+      const fetchProjects = async () => {
+        try {
+          const result = await listProjects();
+          setProjects(result);
+        } catch (error) {
+          console.error("Error fetching projects:", error);
+        }
+      };
+
+      fetchProjects();
+    } catch (error) {
+      throw new Error(`Error updating project: ${error}`);
+    }
+  };
+
   /* Selected Project */
   const changeSelectedProject = (projectId: string) => {
     setSelectedProjectId(projectId);
@@ -160,10 +194,10 @@ export function ProjectProvider({ children }: ProjectProviderType) {
         selectedProject,
         projectMembers: selectedProjectMemberships,
         projects,
-        projectTitle: selectedProject ? selectedProject.title : null,
         changeSelectedProject,
         userRole,
         removeProject,
+        patchProject,
       }}
     >
       {children}

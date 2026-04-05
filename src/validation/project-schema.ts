@@ -6,3 +6,5 @@ export const ProjectSchema = z.object({
   ownerId: z.uuid(),
   description: z.string().optional(),
 });
+
+export const UpdateProjectSchema = ProjectSchema.partial();

@@ -5,19 +5,27 @@ import MemberInfo from "./homepage/MembersInfo";
 import ProjectInfo from "./homepage/ProjectInfo";
 import UserInfo from "./homepage/UserInfo";
 import { useUser } from "@/context/UserContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SurfaceRow } from "./ui/surface/SurfaceItem";
 import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { showError, showSuccess } from "@/lib/toast";
 
 export default function Header() {
-  const { projectTitle, userRole, projectMembers } = useProject();
+  const { userRole, projectMembers, selectedProject, patchProject } =
+    useProject();
   const { user, signout } = useUser();
 
   const [isUserOpen, setIsUserOpen] = useState<boolean>(false);
   const [isSigningOut, setIsSigningOut] = useState<boolean>(false);
 
+  const [projectTitle, setProjectTitle] = useState<string>("");
+
   const router = useRouter();
+
+  useEffect(() => {
+    setProjectTitle(selectedProject ? selectedProject.title : "");
+  }, [selectedProject]);
 
   const handleUserOpen = () => {
     setIsUserOpen((prev) => !prev);
@@ -30,6 +38,16 @@ export default function Header() {
       router.replace("/login");
     } finally {
       setIsSigningOut(false);
+    }
+  };
+
+  const handleProjectTitle = async () => {
+    if (!selectedProject) return;
+    try {
+      await patchProject(selectedProject?.id, { title: projectTitle });
+      showSuccess("Project Title updated");
+    } catch (error) {
+      showError("Error updating ProjectTitle");
     }
   };
 
@@ -61,6 +79,8 @@ export default function Header() {
         <ProjectInfo
           projectTitle={projectTitle ? projectTitle : null}
           role={userRole ? userRole : null}
+          onTitleChange={setProjectTitle}
+          onBlur={handleProjectTitle}
         />
       </div>
       <MemberInfo members={projectMembers} />

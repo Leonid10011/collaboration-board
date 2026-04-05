@@ -8,3 +8,6 @@ export interface Project {
 export interface UserProject extends Project {
   role: string;
 }
+
+export type CreateProjectInput = Omit<Project, "id">;
+export type UpdateProjectInput = Partial<CreateProjectInput>;
