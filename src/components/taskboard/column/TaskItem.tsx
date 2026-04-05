@@ -116,13 +116,15 @@ export default function TaskItem({
 
   return (
     <Card className="relative group">
-      <button
-        type="button"
-        className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 rounded-full hover:bg-red-500 transition-colors"
-        onClick={onDelete}
-      >
-        <Trash2 size={16} />
-      </button>
+      {canAssign && (
+        <button
+          type="button"
+          className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 rounded-full hover:bg-red-500 transition-colors"
+          onClick={onDelete}
+        >
+          <Trash2 size={16} />
+        </button>
+      )}
       <CardHeader />
       <CardSplit onClick={onUpdate}>
         {/*Left */}
