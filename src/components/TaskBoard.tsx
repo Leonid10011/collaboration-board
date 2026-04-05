@@ -83,7 +83,7 @@ export default function TaskBoard() {
     <div className="flex flex-col flex-1 gap-4 px-4 py-2">
       <div className="flex flex-row gap-2">
         {FILTER_MODES.map((mode, i) => (
-          <>
+          <div key={mode}>
             <FilterItem
               key={mode}
               icon={FILTER_CONFIG[mode].icon}
@@ -93,7 +93,7 @@ export default function TaskBoard() {
             {i < FILTER_MODES.length - 1 ? (
               <div className="w-px bg-main-2" />
             ) : null}
-          </>
+          </div>
         ))}
       </div>
       <div className="flex flex-row gap-x-8 h-full">
