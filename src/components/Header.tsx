@@ -11,7 +11,7 @@ import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
-  const { projectTitle, userRole } = useProject();
+  const { projectTitle, userRole, projectMembers } = useProject();
   const { user, signout } = useUser();
 
   const [isUserOpen, setIsUserOpen] = useState<boolean>(false);
@@ -63,7 +63,7 @@ export default function Header() {
           role={userRole ? userRole : null}
         />
       </div>
-      <MemberInfo />
+      <MemberInfo members={projectMembers} />
     </div>
   );
 }
