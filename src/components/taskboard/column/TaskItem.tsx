@@ -1,5 +1,5 @@
 import { TaskPriority } from "@/domain/tasks";
-import { User as UserIcon } from "lucide-react";
+import { Trash, Trash2, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import AssignPopup from "./taskItem/AssignPopup";
@@ -8,10 +8,12 @@ import { toUpper } from "@/lib/utils";
 import {
   Card,
   CardAction,
+  CardHeader,
   CardItem,
   CardSplit,
   CardTitle,
 } from "@/components/ui/card/Card";
+import { SurfaceItem } from "@/components/ui/surface/SurfaceItem";
 
 type TaskItemProps = {
   title: string;
@@ -26,6 +28,7 @@ type TaskItemProps = {
   onUpdate: () => void;
   onPriority: (priority: TaskPriority) => void;
   canAssign: boolean;
+  onDelete: () => Promise<void>;
 };
 
 export default function TaskItem({
@@ -41,6 +44,7 @@ export default function TaskItem({
   onPriority,
   onAction,
   canAssign,
+  onDelete,
 }: TaskItemProps) {
   const [isAssignOpen, setIsAssignOpen] = useState(false);
   const assignRef = useRef<HTMLDivElement | null>(null);
@@ -111,7 +115,15 @@ export default function TaskItem({
   }, [isPriorityOpen]);
 
   return (
-    <Card className="relative">
+    <Card className="relative group">
+      <button
+        type="button"
+        className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 rounded-full hover:bg-red-500 transition-colors"
+        onClick={onDelete}
+      >
+        <Trash2 size={16} />
+      </button>
+      <CardHeader />
       <CardSplit onClick={onUpdate}>
         {/*Left */}
         <div className="flex flex-col">

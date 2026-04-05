@@ -4,16 +4,23 @@ import { SurfaceItem } from "../surface/SurfaceItem";
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("rounded-md bg-card text-card-foreground", className)}
+      className={cn("rounded-md bg-card text-card-foreground p-2", className)}
       {...props}
     />
   );
 }
 
+/**
+ * Default justify-end
+ */
+function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return <div className={cn("mb-4", className)} {...props} />;
+}
+
 function CardSplit({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("flex flex-row p-4 w-full justify-between", className)}
+      className={cn("flex flex-row w-full justify-between", className)}
       {...props}
     />
   );
@@ -44,7 +51,7 @@ function CardFooter({ className, pos, ...props }: CardFooterProps) {
   return (
     <div
       className={cn(
-        `flex flex-row flex-1 p-4 ${pos === "end" ? "justify-end" : "justify-start"}`,
+        `flex flex-row flex-1 ${pos === "end" ? "justify-end" : "justify-start"}`,
         className,
       )}
       {...props}
@@ -52,4 +59,12 @@ function CardFooter({ className, pos, ...props }: CardFooterProps) {
   );
 }
 
-export { Card, CardSplit, CardItem, CardAction, CardTitle, CardFooter };
+export {
+  Card,
+  CardHeader,
+  CardSplit,
+  CardItem,
+  CardAction,
+  CardTitle,
+  CardFooter,
+};

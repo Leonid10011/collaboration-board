@@ -37,7 +37,8 @@ export default function Column({
     onModalOpen();
   };
 
-  const { takeTask, assignTask, unassignTask, changePriority } = useTask();
+  const { takeTask, assignTask, unassignTask, changePriority, removeTask } =
+    useTask();
 
   const { userRole } = useProject();
 
@@ -136,6 +137,7 @@ export default function Column({
               handleChangePriority(t.id, taskPriority)
             }
             canAssign={userRole === "admin"}
+            onDelete={() => removeTask(t.id)}
           />
         ))}
       </div>
