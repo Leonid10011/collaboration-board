@@ -80,7 +80,7 @@ export default function TaskBoard() {
   }, [filteredTasks]);
 
   return (
-    <div className="flex flex-col flex-1 gap-4 px-4 py-2">
+    <div className="flex flex-col flex-1 gap-4 px-board-inline py-2">
       <div className="flex flex-row gap-2">
         {FILTER_MODES.map((mode, i) => (
           <div key={mode}>

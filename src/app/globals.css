@@ -44,6 +44,7 @@
 
   --sidebar-width: 12rem;
   --page-padding-inline: 0.5rem;
+  --board-padding-inline: 1rem;
 }
 
 @theme inline {
@@ -96,6 +97,7 @@
 
   --spacing-sidebar: var(--sidebar-width);
   --spacing-page-inline: var(--page-padding-inline);
+  --spacing-board-inline: var(--board-padding-inline);
 }
 
 body {

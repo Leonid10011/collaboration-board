@@ -77,7 +77,7 @@ export default function Header() {
           )}
         </UserInfo>
       </div>
-      <div className="flex flex-row gap-4">
+      <div className="flex flex-row gap-4 px-board-inline">
         <ProjectInfo
           projectTitle={projectTitle ? projectTitle : null}
           role={userRole ? userRole : null}
