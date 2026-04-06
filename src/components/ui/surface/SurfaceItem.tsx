@@ -4,7 +4,7 @@ function SurfaceItem({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "rounded-md hover:cursor-pointer transition-colors duration-150 hover:bg-black/5 py-1 px-2",
+        "rounded-md hover:cursor-default transition-colors duration-150 hover:bg-black/5 py-1 px-2",
         className,
       )}
       {...props}
@@ -21,7 +21,7 @@ function SurfaceRow({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "flex flex-row items-center gap-1 rounded-md hover:cursor-pointer transition-colors duration-150 hover:bg-black/5 py-1 px-2",
+        "flex flex-row items-center gap-1 hover:cursor-default rounded-md transition-colors duration-150 hover:bg-black/5 py-1 px-2",
         className,
       )}
       {...props}

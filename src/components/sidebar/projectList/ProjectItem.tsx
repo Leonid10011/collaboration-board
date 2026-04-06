@@ -16,11 +16,12 @@ export default function ProjectItem({
 }: ProjectProps) {
   return (
     <SurfaceRow className="text-sm group" onClick={onClick}>
-      <Book height={16} width={16} className="mr-2" />
+      <Book height={16} width={16} className="mr-2" strokeWidth={1.25} />
       <h3>{title}</h3>
       <p>{description}</p>
       <Trash2
         className="ml-auto text-meta opacity-0 group-hover:opacity-100 hover:text-meta/75 rounded-md h-4 w-4"
+        strokeWidth={1.25}
         onClick={(e) => {
           e.stopPropagation();
           onDelete();

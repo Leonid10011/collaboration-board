@@ -54,7 +54,7 @@ export default function SignUp() {
         />
 
         <button
-          className="border-2 p-2 hover:cursor-pointer rounded"
+          className="border-2 p-2 hover:cursor-default rounded"
           onClick={handleSignup}
         >
           SignUp

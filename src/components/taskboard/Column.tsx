@@ -100,7 +100,7 @@ export default function Column({
           width={32}
           height={32}
           onClick={handleClick}
-          className="hover:cursor-pointer"
+          className="hover:cursor-default"
         />
       </div>
       <div className="flex flex-col gap-4">
