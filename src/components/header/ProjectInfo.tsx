@@ -19,13 +19,13 @@ export default function ProjectInfo({
   return (
     <div className="flex flex-row">
       <InfoBlock title="Role" className="justify-between">
-        <span className="text-green-600 text-xl w-[100px]">
+        <span className="text-green-600 text-xl w-[100px] hover:cursor-default">
           {role ? toUpper(role) : "User"}
         </span>
       </InfoBlock>
       <InfoBlock title="Title" className="w-[240px] justify-between">
         <input
-          className="text-meta text-lg font-semibold  text-nowrap truncate"
+          className="text-meta text-lg font-semibold  text-nowrap truncate hover:cursor-default"
           value={projectTitle ? projectTitle : "No Project Selected"}
           onChange={(e) => onTitleChange(e.currentTarget.value)}
           onBlur={onBlur}

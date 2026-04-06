@@ -13,7 +13,7 @@ interface InfoBlock extends React.ComponentProps<"div"> {
 export default function InfoBlock({ className, title, children }: InfoBlock) {
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      <p className="text-xs font-bold">{title}</p>
+      <p className="text-xs font-bold hover:cursor-default">{title}</p>
       {children}
     </div>
   );
