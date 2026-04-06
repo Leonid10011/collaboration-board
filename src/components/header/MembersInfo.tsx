@@ -7,19 +7,6 @@ type MemberInfoProps = {
 };
 
 export default function MemberInfo({ members }: MemberInfoProps) {
-  /*const [members, setMembers] = useState<Omit<User, "lastActive" | "email">[]>([
-    {
-      id: "124",
-      userName: "Laura",
-      imgUrl: "/images/profile_image_01.jpg",
-    },
-    {
-      id: "123",
-      userName: "Sabrina",
-      imgUrl: "/images/profile_image_02.jpg",
-    },
-  ]);*/
-
   return (
     <InfoBlock title="Members">
       <div className="flex flex-row gap-2">

@@ -41,7 +41,7 @@ export default function MemberStatus({ name, img_url }: MemberStatus) {
   const colorClass = getAvatarColor(name);
 
   return (
-    <SurfaceRow className="gap-2 bg-green-200 hover:bg-green-100 hover:cursor-default">
+    <SurfaceRow className="gap-2 bg-green-200 hover:bg-green-100 hover:cursor-default p-1">
       {img_url ? (
         <Image
           width={16}

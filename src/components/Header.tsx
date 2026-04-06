@@ -53,7 +53,7 @@ export default function Header() {
   };
 
   return (
-    <div className="flex flex-row py-2 px-page-inline border-b-2 border-solid bg-main-2 gap-16">
+    <div className="flex flex-row py-2 px-page-inline border-b-2 border-solid bg-main-2">
       <div className="flex flex-row gap-16">
         <UserInfo
           userName={user ? user.userName : null}
@@ -76,15 +76,16 @@ export default function Header() {
             </div>
           )}
         </UserInfo>
-
+      </div>
+      <div className="flex flex-row gap-4">
         <ProjectInfo
           projectTitle={projectTitle ? projectTitle : null}
           role={userRole ? userRole : null}
           onTitleChange={setProjectTitle}
           onBlur={handleProjectTitle}
         />
+        <MemberInfo members={projectMembers} />
       </div>
-      <MemberInfo members={projectMembers} />
     </div>
   );
 }
