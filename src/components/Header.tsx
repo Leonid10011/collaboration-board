@@ -1,15 +1,16 @@
 "use client";
 
 import { useProject } from "@/context/ProjectContext";
-import MemberInfo from "./homepage/MembersInfo";
-import ProjectInfo from "./homepage/ProjectInfo";
-import UserInfo from "./homepage/UserInfo";
+
 import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
 import { SurfaceRow } from "./ui/surface/SurfaceItem";
 import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { showError, showSuccess } from "@/lib/toast";
+import UserInfo from "./header/UserInfo";
+import ProjectInfo from "./header/ProjectInfo";
+import MemberInfo from "./header/MembersInfo";
 
 export default function Header() {
   const { userRole, projectMembers, selectedProject, patchProject } =
@@ -52,7 +53,7 @@ export default function Header() {
   };
 
   return (
-    <div className="flex flex-row py-2 px-1 border-b-2 border-solid bg-main-2 gap-16">
+    <div className="flex flex-row py-2 px-page-inline border-b-2 border-solid bg-main-2">
       <div className="flex flex-row gap-16">
         <UserInfo
           userName={user ? user.userName : null}
@@ -75,15 +76,16 @@ export default function Header() {
             </div>
           )}
         </UserInfo>
-
+      </div>
+      <div className="flex flex-row gap-4 px-board-inline">
         <ProjectInfo
           projectTitle={projectTitle ? projectTitle : null}
           role={userRole ? userRole : null}
           onTitleChange={setProjectTitle}
           onBlur={handleProjectTitle}
         />
+        <MemberInfo members={projectMembers} />
       </div>
-      <MemberInfo members={projectMembers} />
     </div>
   );
 }

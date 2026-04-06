@@ -29,7 +29,7 @@ export default function ModalShell({
       <div className="bg-main-1 border-2 rounded-md shadow-lg w-full max-w-2xl p-16 pb-32 z-10 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="flex-1 w-full">{children}</div>
         <button
-          className="absolute bottom-8 right-16 bg-main-2 px-4 py-2 rounded-md hover:cursor-pointer"
+          className="absolute bottom-8 right-16 bg-main-2 px-4 py-2 rounded-md hover:cursor-default"
           onClick={handleConfirm}
         >
           {confirmLabel ? confirmLabel : "Confirm"}

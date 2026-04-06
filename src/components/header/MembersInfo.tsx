@@ -1,25 +1,12 @@
 import { User } from "@/domain/users";
-import MemberStatus from "../header/MemberStatus";
 import InfoBlock from "../ui/InfoBlock";
+import MemberStatus from "./memberInfo/MemberStatus";
 
 type MemberInfoProps = {
   members: User[] | null;
 };
 
 export default function MemberInfo({ members }: MemberInfoProps) {
-  /*const [members, setMembers] = useState<Omit<User, "lastActive" | "email">[]>([
-    {
-      id: "124",
-      userName: "Laura",
-      imgUrl: "/images/profile_image_01.jpg",
-    },
-    {
-      id: "123",
-      userName: "Sabrina",
-      imgUrl: "/images/profile_image_02.jpg",
-    },
-  ]);*/
-
   return (
     <InfoBlock title="Members">
       <div className="flex flex-row gap-2">

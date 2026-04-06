@@ -23,7 +23,7 @@ export default function UserInfo({
   //mock members data
 
   return (
-    <InfoBlock className="relative" title="User">
+    <InfoBlock className="relative w-sidebar justiy-between" title="User">
       <SurfaceRow onClick={onUserClick}>
         <span className="font-medium text-meta">
           {userName ? userName : "Not logged in"}{" "}

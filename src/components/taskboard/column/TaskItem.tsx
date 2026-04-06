@@ -52,7 +52,7 @@ export default function TaskItem({
   const [isPriorityOpen, setIsPriorityOpen] = useState<boolean>(false);
   const priorityRef = useRef<HTMLDivElement | null>(null);
 
-  const avatarClassName = `rounded-full ${canAssign ? "hover:cursor-pointer" : ""}`;
+  const avatarClassName = `rounded-full ${canAssign ? "hover:cursor-default" : ""}`;
 
   const handleAvatarClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -162,7 +162,7 @@ export default function TaskItem({
             <UserIcon
               width={32}
               height={32}
-              className={`rounded-full hover:bg-gray-700/50 p-1 ${canAssign ? "hover:cursor-pointer" : ""}`}
+              className={`rounded-full hover:bg-gray-700/50 p-1 ${canAssign ? "hover:cursor-default" : ""}`}
               onClick={handleAvatarClick}
             />
           )}

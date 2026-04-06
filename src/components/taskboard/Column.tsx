@@ -93,14 +93,16 @@ export default function Column({
       <div className="flex flex-row justify-between">
         <div className="flex flex-row gap-2 justify-start items-center">
           <Circle width={24} height={24} color={statusColor} />
-          <span className="text-lg">{status}</span>
-          <span className="text-sm">{"(" + tasks.length + ")"}</span>
+          <span className="text-lg hover:cursor-default">{status}</span>
+          <span className="text-sm hover:cursor-default">
+            {"(" + tasks.length + ")"}
+          </span>
         </div>
         <SquarePlus
           width={32}
           height={32}
           onClick={handleClick}
-          className="hover:cursor-pointer"
+          className="hover:cursor-default"
         />
       </div>
       <div className="flex flex-col gap-4">

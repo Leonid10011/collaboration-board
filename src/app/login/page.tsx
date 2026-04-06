@@ -54,13 +54,13 @@ export default function Login() {
         />
 
         <button
-          className="border-2 p-2 hover:cursor-pointer rounded"
+          className="border-2 p-2 hover:cursor-default rounded"
           onClick={handleLogin}
         >
           Login
         </button>
         <button
-          className="border-2 p-2 hover:cursor-pointer rounded"
+          className="border-2 p-2 hover:cursor-default rounded"
           onClick={() => router.push("/signup")}
         >
           Sign Up
