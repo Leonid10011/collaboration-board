@@ -53,7 +53,7 @@ export default function Header() {
   };
 
   return (
-    <div className="flex flex-row py-2 px-2 border-b-2 border-solid bg-main-2 gap-16">
+    <div className="flex flex-row py-2 px-page-inline border-b-2 border-solid bg-main-2 gap-16">
       <div className="flex flex-row gap-16">
         <UserInfo
           userName={user ? user.userName : null}
