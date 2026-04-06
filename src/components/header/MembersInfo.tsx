@@ -1,6 +1,6 @@
 import { User } from "@/domain/users";
-import MemberStatus from "../header/MemberStatus";
 import InfoBlock from "../ui/InfoBlock";
+import MemberStatus from "./memberInfo/MemberStatus";
 
 type MemberInfoProps = {
   members: User[] | null;

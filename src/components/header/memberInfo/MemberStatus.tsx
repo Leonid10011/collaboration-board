@@ -1,6 +1,5 @@
-import { CheckCircle, Circle, CircleIcon } from "lucide-react";
+import { SurfaceRow } from "@/components/ui/surface/SurfaceItem";
 import Image from "next/image";
-import { SurfaceRow } from "../ui/surface/SurfaceItem";
 
 type MemberStatus = {
   name: string;
@@ -12,7 +11,7 @@ type MemberStatus = {
  * This component shows profile image, name and online status.
  * It is mainly used to show members of project in the header
  */
-export default function MemberStatus({ name, img_url, online }: MemberStatus) {
+export default function MemberStatus({ name, img_url }: MemberStatus) {
   function getInitials(name: string) {
     return name
       .split(" ")
