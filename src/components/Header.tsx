@@ -3,7 +3,7 @@
 import { useProject } from "@/context/ProjectContext";
 
 import { useUser } from "@/context/UserContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SurfaceRow } from "./ui/surface/SurfaceItem";
 import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,11 +22,29 @@ export default function Header() {
 
   const [projectTitle, setProjectTitle] = useState<string>("");
 
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
     setProjectTitle(selectedProject ? selectedProject.title : "");
   }, [selectedProject]);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!userMenuRef.current) return;
+
+      if (!userMenuRef.current.contains(event.target as Node)) {
+        setIsUserOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   const handleUserOpen = () => {
     setIsUserOpen((prev) => !prev);
@@ -54,7 +72,7 @@ export default function Header() {
 
   return (
     <div className="flex flex-row py-2 px-page-inline bg-main-2">
-      <div className="flex flex-row gap-16">
+      <div className="flex flex-row gap-16" ref={userMenuRef}>
         <UserInfo
           userName={user ? user.userName : null}
           online={true}
@@ -62,10 +80,7 @@ export default function Header() {
           onUserClick={handleUserOpen}
         >
           {isUserOpen && (
-            <div
-              className="absolute top-15 left-0 z-20 w-48 rounded-md border border-white/10 bg-main-1 p-1"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="absolute top-15 left-0 z-20 w-[calc(var(--sidebar-width)-var(--page-padding-inline))] rounded-md shadow bg-main-1 p-1">
               <div
                 className={`max-h-44 overflow-y-auto ${isSigningOut ? "disabled" : ""}`}
               >
