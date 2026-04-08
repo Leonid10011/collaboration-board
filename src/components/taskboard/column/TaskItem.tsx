@@ -13,6 +13,8 @@ import {
   CardSplit,
   CardTitle,
 } from "@/components/ui/card/Card";
+import PriorityBadge from "./taskItem/PriorityBadge";
+import { SurfaceItem } from "@/components/ui/surface/SurfaceItem";
 
 type TaskItemProps = {
   title: string;
@@ -124,16 +126,15 @@ export default function TaskItem({
           <Trash2 size={16} />
         </button>
       )}
-      <CardHeader />
       <CardSplit onClick={onUpdate}>
         {/*Left */}
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <CardItem>
             <CardTitle>{title}</CardTitle>
           </CardItem>
           <CardItem className="relative" ref={priorityRef}>
             <div onClick={handlePriorityClick} className="text-sm">
-              {toUpper(priority)}
+              <PriorityBadge type={priority} />
             </div>
             {isPriorityOpen && (
               <PriorityPopup

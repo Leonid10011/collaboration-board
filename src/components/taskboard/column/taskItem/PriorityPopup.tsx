@@ -1,4 +1,6 @@
 import { TaskPriority } from "@/domain/tasks";
+import PriorityBadge from "./PriorityBadge";
+import { SurfaceItem, SurfaceRow } from "@/components/ui/surface/SurfaceItem";
 
 type PriorityPopupProps = {
   priorityOptions: readonly TaskPriority[];
@@ -11,19 +13,19 @@ export default function PriorityPopup({
 }: PriorityPopupProps) {
   return (
     <div
-      className="absolute top-10 left-0 z-20 w-48 rounded-md border border-white/10 bg-main-2 p-2 shadow-lg"
+      className="absolute top-10 left-0 z-20 w-48 rounded-md border border-border bg-main-1 p-2 shadow-lg"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="max-h-44 overflow-y-auto">
+      <div className="flex flex-col gap-2 max-h-44 overflow-y-auto">
         {priorityOptions.map((p) => (
-          <button
-            key={p}
-            type="button"
-            className="w-full rounded px-2 py-1 text-left text-sm hover:bg-main-1"
+          <SurfaceRow
+            className="flex flex-row items-center gap-2"
+            key={p + "xyz"}
             onClick={() => onPriority(p)}
           >
+            <PriorityBadge key={p} type={p} />{" "}
             {p.substring(0, 1).toUpperCase() + p.substring(1)}
-          </button>
+          </SurfaceRow>
         ))}
       </div>
     </div>
