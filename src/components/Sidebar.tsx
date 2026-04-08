@@ -19,7 +19,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col px-page-inline py-4 w-sidebar gap-4 border-r-2 border-solid bg-main-2">
+    <div className="flex flex-col px-page-inline py-4 w-sidebar gap-4 bg-main-2">
       <InfoBlock title="Actions">
         <SurfaceRow className="text-sm" onClick={handleCreateProjectClick}>
           <Plus size={16} />
