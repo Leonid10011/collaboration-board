@@ -28,7 +28,7 @@ export default function UserInfo({
       title="User"
     >
       <SurfaceRow onClick={onUserClick}>
-        <span className="font-medium text-meta">
+        <span className="text-label">
           {userName ? userName : "Not logged in"}{" "}
         </span>
         {online !== null && isUserOpen ? (

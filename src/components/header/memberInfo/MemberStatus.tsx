@@ -23,12 +23,12 @@ export default function MemberStatus({ name, img_url }: MemberStatus) {
 
   function getAvatarColor(seed: string) {
     const colors = [
-      "bg-red-500",
-      "bg-blue-500",
-      "bg-green-500",
-      "bg-purple-500",
-      "bg-pink-500",
-      "bg-orange-500",
+      "bg-red-200",
+      "bg-blue-200",
+      "bg-green-200",
+      "bg-purple-200",
+      "bg-pink-200",
+      "bg-orange-200",
     ];
 
     let hash = 0;
@@ -41,7 +41,7 @@ export default function MemberStatus({ name, img_url }: MemberStatus) {
   const colorClass = getAvatarColor(name);
 
   return (
-    <SurfaceRow className="gap-2 bg-green-200 hover:bg-green-100 hover:cursor-default p-1">
+    <SurfaceRow className="gap-2 bg-card hover:bg-meta/5 hover:cursor-default p-1">
       {img_url ? (
         <Image
           width={16}
@@ -57,7 +57,7 @@ export default function MemberStatus({ name, img_url }: MemberStatus) {
           {initials}
         </div>
       )}
-      <span className="font-semibold text-meta">{name}</span>
+      <span className="text-label">{name}</span>
     </SurfaceRow>
   );
 }
