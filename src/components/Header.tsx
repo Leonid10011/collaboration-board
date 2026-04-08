@@ -66,7 +66,7 @@ export default function Header() {
       await patchProject(selectedProject?.id, { title: projectTitle });
       showSuccess("Project Title updated");
     } catch (error) {
-      showError("Error updating ProjectTitle");
+      showError(`Error updating ProjectTitle: ${error}`);
     }
   };
 

@@ -1,5 +1,5 @@
 import { TaskPriority } from "@/domain/tasks";
-import { Trash, Trash2, User as UserIcon } from "lucide-react";
+import { Trash2, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import AssignPopup from "./taskItem/AssignPopup";
@@ -13,7 +13,6 @@ import {
   CardSplit,
   CardTitle,
 } from "@/components/ui/card/Card";
-import { SurfaceItem } from "@/components/ui/surface/SurfaceItem";
 
 type TaskItemProps = {
   title: string;
