@@ -1,5 +1,6 @@
 import { toUpper } from "@/lib/utils";
 import InfoBlock from "../ui/InfoBlock";
+import { SurfaceItem } from "../ui/surface/SurfaceItem";
 
 type ProjectInfo = {
   projectTitle: string | null;
@@ -17,20 +18,24 @@ export default function ProjectInfo({
   //Will be replaced
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row gap-4">
       <InfoBlock title="Role" className="justify-between">
-        <span className="text-green-600 text-xl w-[100px] hover:cursor-default">
-          {role ? toUpper(role) : "User"}
-        </span>
+        <SurfaceItem>
+          <span className="text-label text-blue-400 w-[100px] hover:cursor-default">
+            {role ? toUpper(role) : "User"}
+          </span>
+        </SurfaceItem>
       </InfoBlock>
       <InfoBlock title="Title" className="w-[240px] justify-between">
-        <input
-          className="text-meta text-lg font-semibold  text-nowrap truncate hover:cursor-default"
-          value={projectTitle ? projectTitle : "No Project Selected"}
-          onChange={(e) => onTitleChange(e.currentTarget.value)}
-          onBlur={onBlur}
-          disabled={role !== "admin"}
-        />
+        <SurfaceItem>
+          <input
+            className="text-label  text-nowrap truncate hover:cursor-default"
+            value={projectTitle ? projectTitle : "No Project Selected"}
+            onChange={(e) => onTitleChange(e.currentTarget.value)}
+            onBlur={onBlur}
+            disabled={role !== "admin"}
+          />
+        </SurfaceItem>
       </InfoBlock>
     </div>
   );

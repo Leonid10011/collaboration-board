@@ -5,13 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --text: #1f1f1f;
+  --text: #1b1b1b;
   --meta: #5e6772;
   --main-1: #fff;
   --main-2: #f1f1f1;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: #f6f6f7;
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
@@ -24,7 +24,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: #e4e4e4;
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.87 0 0);
@@ -143,9 +143,19 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-text text-sm;
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  .text-label {
+    @apply text-sm font-medium text-meta;
+  }
+
+  .text-card-title {
+    @apply text-lg font-semibold text-text leading-none;
   }
 }

@@ -1,5 +1,5 @@
 import { TaskPriority } from "@/domain/tasks";
-import { Trash, Trash2, User as UserIcon } from "lucide-react";
+import { Trash2, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import AssignPopup from "./taskItem/AssignPopup";
@@ -13,6 +13,7 @@ import {
   CardSplit,
   CardTitle,
 } from "@/components/ui/card/Card";
+import PriorityBadge from "./taskItem/PriorityBadge";
 import { SurfaceItem } from "@/components/ui/surface/SurfaceItem";
 
 type TaskItemProps = {
@@ -125,16 +126,15 @@ export default function TaskItem({
           <Trash2 size={16} />
         </button>
       )}
-      <CardHeader />
       <CardSplit onClick={onUpdate}>
         {/*Left */}
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <CardItem>
             <CardTitle>{title}</CardTitle>
           </CardItem>
           <CardItem className="relative" ref={priorityRef}>
             <div onClick={handlePriorityClick} className="text-sm">
-              {toUpper(priority)}
+              <PriorityBadge type={priority} />
             </div>
             {isPriorityOpen && (
               <PriorityPopup

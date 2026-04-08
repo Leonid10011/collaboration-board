@@ -1,10 +1,9 @@
 import { cn } from "@/lib/utils";
-import { SurfaceItem } from "../surface/SurfaceItem";
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("rounded-md bg-card text-card-foreground p-2", className)}
+      className={cn("rounded-md bg-card px-2 py-4 ", className)}
       {...props}
     />
   );
@@ -27,16 +26,13 @@ function CardSplit({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn("text-xl font-medium leading-none", className)}
-      {...props}
-    />
-  );
+  return <div className={cn("text-card-title", className)} {...props} />;
 }
 
 function CardItem({ className, ...props }: React.ComponentProps<"div">) {
-  return <SurfaceItem className={cn("text-sm", className)} {...props} />;
+  return (
+    <div className={cn("text-sm hover:cursor-default", className)} {...props} />
+  );
 }
 
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {

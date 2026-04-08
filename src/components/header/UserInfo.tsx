@@ -23,9 +23,12 @@ export default function UserInfo({
   //mock members data
 
   return (
-    <InfoBlock className="relative w-sidebar justiy-between" title="User">
+    <InfoBlock
+      className="relative w-[calc(var(--sidebar-width)-var(--page-padding-inline))] justify-between"
+      title="User"
+    >
       <SurfaceRow onClick={onUserClick}>
-        <span className="font-medium text-meta">
+        <span className="text-label">
           {userName ? userName : "Not logged in"}{" "}
         </span>
         {online !== null && isUserOpen ? (
