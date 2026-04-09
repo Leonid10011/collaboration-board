@@ -2,6 +2,7 @@ import {
   CreateTaskInput,
   Task,
   TaskPriority,
+  TaskStatus,
   UpdateTaskInput,
 } from "@/domain/tasks";
 import {
@@ -23,6 +24,7 @@ import { showError } from "@/lib/toast";
 import { IdSchema } from "@/validation/global-schema";
 import { useUser } from "./UserContext";
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
+import { id } from "zod/locales";
 
 type TaskContextType = {
   // For current project
@@ -36,6 +38,7 @@ type TaskContextType = {
   unassignTask: (taskId: string) => Promise<void>;
   removeTask: (taskId: string) => Promise<void>;
   changePriority: (taskId: string, priority: TaskPriority) => Promise<void>;
+  optimistic_changeStatus: (taskId: string, status: TaskStatus) => void;
 };
 
 export const TaskContext = createContext<TaskContextType | null>(null);
@@ -200,6 +203,23 @@ export function TaskProvider({ children }: TaskProviderProps) {
     }
   };
 
+  const optimistic_changeStatus = (taskId: string, status: TaskStatus) => {
+    if (projectTasks.find((t) => t.id === taskId)?.status === status) return;
+
+    setProjectTasks((prev) => {
+      const taskExists = prev.some((task) => task.id === taskId);
+
+      if (!taskExists) {
+        return prev;
+      }
+
+      const nextTasks = prev.map((task) =>
+        task.id === taskId ? { ...task, status } : task,
+      );
+      return nextTasks;
+    });
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -211,6 +231,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
         unassignTask,
         removeTask,
         changePriority,
+        optimistic_changeStatus,
       }}
     >
       {children}
