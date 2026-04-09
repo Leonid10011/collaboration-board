@@ -203,9 +203,17 @@ export function TaskProvider({ children }: TaskProviderProps) {
     }
   };
 
-  const optimistic_changeStatus = (taskId: string, status: TaskStatus) => {
-    if (projectTasks.find((t) => t.id === taskId)?.status === status) return;
+  const optimistic_changeStatus = async (
+    taskId: string,
+    status: TaskStatus,
+  ) => {
+    const previousTask = projectTasks.find((t) => t.id === taskId);
+    if (!previousTask) return;
+    if (previousTask.status === status) return;
+    console.log("Previous Task: ", previousTask);
+    const previousStatus = previousTask.status;
 
+    // optimistic update
     setProjectTasks((prev) => {
       const taskExists = prev.some((task) => task.id === taskId);
 
@@ -218,6 +226,19 @@ export function TaskProvider({ children }: TaskProviderProps) {
       );
       return nextTasks;
     });
+
+    try {
+      await updateTaskRepo(taskId, { status });
+    } catch (error) {
+      //rollbakc
+      setProjectTasks((prev) =>
+        prev.map((task) =>
+          task.id === taskId ? { ...task, status: previousStatus } : task,
+        ),
+      );
+
+      throw new Error(`Error updating task status: ${error}`);
+    }
   };
 
   return (
