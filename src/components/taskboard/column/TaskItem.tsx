@@ -4,19 +4,18 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import AssignPopup from "./taskItem/AssignPopup";
 import PriorityPopup from "./taskItem/PriorityPopup";
-import { toUpper } from "@/lib/utils";
 import {
   Card,
   CardAction,
-  CardHeader,
   CardItem,
   CardSplit,
   CardTitle,
 } from "@/components/ui/card/Card";
 import PriorityBadge from "./taskItem/PriorityBadge";
-import { SurfaceItem } from "@/components/ui/surface/SurfaceItem";
+import { useDraggable } from "@dnd-kit/react";
 
 type TaskItemProps = {
+  id: string;
   title: string;
   priority: TaskPriority;
   priorityOptions: readonly TaskPriority[];
@@ -33,6 +32,7 @@ type TaskItemProps = {
 };
 
 export default function TaskItem({
+  id,
   title,
   priority,
   priorityOptions,
@@ -54,6 +54,8 @@ export default function TaskItem({
   const priorityRef = useRef<HTMLDivElement | null>(null);
 
   const avatarClassName = `rounded-full ${canAssign ? "hover:cursor-default" : ""}`;
+
+  const { ref } = useDraggable({ id: id });
 
   const handleAvatarClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -116,7 +118,7 @@ export default function TaskItem({
   }, [isPriorityOpen]);
 
   return (
-    <Card className="relative group">
+    <Card className="relative group" ref={ref}>
       {canAssign && (
         <button
           type="button"
