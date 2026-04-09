@@ -10,6 +10,7 @@ import TaskItem from "./column/TaskItem";
 import { showError, showSuccess } from "@/lib/toast";
 import { useTask } from "@/context/TaskContext";
 import { useProject } from "@/context/ProjectContext";
+import { useDroppable } from "@dnd-kit/react";
 
 type ColumnProp = {
   statusColor: string;
@@ -36,6 +37,8 @@ export default function Column({
     onAdd(status);
     onModalOpen();
   };
+
+  const { isDropTarget, ref } = useDroppable({ id: status });
 
   const { takeTask, assignTask, unassignTask, changePriority, removeTask } =
     useTask();
@@ -88,7 +91,10 @@ export default function Column({
   };
 
   return (
-    <div className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260px] md:min-w-[300px] flex-1 rounded px-4 py-2">
+    <div
+      className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260px] md:min-w-[300px] flex-1 rounded px-4 py-2"
+      ref={ref}
+    >
       {/* Column Header*/}
       <div className="flex flex-row justify-between">
         <div className="flex flex-row gap-2 justify-start items-center">
@@ -110,6 +116,7 @@ export default function Column({
         {tasks.map((t) => (
           <TaskItem
             key={t.id}
+            id={t.id}
             title={t.title}
             priority={t.priority}
             priorityOptions={TASK_PRIORITIES}
