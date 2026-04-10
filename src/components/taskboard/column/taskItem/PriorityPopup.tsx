@@ -1,6 +1,6 @@
 import { TaskPriority } from "@/domain/tasks";
 import PriorityBadge from "./PriorityBadge";
-import { SurfaceItem, SurfaceRow } from "@/components/ui/surface/SurfaceItem";
+import { SurfaceRow } from "@/components/ui/surface/SurfaceItem";
 
 type PriorityPopupProps = {
   priorityOptions: readonly TaskPriority[];
