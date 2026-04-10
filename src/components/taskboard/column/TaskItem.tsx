@@ -84,36 +84,38 @@ export default function TaskItem({
   };
 
   useEffect(() => {
+    if (!isAssignOpen) return;
+
     const onOutsideClick = (event: MouseEvent) => {
-      if (!assignRef.current) return;
-      if (!assignRef.current.contains(event.target as Node)) {
-        setIsAssignOpen(false);
-      }
+      if (assignRef.current?.contains(event.target as Node)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      setIsAssignOpen(false);
     };
 
-    if (isAssignOpen) {
-      document.addEventListener("mousedown", onOutsideClick);
-    }
+    document.addEventListener("click", onOutsideClick, true);
 
     return () => {
-      document.removeEventListener("mousedown", onOutsideClick);
+      document.removeEventListener("click", onOutsideClick, true);
     };
   }, [isAssignOpen]);
 
   useEffect(() => {
+    if (!isPriorityOpen) return;
+
     const onOutsideClick = (event: MouseEvent) => {
-      if (!priorityRef.current) return;
-      if (!priorityRef.current.contains(event.target as Node)) {
-        setIsPriorityOpen(false);
-      }
+      if (priorityRef.current?.contains(event.target as Node)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      setIsPriorityOpen(false);
     };
 
-    if (isPriorityOpen) {
-      document.addEventListener("mousedown", onOutsideClick);
-    }
+    document.addEventListener("click", onOutsideClick, true);
 
     return () => {
-      document.removeEventListener("mousedown", onOutsideClick);
+      document.removeEventListener("click", onOutsideClick, true);
     };
   }, [isPriorityOpen]);
 
