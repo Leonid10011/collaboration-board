@@ -5,12 +5,13 @@ import {
   TaskStatus,
 } from "@/domain/tasks";
 import { User } from "@/domain/users";
-import { Circle, SquarePlus } from "lucide-react";
+import { Circle, CirclePlus, SquarePlus } from "lucide-react";
 import TaskItem from "./column/TaskItem";
 import { showError, showSuccess } from "@/lib/toast";
 import { useTask } from "@/context/TaskContext";
 import { useProject } from "@/context/ProjectContext";
 import { useDroppable } from "@dnd-kit/react";
+import { statusMap } from "./task-board.config";
 
 type ColumnProp = {
   statusColor: string;
@@ -92,23 +93,32 @@ export default function Column({
 
   return (
     <div
-      className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260px] md:min-w-[300px] flex-1 rounded px-4 py-2"
+      className="flex flex-col bg-main-2 h-full min-w-[220px] sm:min-w-[260px] md:min-w-[300px] flex-1 px-4 py-2"
       ref={ref}
     >
       {/* Column Header*/}
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between mb-4">
         <div className="flex flex-row gap-2 justify-start items-center">
-          <Circle width={24} height={24} color={statusColor} />
-          <span className="text-lg hover:cursor-default">{status}</span>
-          <span className="text-sm hover:cursor-default">
+          <Circle
+            width={24}
+            height={24}
+            color={statusColor}
+            fill={statusColor}
+            strokeWidth={1.25}
+          />
+          <span className="text-lg hover:cursor-default">
+            {statusMap[status]}
+          </span>
+          <span className="text-lg hover:cursor-default text-meta">
             {"(" + tasks.length + ")"}
           </span>
         </div>
-        <SquarePlus
+        <CirclePlus
           width={32}
           height={32}
           onClick={handleClick}
-          className="hover:cursor-default"
+          strokeWidth={1.25}
+          className="hover:cursor-default hover:text-meta "
         />
       </div>
       <div className="flex flex-col gap-4">

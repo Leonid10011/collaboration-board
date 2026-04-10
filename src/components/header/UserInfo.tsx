@@ -32,9 +32,9 @@ export default function UserInfo({
           {userName ? userName : "Not logged in"}{" "}
         </span>
         {online !== null && isUserOpen ? (
-          <ChevronUp size={16} />
+          <ChevronUp strokeWidth={1.25} size={16} />
         ) : (
-          <ChevronDown size={16} />
+          <ChevronDown strokeWidth={1.25} size={16} />
         )}
       </SurfaceRow>
       {children}
