@@ -12,7 +12,7 @@ import { FilterItem } from "./FilterItem";
 import { FILTER_CONFIG, FILTER_MODES, FilterMode } from "./task-board.config";
 
 export default function TaskBoardBasic() {
-  const STATUS_COLORS = ["gray", "yellow", "green"] as const;
+  const STATUS_COLORS = ["gray", "orange", "green"] as const;
 
   const { projectTasks: tasks } = useTask();
   const { projectMembers: members } = useProject();
@@ -76,12 +76,14 @@ export default function TaskBoardBasic() {
   }, [filteredTasks]);
 
   return (
-    <div className="flex flex-col flex-1 gap-4 px-board-inline py-2">
+    <div className="flex flex-col flex-1 p-board-inline">
       <div className="flex flex-row gap-2">
         {FILTER_MODES.map((mode, i) => (
-          <div key={mode}>
+          <div
+            key={mode}
+            className={`${filterMode === mode ? "bg-meta/10 rounded-tl-md rounded-tr-md" : ""}`}
+          >
             <FilterItem
-              key={mode}
               icon={FILTER_CONFIG[mode].icon}
               label={FILTER_CONFIG[mode].label}
               onFilter={() => handleFilterMode(mode)}
