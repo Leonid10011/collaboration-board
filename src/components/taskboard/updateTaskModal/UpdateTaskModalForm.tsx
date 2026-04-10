@@ -55,9 +55,9 @@ export default function UpdateTaskModalForm({
       </Field>
       <Field>
         <FieldLabel>Priority</FieldLabel>
-        <Select onValueChange={onPriorityChange}>
+        <Select value={priority} onValueChange={onPriorityChange}>
           <SelectTrigger className="w-full max-w-48">
-            <SelectValue placeholder={toUpper(priority)} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent position="popper">
             {TASK_PRIORITIES.map((p) => (
@@ -70,9 +70,9 @@ export default function UpdateTaskModalForm({
       </Field>
       <Field>
         <FieldLabel>Status</FieldLabel>
-        <Select onValueChange={onStatusChange}>
+        <Select value={status} onValueChange={onStatusChange}>
           <SelectTrigger className="w-full max-w-48">
-            <SelectValue placeholder={toUpper(status)} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent position="popper">
             {TASK_STATUSES.map((s) => (
