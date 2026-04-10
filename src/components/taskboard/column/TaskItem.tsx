@@ -122,13 +122,13 @@ export default function TaskItem({
       {canAssign && (
         <button
           type="button"
-          className="absolute top-2 right-2 inline-flex h-6 w-6 items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 rounded-full hover:bg-red-500 transition-colors"
+          className="absolute z-1 top-2 right-2 inline-flex h-6 w-6 items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 rounded-full hover:bg-red-500 transition-colors"
           onClick={onDelete}
         >
           <Trash2 size={16} />
         </button>
       )}
-      <CardSplit onClick={onUpdate}>
+      <CardSplit className="z-0" onClick={onUpdate}>
         {/*Left */}
         <div className="flex flex-col gap-2">
           <CardItem>
@@ -164,7 +164,7 @@ export default function TaskItem({
             <UserIcon
               width={32}
               height={32}
-              className={`rounded-full hover:bg-gray-700/50 p-1 ${canAssign ? "hover:cursor-default" : ""}`}
+              className={`rounded-full p-1 ${canAssign ? "hover:cursor-default hover:bg-meta/10" : ""}`}
               onClick={handleAvatarClick}
             />
           )}
