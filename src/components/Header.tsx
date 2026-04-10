@@ -84,8 +84,11 @@ export default function Header() {
               <div
                 className={`max-h-44 overflow-y-auto ${isSigningOut ? "disabled" : ""}`}
               >
-                <SurfaceRow className="text-sm" onClick={handleSignOut}>
-                  <LogOutIcon size={16} /> Logout
+                <SurfaceRow
+                  className="text-sm font-regular"
+                  onClick={handleSignOut}
+                >
+                  <LogOutIcon strokeWidth={1.25} size={16} /> Logout
                 </SurfaceRow>
               </div>
             </div>

@@ -10,7 +10,7 @@ export function FilterItem({ icon, label, onFilter }: FitlerItemProps) {
   return (
     <SurfaceRow onClick={onFilter}>
       {icon}
-      <span>{label}</span>
+      <span className="font-light">{label}</span>
     </SurfaceRow>
   );
 }
