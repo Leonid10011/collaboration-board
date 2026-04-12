@@ -7,7 +7,12 @@ type ProjectListType = {
 };
 
 export default function ProjectList({ projects }: ProjectListType) {
-  const { changeSelectedProject, removeProject } = useProject();
+  const { changeSelectedProject, removeProject, userRole } = useProject();
+
+  const handleDelete = async (id: string) => {
+    if (userRole !== "admin") return;
+    await removeProject(id);
+  };
 
   return (
     <div className="flex flex-col gap-1">
@@ -17,7 +22,7 @@ export default function ProjectList({ projects }: ProjectListType) {
           title={p.title}
           description={p.description}
           onClick={() => changeSelectedProject(p.id)}
-          onDelete={() => removeProject(p.id)}
+          onDelete={() => handleDelete(p.id)}
         />
       ))}
     </div>
