@@ -32,6 +32,8 @@ export default function UpdateTaskModal({
   const [priority, setPriority] = useState<TaskPriority>(selectedTask.priority);
   const [status, setStatus] = useState<TaskStatus>(selectedTask.status);
 
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+
   useEffect(() => {
     setTitle(selectedTask.title);
     setDescription(selectedTask.description);
@@ -40,37 +42,45 @@ export default function UpdateTaskModal({
   }, [selectedTask]);
 
   const handleConfirm = async () => {
-    const updates: UpdateTaskInput = {};
+    if (isSaving) return;
 
-    const nextTitle = title.trim();
-    if (!nextTitle) {
-      showError("Title is required");
-      return;
-    }
-    if (nextTitle !== selectedTask.title) {
-      updates.title = nextTitle;
-    }
-    const nextDescription = description.trim();
-    if (nextDescription !== selectedTask.description) {
-      updates.description = nextDescription;
-    }
-    if (priority !== selectedTask.priority) {
-      updates.priority = selectedTask.priority;
-    }
-    if (status !== selectedTask.status) {
-      updates.status = selectedTask.status;
-    }
-
-    if (Object.keys(updates).length === 0) {
-      onModalClose();
-      return;
-    }
+    setIsSaving(true);
 
     try {
+      const updates: UpdateTaskInput = {};
+
+      const nextTitle = title.trim();
+      if (!nextTitle) {
+        showError("Title is required");
+        return;
+      }
+      if (nextTitle !== selectedTask.title) {
+        updates.title = nextTitle;
+      }
+      if (description) {
+        const nextDescription = description.trim();
+        if (nextDescription !== selectedTask.description) {
+          updates.description = nextDescription;
+        }
+      }
+      if (priority !== selectedTask.priority) {
+        updates.priority = selectedTask.priority;
+      }
+      if (status !== selectedTask.status) {
+        updates.status = selectedTask.status;
+      }
+
+      if (Object.keys(updates).length === 0) {
+        onModalClose();
+        setIsSaving(false);
+        return;
+      }
       await patchTask(selectedTask.id, updates);
       showSuccess("Task Updated!");
     } catch (error) {
       showError(`${error}`);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -80,11 +90,12 @@ export default function UpdateTaskModal({
         onClose={handleClose}
         confirmLabel="Confirm"
         onConfirm={handleConfirm}
+        isLoading={isSaving}
       >
         <UpdateTaskModalForm
           title={title}
           onTitleChange={setTitle}
-          description={description}
+          description={description ? description : ""}
           onDescriptionChange={setDescription}
           priority={priority}
           onPriorityChange={setPriority}
