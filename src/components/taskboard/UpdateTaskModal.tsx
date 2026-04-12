@@ -1,4 +1,9 @@
-import { Task, TaskPriority, TaskStatus } from "@/domain/tasks";
+import {
+  Task,
+  TaskPriority,
+  TaskStatus,
+  UpdateTaskInput,
+} from "@/domain/tasks";
 import ModalShell from "../modal/ModalShell";
 import UpdateTaskModalForm from "./updateTaskModal/UpdateTaskModalForm";
 import { useState } from "react";
@@ -28,13 +33,34 @@ export default function UpdateTaskModal({
   const [status, setStatus] = useState<TaskStatus>(selectedTask.status);
 
   const handleConfirm = async () => {
+    const updates: UpdateTaskInput = {};
+
+    const nextTitle = title.trim();
+    if (!nextTitle) {
+      showError("Title is required");
+      return;
+    }
+    if (nextTitle !== selectedTask.title) {
+      updates.title = nextTitle;
+    }
+    const nextDescription = description.trim();
+    if (nextDescription !== selectedTask.description) {
+      updates.description = nextDescription;
+    }
+    if (priority !== selectedTask.priority) {
+      updates.priority = selectedTask.priority;
+    }
+    if (status !== selectedTask.status) {
+      updates.status = selectedTask.status;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      onModalClose();
+      return;
+    }
+
     try {
-      await patchTask(selectedTask.id, {
-        title: title,
-        description: description,
-        priority: priority,
-        status: status,
-      });
+      await patchTask(selectedTask.id, updates);
       showSuccess("Task Updated!");
     } catch (error) {
       showError(`${error}`);
