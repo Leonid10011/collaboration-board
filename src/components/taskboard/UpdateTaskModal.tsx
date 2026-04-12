@@ -6,7 +6,7 @@ import {
 } from "@/domain/tasks";
 import ModalShell from "../modal/ModalShell";
 import UpdateTaskModalForm from "./updateTaskModal/UpdateTaskModalForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTask } from "@/context/TaskContext";
 import { showError, showSuccess } from "@/lib/toast";
 
@@ -26,11 +26,18 @@ export default function UpdateTaskModal({
   const { patchTask } = useTask();
 
   const [title, setTitle] = useState<string>(selectedTask.title);
-  const [description, setDescription] = useState<string>(
+  const [description, setDescription] = useState<string | null>(
     selectedTask.description ? selectedTask.description : "",
   );
   const [priority, setPriority] = useState<TaskPriority>(selectedTask.priority);
   const [status, setStatus] = useState<TaskStatus>(selectedTask.status);
+
+  useEffect(() => {
+    setTitle(selectedTask.title);
+    setDescription(selectedTask.description);
+    setPriority(selectedTask.priority);
+    setStatus(selectedTask.status);
+  }, [selectedTask]);
 
   const handleConfirm = async () => {
     const updates: UpdateTaskInput = {};
