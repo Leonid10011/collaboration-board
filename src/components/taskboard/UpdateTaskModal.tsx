@@ -57,17 +57,19 @@ export default function UpdateTaskModal({
       if (nextTitle !== selectedTask.title) {
         updates.title = nextTitle;
       }
-      if (description) {
-        const nextDescription = description.trim();
-        if (nextDescription !== selectedTask.description) {
-          updates.description = nextDescription;
-        }
+
+      const nextDescription = description ? description.trim() : null;
+      const currentDescription = selectedTask.description ?? null;
+
+      if (nextDescription !== currentDescription) {
+        updates.description = nextDescription;
       }
+
       if (priority !== selectedTask.priority) {
-        updates.priority = selectedTask.priority;
+        updates.priority = priority;
       }
       if (status !== selectedTask.status) {
-        updates.status = selectedTask.status;
+        updates.status = status;
       }
 
       if (Object.keys(updates).length === 0) {
