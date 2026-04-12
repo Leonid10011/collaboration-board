@@ -157,7 +157,7 @@ export default function TaskItem({
             <Image
               width={32}
               height={32}
-              src="/images/profile_image_01.jpg"
+              src={assignedUserImageUrl}
               alt="Profile Pic"
               className={avatarClassName}
               onClick={handleAvatarClick}
@@ -181,11 +181,15 @@ export default function TaskItem({
           )}
 
           {assignedUserName ? (
-            <CardItem onClick={(e) => e.stopPropagation()}>
+            <CardItem
+              className="text-xs font-medium text-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
               {assignedUserName}
             </CardItem>
           ) : (
             <CardAction
+              className="p-1 rounded-md hover:bg-meta/10"
               onClick={(e) => {
                 e.stopPropagation();
                 onAction();

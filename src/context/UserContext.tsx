@@ -46,7 +46,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const userData: User = {
           id: result.id,
           userName: result.user_name,
-          imgUrl: "",
+          imgUrl: result.image_url,
           lastActive: new Date(),
         };
         setUser(userData);
