@@ -130,7 +130,10 @@ export default function TaskItem({
           <Trash2 size={16} />
         </button>
       )}
-      <CardSplit className="z-0" onClick={onUpdate}>
+      <CardSplit
+        className="z-0"
+        onClick={canAssign ? () => onUpdate() : undefined}
+      >
         {/*Left */}
         <div className="flex flex-col gap-2">
           <CardItem>
