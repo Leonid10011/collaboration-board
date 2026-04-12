@@ -2,7 +2,7 @@ type ModalShellProps = {
   children: React.ReactNode;
   onClose: (value: boolean) => void;
   confirmLabel?: string;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void> | void;
   isLoading: boolean;
 };
 
@@ -17,9 +17,8 @@ export default function ModalShell({
     onClose(false);
   };
 
-  const handleConfirm = () => {
-    onConfirm();
-    onClose(false);
+  const handleConfirm = async () => {
+    await onConfirm();
   };
 
   return (
