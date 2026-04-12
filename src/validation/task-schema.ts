@@ -22,9 +22,9 @@ export const TaskSchemaDB = z.object({
 export const TaskSchema = z.object({
   projectId: z.uuid(),
   creatorId: z.uuid(),
-  assgineeId: z.uuid().optional().nullable(),
+  assgineeId: z.uuid().nullable(),
   title: z.string().min(1),
-  description: z.string().optional().nullable(),
+  description: z.string().nullable(),
   status: z.enum(TASK_STATUSES),
   priority: z.enum(TASK_PRIORITIES),
 });

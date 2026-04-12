@@ -1,6 +1,7 @@
 import { toUpper } from "@/lib/utils";
 import InfoBlock from "../ui/InfoBlock";
 import { SurfaceItem } from "../ui/surface/SurfaceItem";
+import { useRef } from "react";
 
 type ProjectInfo = {
   projectTitle: string | null;
@@ -15,7 +16,20 @@ export default function ProjectInfo({
   onTitleChange,
   onBlur,
 }: ProjectInfo) {
-  //Will be replaced
+  const initialProjectTitleRef = useRef(projectTitle ?? "");
+
+  const handleFocus = () => {
+    initialProjectTitleRef.current = projectTitle ?? "";
+  };
+
+  const handleBlur = () => {
+    const currentProjectTitle = projectTitle ?? "";
+
+    if (currentProjectTitle !== initialProjectTitleRef.current) {
+      onBlur();
+      initialProjectTitleRef.current = currentProjectTitle;
+    }
+  };
 
   return (
     <div className="flex flex-row gap-4">
@@ -30,9 +44,11 @@ export default function ProjectInfo({
         <SurfaceItem>
           <input
             className="text-label  text-nowrap truncate hover:cursor-default"
-            value={projectTitle ? projectTitle : "No Project Selected"}
+            value={projectTitle ?? ""}
+            placeholder="No Project Selected"
             onChange={(e) => onTitleChange(e.currentTarget.value)}
-            onBlur={onBlur}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             disabled={role !== "admin"}
           />
         </SurfaceItem>

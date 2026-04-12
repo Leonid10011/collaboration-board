@@ -29,6 +29,8 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
 
   const [createError, setCreateError] = useState<string | null>(null);
 
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+
   const handleTitleChange = (title: string) => {
     setProjectTitle(title);
   };
@@ -55,6 +57,9 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
   };
 
   const handleCreateProject = async () => {
+    if (isSaving) return;
+
+    setIsSaving(true);
     try {
       setCreateError(null);
       if (!user) return;
@@ -80,11 +85,18 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
     } catch (error) {
       setCreateError(`Error creating Project: ${error}`);
       showError(`Error creating Project: ${error}`);
+      setIsSaving(false);
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
-    <ModalShell onConfirm={handleCreateProject} onClose={onClose}>
+    <ModalShell
+      onConfirm={handleCreateProject}
+      onClose={onClose}
+      isLoading={isSaving}
+    >
       <input
         placeholder={projectTitle}
         className="w-full text-4xl font-bold placeholder-gray-300 mb-8"
