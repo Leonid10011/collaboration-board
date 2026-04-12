@@ -8,9 +8,9 @@ export type Task = {
   id: string;
   projectId: string;
   creatorId: string;
-  assgineeId?: string | null;
+  assgineeId: string | null;
   title: string;
-  description?: string | null;
+  description: string | null;
   status: TaskStatus;
   priority: TaskPriority;
 };
