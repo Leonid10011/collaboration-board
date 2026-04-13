@@ -4,13 +4,13 @@ import { useProject } from "@/context/ProjectContext";
 
 import { useUser } from "@/context/UserContext";
 import { useEffect, useRef, useState } from "react";
-import { SurfaceRow } from "./ui/surface/SurfaceItem";
+import { SurfaceRow } from "../../../components/ui/surface/SurfaceItem";
 import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { showError, showSuccess } from "@/lib/toast";
-import UserInfo from "./header/UserInfo";
-import ProjectInfo from "./header/ProjectInfo";
-import MemberInfo from "./header/MembersInfo";
+import UserInfo from "../../users/components/UserInfo";
+import ProjectInfo from "../../projects/components/ProjectInfo";
+import MemberInfo from "../../memberships/components/MembersInfo";
 
 export default function Header() {
   const { userRole, projectMembers, selectedProject, patchProject } =

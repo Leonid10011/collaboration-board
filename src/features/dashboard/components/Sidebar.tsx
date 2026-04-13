@@ -1,9 +1,9 @@
 import { useProject } from "@/context/ProjectContext";
-import InfoBlock from "./ui/InfoBlock";
-import ProjectList from "./sidebar/ProjectList";
+import InfoBlock from "../../../components/ui/composed/InfoBlock";
+import ProjectList from "../../projects/components/ProjectList";
 import { useState } from "react";
-import CreateModalOpen from "./sidebar/CreateProjectModal";
-import { SurfaceRow } from "./ui/surface/SurfaceItem";
+import CreateModalOpen from "../../projects/components/CreateProjectModal";
+import { SurfaceRow } from "../../../components/ui/surface/SurfaceItem";
 import { Plus } from "lucide-react";
 
 export default function Sidebar() {

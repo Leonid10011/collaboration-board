@@ -108,6 +108,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
   const saveTask = async (task: CreateTaskInput): Promise<void> => {
     //validation
+
     const validated = TaskSchema.safeParse(task);
 
     if (!validated.success)

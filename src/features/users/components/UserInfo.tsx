@@ -1,8 +1,8 @@
 "use client";
 
-import InfoBlock from "../ui/InfoBlock";
+import InfoBlock from "../../../components/ui/composed/InfoBlock";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { SurfaceRow } from "../ui/surface/SurfaceItem";
+import { SurfaceRow } from "../../../components/ui/surface/SurfaceItem";
 import React from "react";
 
 type UserInfoProps = {

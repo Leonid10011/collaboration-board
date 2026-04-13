@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ModalShell from "../modal/ModalShell";
-import { showSuccess } from "@/lib/toast";
-import TaskModalForm from "./createTaskModal/TaskModalForm";
+import ModalShell from "../../../components/ui/modal/ModalShell";
+import { showError, showSuccess } from "@/lib/toast";
+import TaskModalForm from "./TaskModalForm";
 import { CreateTaskInput, TaskPriority, TaskStatus } from "@/domain/tasks";
 import { useProject } from "@/context/ProjectContext";
 import { useUser } from "@/context/UserContext";
@@ -21,6 +21,8 @@ export default function CreateTaskModal({
   const [title, setTitle] = useState<string>("New Task");
   const [description, setDescription] = useState<string>("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
+
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const { selectedProject } = useProject();
   const { user } = useUser();
@@ -43,25 +45,37 @@ export default function CreateTaskModal({
   };
 
   const handleConfirm = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+
     if (!selectedProject || !user) return;
 
     const dataToSend: CreateTaskInput = {
       projectId: selectedProject.id,
       creatorId: user.id,
       title: title,
+      assgineeId: null,
       description: description,
       status: newStatus,
       priority: priority,
     };
-
-    await saveTask(dataToSend);
-
-    showSuccess("Task Added!");
-    onModalClose();
+    try {
+      await saveTask(dataToSend);
+      showSuccess("Task Added!");
+      onModalClose();
+    } catch (error) {
+      showError(`Error creating Task. ${error}`);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
-    <ModalShell onClose={handleClose} onConfirm={handleConfirm}>
+    <ModalShell
+      onClose={handleClose}
+      onConfirm={handleConfirm}
+      isLoading={isSaving}
+    >
       <input
         placeholder={title}
         className="w-full text-4xl font-bold placeholder-gray-300 border-none outline-none bg transparent focus:ring-0 mb-8"

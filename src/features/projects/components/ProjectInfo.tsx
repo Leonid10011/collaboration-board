@@ -1,6 +1,6 @@
 import { toUpper } from "@/lib/utils";
-import InfoBlock from "../ui/InfoBlock";
-import { SurfaceItem } from "../ui/surface/SurfaceItem";
+import InfoBlock from "../../../components/ui/composed/InfoBlock";
+import { SurfaceItem } from "../../../components/ui/surface/SurfaceItem";
 import { useRef } from "react";
 
 type ProjectInfo = {

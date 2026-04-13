@@ -1,7 +1,7 @@
 "use client";
 
 import { DragDropProvider } from "@dnd-kit/react";
-import TaskBoardBasic from "./taskboard/TaskBoardBasic";
+import TaskBoardBasic from "../../tasks/components/TaskBoardBasic";
 import { useTask } from "@/context/TaskContext";
 import { TaskStatus } from "@/domain/tasks";
 

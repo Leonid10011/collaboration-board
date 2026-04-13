@@ -1,14 +1,14 @@
-import ModalShell from "../modal/ModalShell";
-import { TextareaField } from "../ui/TextareaField";
+import ModalShell from "../../../components/ui/modal/ModalShell";
+import { TextareaField } from "../../../components/ui/TextareaField";
 
 import { useUser } from "@/context/UserContext";
 
-import SearchInputField from "../ui/composed/SearchInputField";
+import SearchInputField from "../../../components/ui/composed/SearchInputField";
 
-import { Field, FieldLabel } from "../ui/field";
+import { Field, FieldLabel } from "../../../components/ui/field";
 
 import { useState } from "react";
-import { MemberBadge } from "./createProjectModal/MemberBadge";
+import { MemberBadge } from "../../memberships/components/MemberBadge";
 import { insertProject } from "@/repository/repository-projects";
 import { Project } from "@/domain/projects";
 import { addMemberToProject } from "@/repository/repository-project-memberships";

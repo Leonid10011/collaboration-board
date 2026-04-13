@@ -4,8 +4,8 @@ import {
   TaskStatus,
   UpdateTaskInput,
 } from "@/domain/tasks";
-import ModalShell from "../modal/ModalShell";
-import UpdateTaskModalForm from "./updateTaskModal/UpdateTaskModalForm";
+import ModalShell from "../../../components/ui/modal/ModalShell";
+import UpdateTaskModalForm from "./UpdateTaskModalForm";
 import { useEffect, useState } from "react";
 import { useTask } from "@/context/TaskContext";
 import { showError, showSuccess } from "@/lib/toast";

@@ -2,8 +2,8 @@ import { TaskPriority } from "@/domain/tasks";
 import { Trash2, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import AssignPopup from "./taskItem/AssignPopup";
-import PriorityPopup from "./taskItem/PriorityPopup";
+import AssignPopup from "./AssignPopup";
+import PriorityPopup from "./PriorityPopup";
 import {
   Card,
   CardAction,
@@ -11,7 +11,7 @@ import {
   CardSplit,
   CardTitle,
 } from "@/components/ui/card/Card";
-import PriorityBadge from "./taskItem/PriorityBadge";
+import PriorityBadge from "./PriorityBadge";
 import { useDraggable } from "@dnd-kit/react";
 
 type TaskItemProps = {

@@ -6,12 +6,12 @@ import {
 } from "@/domain/tasks";
 import { User } from "@/domain/users";
 import { Circle, CirclePlus, SquarePlus } from "lucide-react";
-import TaskItem from "./column/TaskItem";
+import TaskItem from "./TaskItem";
 import { showError, showSuccess } from "@/lib/toast";
 import { useTask } from "@/context/TaskContext";
 import { useProject } from "@/context/ProjectContext";
 import { useDroppable } from "@dnd-kit/react";
-import { statusMap } from "./task-board.config";
+import { statusMap } from "../task-board.config";
 
 type ColumnProp = {
   statusColor: string;

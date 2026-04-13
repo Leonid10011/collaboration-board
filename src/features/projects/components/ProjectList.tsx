@@ -1,5 +1,5 @@
 import { Project } from "@/domain/projects";
-import ProjectItem from "./projectList/ProjectItem";
+import ProjectItem from "../../../components/sidebar/projectList/ProjectItem";
 import { useProject } from "@/context/ProjectContext";
 
 type ProjectListType = {

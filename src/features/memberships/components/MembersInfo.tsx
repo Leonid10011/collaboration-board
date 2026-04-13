@@ -1,6 +1,6 @@
 import { User } from "@/domain/users";
-import InfoBlock from "../ui/InfoBlock";
-import MemberStatus from "./memberInfo/MemberStatus";
+import InfoBlock from "../../../components/ui/composed/InfoBlock";
+import MemberStatus from "./MemberStatus";
 
 type MemberInfoProps = {
   members: User[] | null;
