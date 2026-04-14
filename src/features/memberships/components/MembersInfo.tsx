@@ -1,9 +1,9 @@
-import { User } from "@/domain/users";
 import InfoBlock from "../../../components/ui/composed/InfoBlock";
 import MemberStatus from "./MemberStatus";
+import { ProjectMember } from "../types";
 
 type MemberInfoProps = {
-  members: User[] | null;
+  members: ProjectMember[] | null;
 };
 
 export default function MemberInfo({ members }: MemberInfoProps) {
@@ -14,7 +14,7 @@ export default function MemberInfo({ members }: MemberInfoProps) {
           members.map((m) => (
             <MemberStatus
               key={m.id}
-              name={m.userName}
+              name={m.username}
               img_url={m.imgUrl}
               online={true}
             />

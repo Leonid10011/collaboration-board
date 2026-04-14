@@ -1,14 +1,60 @@
 import { useProject } from "@/context/ProjectContext";
 import InfoBlock from "../../../components/ui/composed/InfoBlock";
 import ProjectList from "../../projects/components/ProjectList";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CreateModalOpen from "../../projects/components/CreateProjectModal";
 import { SurfaceRow } from "../../../components/ui/surface/SurfaceItem";
-import { Plus } from "lucide-react";
+import { Plus, View } from "lucide-react";
+import { Project } from "@/features/projects/types";
+import { listProjects } from "@/features/projects/queries/get-projects";
+import { Membership } from "@/features/memberships/types";
+import { getMembershipsByUserId } from "@/features/memberships/get-memberships-by-user-id";
+import { showError } from "@/lib/toast";
 
-export default function Sidebar() {
-  const { userProjects } = useProject();
+type SidebarProps = {
+  userId: string;
+};
+
+export default function Sidebar({ userId }: SidebarProps) {
+  //const { userProjects } = useProject();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [userMemberships, setUserMemberships] = useState<Membership[]>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const results = await listProjects();
+      setProjects(results);
+    };
+
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchMembershipsbyUserId = async () => {
+      try {
+        const result = await getMembershipsByUserId(userId);
+        setUserMemberships(result);
+      } catch (error) {
+        showError("Error fetching memberships by user id.");
+      }
+    };
+
+    fetchMembershipsbyUserId();
+  }, [userId]);
+
+  const userProjects = useMemo(() => {
+    if (!userId) return [];
+
+    const tmp = projects.filter((project) =>
+      userMemberships.some((membership) => membership.projectId === project.id),
+    );
+
+    return tmp;
+  }, [projects, userId, userMemberships]);
 
   const handleModalOpen = (value: boolean) => {
     setIsModalOpen(value);

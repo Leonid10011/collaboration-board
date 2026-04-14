@@ -22,8 +22,8 @@ export type TaskDB = {
   assignee_id: string | null;
   title: string;
   description: string | null;
-  status: string;
-  priority: string;
+  status: TaskStatus;
+  priority: TaskPriority;
   created_at: string;
   updated_at: string;
 };

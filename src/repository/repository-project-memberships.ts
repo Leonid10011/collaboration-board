@@ -1,34 +1,27 @@
 "use client";
 
-import { MembershipDB, MemberWithProfileDB } from "@/db/supabase/membership-db";
+import { MembershipDB } from "@/db/supabase/membership-db";
 import {
   mapMembershipDBToMembership,
   mapMemberWithProfileDBToMember,
 } from "@/db/supabase/membership-mapper";
-import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
+
 import { Membership } from "@/domain/memberships";
-import { Member } from "@/domain/users";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+
+import { QueryData } from "@supabase/supabase-js";
 
 const supabase = createSupabaseBrowserClient();
 
-/**
- *
- * @param projectId
- * @returns
- */
-export async function getMembershipsByProjectId(
-  projectId: string,
-): Promise<Member[]> {
-  const result = await supabase
+export async function getMembershipsByProjectId(projectId: string) {
+  const supabase2 = createSupabaseBrowserClient();
+
+  const query = supabase2
     .from("project_memberships")
     .select("*, profiles (id, user_name, last_active, img_url)")
-    .eq("project_id", projectId)
+    .eq("project_id", projectId);
 
-    .returns<MemberWithProfileDB[]>();
-
-  const memberships = result.data || [];
-
-  return memberships.map(mapMemberWithProfileDBToMember);
+  return query.data.map(mapMemberWithProfileDBToMember);
 }
 
 export async function getMembershipsByUserId(

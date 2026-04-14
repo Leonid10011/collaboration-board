@@ -11,10 +11,16 @@ import { showError, showSuccess } from "@/lib/toast";
 import UserInfo from "../../users/components/UserInfo";
 import ProjectInfo from "../../projects/components/ProjectInfo";
 import MemberInfo from "../../memberships/components/MembersInfo";
+import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 
-export default function Header() {
-  const { userRole, projectMembers, selectedProject, patchProject } =
-    useProject();
+interface HeaderProps {
+  userRole: ProjectRole | null;
+  projectTitle: string | null;
+  projectMembers: ProjectMember[];
+}
+
+export default function Header({ userRole, projectMembers }: HeaderProps) {
+  const { selectedProject, patchProject } = useProject();
   const { user, signout } = useUser();
 
   const [isUserOpen, setIsUserOpen] = useState<boolean>(false);

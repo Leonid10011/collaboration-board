@@ -1,8 +1,10 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { SessionUser } from "../types";
+import { mapProfileDBtoDomain } from "../mapper";
 
-export const getSessionUser = async () => {
+export const getSessionUser = async (): Promise<SessionUser> => {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.getUser();
 
@@ -22,5 +24,5 @@ export const getSessionUser = async () => {
     );
   }
 
-  return profileData;
+  return mapProfileDBtoDomain(profileData);
 };
