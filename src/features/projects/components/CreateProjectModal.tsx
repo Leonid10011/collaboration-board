@@ -1,5 +1,7 @@
+"use client";
+
 import ModalShell from "../../../components/ui/modal/ModalShell";
-import { TextareaField } from "../../../components/ui/TextareaField";
+import { TextareaField } from "../../../components/ui/composed/TextareaField";
 
 import { useUser } from "@/context/UserContext";
 
@@ -9,12 +11,12 @@ import { Field, FieldLabel } from "../../../components/ui/field";
 
 import { useState } from "react";
 import { MemberBadge } from "../../memberships/components/MemberBadge";
-import { insertProject } from "@/repository/repository-projects";
 import { Project } from "@/domain/projects";
 import { addMemberToProject } from "@/repository/repository-project-memberships";
 import { ProjectSchema } from "@/validation/project-schema";
 import { showError, showSuccess } from "@/lib/toast";
 import { User } from "@/domain/users";
+import { insertProject } from "../actions/create-project";
 
 type CreateModalOpenProps = {
   onClose: () => void;

@@ -1,9 +1,4 @@
 import { Project, UpdateProjectInput } from "@/domain/projects";
-import {
-  deleteProject,
-  listProjects,
-  updateProject,
-} from "@/repository/repository-projects";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useUser } from "./UserContext";
 import {
@@ -15,6 +10,9 @@ import { Membership } from "@/domain/memberships";
 import { Member, User } from "@/domain/users";
 import { showSuccess } from "@/lib/toast";
 import { UpdateProjectSchema } from "@/validation/project-schema";
+import { listProjects } from "@/features/projects/queries/get-projects";
+import { updateProject } from "@/features/projects/actions/update-project";
+import { deleteProject } from "@/features/projects/actions/delete-project";
 
 type ProjectContextType = {
   selectedProject: Project | null;

@@ -1,8 +1,8 @@
 "use server";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import "server-only";
 
-const supabase = await createSupabaseServerClient();
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 /**
  *
@@ -11,6 +11,7 @@ const supabase = await createSupabaseServerClient();
  */
 
 export const deleteProject = async (projectId: string) => {
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from("projects")
     .delete()

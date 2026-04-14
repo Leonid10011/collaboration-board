@@ -5,12 +5,6 @@ import {
   TaskStatus,
   UpdateTaskInput,
 } from "@/domain/tasks";
-import {
-  deleteTaskRepo,
-  getTasksByProjectId,
-  insertTaskRepo,
-  updateTaskRepo,
-} from "@/repository/repository-tasks";
 import { TaskSchema, UpdateTaskSchema } from "@/validation/task-schema";
 import {
   createContext,
@@ -21,10 +15,14 @@ import {
 } from "react";
 import { useProject } from "./ProjectContext";
 import { showError } from "@/lib/toast";
-import { IdSchema } from "@/validation/global-schema";
+import { IdSchema } from "@/global-schema";
 import { useUser } from "./UserContext";
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
 import { id } from "zod/locales";
+import { updateTaskRepo } from "@/features/tasks/actions/update-task";
+import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks";
+import { insertTaskRepo } from "@/features/tasks/actions/create-task";
+import { deleteTaskRepo } from "@/features/tasks/actions/delete-task";
 
 type TaskContextType = {
   // For current project

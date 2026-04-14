@@ -1,3 +1,5 @@
+"use server";
+
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Task, TaskDB, UpdateTaskInput } from "../types";
 import { mapTaskDBToTask } from "../mapper";

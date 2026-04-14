@@ -4,8 +4,6 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Project, ProjectDB } from "../types";
 import { mapProjectDBToDomain } from "../mapper";
 
-const supabase = await createSupabaseServerClient();
-
 /**
  *
  * @param projectId
@@ -17,6 +15,7 @@ export const updateProject = async (
   projectId: string,
   updates: Partial<Project>,
 ): Promise<Project> => {
+  const supabase = await createSupabaseServerClient();
   console.log("Updating project with ID:", projectId, "and updates:", updates);
 
   const { data, error } = await supabase

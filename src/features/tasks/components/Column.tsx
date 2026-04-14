@@ -5,7 +5,7 @@ import {
   TaskStatus,
 } from "@/domain/tasks";
 import { User } from "@/domain/users";
-import { Circle, CirclePlus, SquarePlus } from "lucide-react";
+import { Circle, CirclePlus } from "lucide-react";
 import TaskItem from "./TaskItem";
 import { showError, showSuccess } from "@/lib/toast";
 import { useTask } from "@/context/TaskContext";

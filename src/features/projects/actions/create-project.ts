@@ -1,9 +1,8 @@
 "use server";
 
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import "server-only";
 import { Project } from "../types";
-
-const supabase = createSupabaseBrowserClient();
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 /**
  * Creating project requires the creation of ProjectMemberships in order to assign the project to the user. This is handled in the API route, so we only need to insert the project here.
@@ -11,6 +10,8 @@ const supabase = createSupabaseBrowserClient();
  * @returns project_id of the inserted Project.
  */
 export const insertProject = async (project: Omit<Project, "id">) => {
+  const supabase = await createSupabaseServerClient();
+
   const dataToSend = {
     title: project.title,
     owner_id: project.ownerId,
