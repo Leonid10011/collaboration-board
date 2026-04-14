@@ -1,7 +1,7 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { Project, ProjectDB } from "../types";
+import { Project, ProjectDB, UpdateProjectInput } from "../types";
 import { mapProjectDBToDomain } from "../mapper";
 
 /**
@@ -13,7 +13,7 @@ import { mapProjectDBToDomain } from "../mapper";
 
 export const updateProject = async (
   projectId: string,
-  updates: Partial<Project>,
+  updates: UpdateProjectInput,
 ): Promise<Project> => {
   const supabase = await createSupabaseServerClient();
   console.log("Updating project with ID:", projectId, "and updates:", updates);

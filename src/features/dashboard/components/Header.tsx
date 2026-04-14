@@ -12,21 +12,24 @@ import UserInfo from "../../users/components/UserInfo";
 import ProjectInfo from "../../projects/components/ProjectInfo";
 import MemberInfo from "../../memberships/components/MembersInfo";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
+import { useSelectedProject } from "../context/SelectedProjectContext";
+import { updateProject } from "@/features/projects/actions/update-project";
 
 interface HeaderProps {
   userRole: ProjectRole | null;
-  projectTitle: string | null;
+  selectedProjectTitle: string | null;
   projectMembers: ProjectMember[];
 }
 
 export default function Header({ userRole, projectMembers }: HeaderProps) {
-  const { selectedProject, patchProject } = useProject();
+  const { selectedProject } = useSelectedProject();
+
   const { user, signout } = useUser();
 
   const [isUserOpen, setIsUserOpen] = useState<boolean>(false);
   const [isSigningOut, setIsSigningOut] = useState<boolean>(false);
 
-  const [projectTitle, setProjectTitle] = useState<string>("");
+  const [projectTitle, setProjectTitle] = useState<string | null>(null);
 
   const userMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -35,6 +38,10 @@ export default function Header({ userRole, projectMembers }: HeaderProps) {
   useEffect(() => {
     setProjectTitle(selectedProject ? selectedProject.title : "");
   }, [selectedProject]);
+
+  const handleOnTitleChange = (title: string) => {
+    setProjectTitle(title);
+  };
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -69,7 +76,9 @@ export default function Header({ userRole, projectMembers }: HeaderProps) {
   const handleProjectTitle = async () => {
     if (!selectedProject) return;
     try {
-      await patchProject(selectedProject?.id, { title: projectTitle });
+      await updateProject(selectedProject?.id, {
+        title: projectTitle ? projectTitle : undefined,
+      });
       showSuccess("Project Title updated");
     } catch (error) {
       showError(`Error updating ProjectTitle: ${error}`);
@@ -105,7 +114,7 @@ export default function Header({ userRole, projectMembers }: HeaderProps) {
         <ProjectInfo
           projectTitle={projectTitle ? projectTitle : null}
           role={userRole ? userRole : null}
-          onTitleChange={setProjectTitle}
+          onTitleChange={handleOnTitleChange}
           onBlur={handleProjectTitle}
         />
         <MemberInfo members={projectMembers} />

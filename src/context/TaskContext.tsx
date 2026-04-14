@@ -23,6 +23,7 @@ import { updateTaskRepo } from "@/features/tasks/actions/update-task";
 import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks";
 import { insertTaskRepo } from "@/features/tasks/actions/create-task";
 import { deleteTaskRepo } from "@/features/tasks/actions/delete-task";
+import { useSelectedProject } from "@/features/dashboard/context/SelectedProjectContext";
 
 type TaskContextType = {
   // For current project
@@ -54,7 +55,7 @@ type TaskProviderProps = {
 };
 
 export function TaskProvider({ children }: TaskProviderProps) {
-  const { selectedProject } = useProject();
+  const { selectedProject } = useSelectedProject();
 
   const [projectTasks, setProjectTasks] = useState<Task[]>([]);
 

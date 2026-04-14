@@ -1,9 +1,13 @@
-import { createContext, useContext, useState } from "react";
+"use client";
+
+import { Project, ProjectsState } from "@/features/projects/types";
+import { createContext, useContext, useMemo, useState } from "react";
 
 type SelectedProjectContextType = {
-  projectId: string | null;
-  projectTitle: string | null;
-  changeSelectedProject: (id: string, title: string) => void;
+  projects: ProjectsState;
+  selectedProjectId: string | null;
+  selectedProject: Project | null;
+  selectProject: (id: string | null) => void;
 };
 
 export const SelectedProjectContext =
@@ -11,6 +15,7 @@ export const SelectedProjectContext =
 
 type SelectedProjectProviderType = {
   children: React.ReactNode;
+  projectState: ProjectsState;
 };
 
 export const useSelectedProject = () => {
@@ -25,19 +30,30 @@ export const useSelectedProject = () => {
 
 export function SelectedProjectProvider({
   children,
+  projectState,
 }: SelectedProjectProviderType) {
-  const [projectId, setProjectId] = useState<string | null>(null);
-  const [projectTitle, setProjectTitle] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null,
+  );
 
-  const changeSelectedProject = (id: string, title: string) => {
-    setProjectId(id);
-    setProjectTitle(title);
-  };
+  const selectedProject = useMemo(() => {
+    if (!selectedProjectId) return null;
+    console.log("select project: ", projectState);
+    return projectState.byId[selectedProjectId] ?? null;
+  }, [projectState, selectedProjectId]);
+
+  const value = useMemo(
+    () => ({
+      projects: projectState,
+      selectedProjectId,
+      selectedProject,
+      selectProject: setSelectedProjectId,
+    }),
+    [projectState, selectedProjectId, selectedProject],
+  );
 
   return (
-    <SelectedProjectContext.Provider
-      value={{ projectId, projectTitle, changeSelectedProject }}
-    >
+    <SelectedProjectContext.Provider value={value}>
       {children}
     </SelectedProjectContext.Provider>
   );

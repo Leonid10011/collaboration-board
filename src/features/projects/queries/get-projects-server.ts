@@ -1,6 +1,8 @@
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+"use server";
+
 import { Project, ProjectDB } from "../types";
 import { mapProjectDBToDomain } from "../mapper";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 /** PROJECTS */
 /**
@@ -8,7 +10,7 @@ import { mapProjectDBToDomain } from "../mapper";
  * @returns An array of projects. Returns an empty array if there was an error fetching the projects.
  */
 export const listProjects = async (): Promise<Project[]> => {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("projects")
     .select("*")

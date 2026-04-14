@@ -2,7 +2,10 @@
 
 import HomePage from "@/features/dashboard/components/HomePage";
 import { getSessionUser } from "../features/auth/queries/get-session-user";
-import { listProjects } from "@/features/projects/queries/get-projects";
+
+import { normalizeProjects } from "@/features/projects/utils";
+import { SelectedProjectProvider } from "@/features/dashboard/context/SelectedProjectContext";
+import { listProjects } from "@/features/projects/queries/get-projects-server";
 
 export default async function Home() {
   const [viewer, projects] = await Promise.all([
@@ -10,5 +13,11 @@ export default async function Home() {
     listProjects(),
   ]);
 
-  return <HomePage viewer={viewer} projects={projects} />;
+  const projectsState = normalizeProjects(projects);
+
+  return (
+    <SelectedProjectProvider projectState={projectsState}>
+      <HomePage viewer={viewer} />;
+    </SelectedProjectProvider>
+  );
 }

@@ -25,7 +25,7 @@ type ProjectContextType = {
   patchProject: (id: string, update: UpdateProjectInput) => Promise<void>;
 };
 
-const ProjectContext = createContext<ProjectContextType | null>(null);
+const ProjectContext = createContext<null>(null);
 
 export function useProject() {
   const context = useContext(ProjectContext);
@@ -186,19 +186,6 @@ export function ProjectProvider({ children }: ProjectProviderType) {
   };
 
   return (
-    <ProjectContext.Provider
-      value={{
-        userProjects,
-        selectedProject,
-        projectMembers: selectedProjectMemberships,
-        projects,
-        changeSelectedProject,
-        userRole,
-        removeProject,
-        patchProject,
-      }}
-    >
-      {children}
-    </ProjectContext.Provider>
+    <ProjectContext.Provider value={null}>{children}</ProjectContext.Provider>
   );
 }

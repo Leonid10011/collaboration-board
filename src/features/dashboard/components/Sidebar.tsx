@@ -1,22 +1,21 @@
-import { useProject } from "@/context/ProjectContext";
 import InfoBlock from "../../../components/ui/composed/InfoBlock";
 import ProjectList from "../../projects/components/ProjectList";
 import { useEffect, useMemo, useState } from "react";
 import CreateModalOpen from "../../projects/components/CreateProjectModal";
 import { SurfaceRow } from "../../../components/ui/surface/SurfaceItem";
-import { Plus, View } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Project } from "@/features/projects/types";
 import { listProjects } from "@/features/projects/queries/get-projects";
-import { Membership } from "@/features/memberships/types";
+import { Membership, ProjectRole } from "@/features/memberships/types";
 import { getMembershipsByUserId } from "@/features/memberships/get-memberships-by-user-id";
 import { showError } from "@/lib/toast";
 
 type SidebarProps = {
   userId: string;
+  userRole: ProjectRole | null;
 };
 
-export default function Sidebar({ userId }: SidebarProps) {
-  //const { userProjects } = useProject();
+export default function Sidebar({ userId, userRole }: SidebarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [projects, setProjects] = useState<Project[]>([]);
@@ -73,7 +72,7 @@ export default function Sidebar({ userId }: SidebarProps) {
         </SurfaceRow>
       </InfoBlock>
       <InfoBlock title="Projects">
-        <ProjectList projects={userProjects} />
+        <ProjectList projects={userProjects} userRole={userRole} />
       </InfoBlock>
       {isModalOpen && (
         <CreateModalOpen onClose={() => handleModalOpen(false)} />
