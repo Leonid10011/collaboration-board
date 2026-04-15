@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CreateTaskInput,
   Task,
@@ -15,13 +17,11 @@ import {
 } from "react";
 import { showError } from "@/lib/toast";
 import { IdSchema } from "@/global-schema";
-import { useUser } from "./UserContext";
+
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
-import { updateTaskRepo } from "@/features/tasks/actions/update-task";
 import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks";
-import { insertTaskRepo } from "@/features/tasks/actions/create-task";
-import { deleteTaskRepo } from "@/features/tasks/actions/delete-task";
 import { useSelectedProject } from "@/features/dashboard/context/SelectedProjectContext";
+import { useAuth } from "@/features/auth/AuthContext";
 
 type TaskContextType = {
   // For current project
@@ -57,7 +57,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
   const [projectTasks, setProjectTasks] = useState<Task[]>([]);
 
-  const { user } = useUser();
+  const { user } = useAuth();
   const supabase = createSupabaseBrowserClient();
 
   const fetchTasks = useCallback(async () => {
