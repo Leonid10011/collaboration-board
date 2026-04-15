@@ -4,8 +4,17 @@ import { DragDropProvider } from "@dnd-kit/react";
 import TaskBoardBasic from "../../tasks/components/TaskBoardBasic";
 import { useTask } from "@/context/TaskContext";
 import { TaskStatus } from "@/domain/tasks";
+import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 
-export default function TaskBoard() {
+type TaskBoardProps = {
+  userRole: ProjectRole | null;
+  projectMembers: ProjectMember[];
+};
+
+export default function TaskBoard({
+  userRole,
+  projectMembers,
+}: TaskBoardProps) {
   const { optimistic_changeStatus } = useTask();
 
   return (
@@ -35,7 +44,7 @@ export default function TaskBoard() {
         }
       }}
     >
-      <TaskBoardBasic />
+      <TaskBoardBasic userRole={userRole} members={projectMembers} />
     </DragDropProvider>
   );
 }

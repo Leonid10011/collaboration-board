@@ -1,8 +1,5 @@
 "use client";
 
-import { useProject } from "@/context/ProjectContext";
-
-import { useUser } from "@/context/UserContext";
 import { useEffect, useRef, useState } from "react";
 import { SurfaceRow } from "../../../components/ui/surface/SurfaceItem";
 import { LogOutIcon } from "lucide-react";
@@ -14,6 +11,7 @@ import MemberInfo from "../../memberships/components/MembersInfo";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { useSelectedProject } from "../context/SelectedProjectContext";
 import { updateProject } from "@/features/projects/actions/update-project";
+import { useAuth } from "@/features/auth/AuthContext";
 
 interface HeaderProps {
   userRole: ProjectRole | null;
@@ -24,7 +22,7 @@ interface HeaderProps {
 export default function Header({ userRole, projectMembers }: HeaderProps) {
   const { selectedProject } = useSelectedProject();
 
-  const { user, signout } = useUser();
+  const { user, signout } = useAuth();
 
   const [isUserOpen, setIsUserOpen] = useState<boolean>(false);
   const [isSigningOut, setIsSigningOut] = useState<boolean>(false);

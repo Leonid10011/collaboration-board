@@ -3,8 +3,6 @@
 import ModalShell from "../../../components/ui/modal/ModalShell";
 import { TextareaField } from "../../../components/ui/composed/TextareaField";
 
-import { useUser } from "@/context/UserContext";
-
 import SearchInputField from "../../../components/ui/composed/SearchInputField";
 
 import { Field, FieldLabel } from "../../../components/ui/field";
@@ -17,13 +15,14 @@ import { ProjectSchema } from "@/validation/project-schema";
 import { showError, showSuccess } from "@/lib/toast";
 import { User } from "@/domain/users";
 import { insertProject } from "../actions/create-project";
+import { useAuth } from "@/features/auth/AuthContext";
 
 type CreateModalOpenProps = {
   onClose: () => void;
 };
 
 export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
-  const { users, user } = useUser();
+  const { users, user } = useAuth();
 
   const [projectTitle, setProjectTitle] = useState<string>("New Project");
   const [projectDescription, setProjectDescription] = useState<string>("");

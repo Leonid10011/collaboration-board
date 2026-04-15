@@ -1,6 +1,5 @@
 import { Project } from "@/domain/projects";
 import ProjectItem from "./ProjectItem";
-import { useProject } from "@/context/ProjectContext";
 import { ProjectRole } from "@/features/memberships/types";
 import { deleteProject } from "../actions/delete-project";
 import { useSelectedProject } from "@/features/dashboard/context/SelectedProjectContext";

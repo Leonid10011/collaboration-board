@@ -62,7 +62,7 @@ export default function HomePage({ viewer }: HomePageProps) {
       />
       <div className="flex flex-row flex-1">
         <Sidebar userId={viewer.id} userRole={userRole} />
-        <TaskBoard />
+        <TaskBoard userRole={userRole} projectMembers={projectMembers} />
       </div>
     </div>
   );

@@ -3,9 +3,9 @@ import ModalShell from "../../../components/ui/modal/ModalShell";
 import { showError, showSuccess } from "@/lib/toast";
 import TaskModalForm from "./TaskModalForm";
 import { CreateTaskInput, TaskPriority, TaskStatus } from "@/domain/tasks";
-import { useProject } from "@/context/ProjectContext";
-import { useUser } from "@/context/UserContext";
 import { useTask } from "@/context/TaskContext";
+import { useSelectedProject } from "@/features/dashboard/context/SelectedProjectContext";
+import { useAuth } from "@/features/auth/AuthContext";
 
 type CreateTaskItemProps = {
   onModalClose: () => void;
@@ -24,8 +24,8 @@ export default function CreateTaskModal({
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  const { selectedProject } = useProject();
-  const { user } = useUser();
+  const { selectedProject } = useSelectedProject();
+  const { user } = useAuth();
   const { saveTask } = useTask();
 
   const handlePriority = (value: TaskPriority) => {

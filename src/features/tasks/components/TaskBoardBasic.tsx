@@ -2,21 +2,30 @@
 
 import { useMemo, useState } from "react";
 import Column from "./Column";
-import { useProject } from "@/context/ProjectContext";
 import { Task, TASK_STATUSES, TaskStatus } from "@/domain/tasks";
 import CreateTaskModal from "./CreateTaskModal";
 import { useTask } from "@/context/TaskContext";
 import UpdateTaskModal from "./UpdateTaskModal";
-import { useUser } from "@/context/UserContext";
 import { FilterItem } from "./FilterItem";
 import { FILTER_CONFIG, FILTER_MODES, FilterMode } from "../task-board.config";
+import { ProjectMember, ProjectRole } from "@/features/memberships/types";
+import { useAuth } from "@/features/auth/AuthContext";
 
-export default function TaskBoardBasic() {
+type TaskBoardBasicProps = {
+  members: ProjectMember[];
+  userRole: ProjectRole | null;
+};
+
+export default function TaskBoardBasic({
+  members,
+  userRole,
+}: TaskBoardBasicProps) {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
   const { projectTasks: tasks } = useTask();
-  const { projectMembers: members } = useProject();
-  const { user } = useUser();
+  //const { projectMembers: members } = useProject();
+  const { user } = useAuth();
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
   const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>("backlog");
@@ -104,6 +113,7 @@ export default function TaskBoardBasic() {
             onUpdateModalOpen={() => handleUpdateModalOpen(true)}
             onAdd={handleNewTaskStatus}
             onSelectedTask={handleSelectedTask}
+            userRole={userRole}
           />
         ))}
       </div>

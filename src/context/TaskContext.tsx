@@ -13,12 +13,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useProject } from "./ProjectContext";
 import { showError } from "@/lib/toast";
 import { IdSchema } from "@/global-schema";
 import { useUser } from "./UserContext";
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
-import { id } from "zod/locales";
 import { updateTaskRepo } from "@/features/tasks/actions/update-task";
 import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks";
 import { insertTaskRepo } from "@/features/tasks/actions/create-task";

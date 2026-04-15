@@ -4,24 +4,24 @@ import {
   TaskPriority,
   TaskStatus,
 } from "@/domain/tasks";
-import { User } from "@/domain/users";
 import { Circle, CirclePlus } from "lucide-react";
 import TaskItem from "./TaskItem";
 import { showError, showSuccess } from "@/lib/toast";
 import { useTask } from "@/context/TaskContext";
-import { useProject } from "@/context/ProjectContext";
 import { useDroppable } from "@dnd-kit/react";
 import { statusMap } from "../task-board.config";
+import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 
 type ColumnProp = {
   statusColor: string;
   status: TaskStatus;
   tasks: Task[];
-  userMap: Map<string, User> | null;
+  userMap: Map<string, ProjectMember> | null;
   onModalOpen: () => void;
   onAdd: (s: TaskStatus) => void;
   onUpdateModalOpen: () => void;
   onSelectedTask: (taskId: string) => void;
+  userRole: ProjectRole | null;
 };
 
 export default function Column({
@@ -33,6 +33,7 @@ export default function Column({
   onAdd,
   onUpdateModalOpen,
   onSelectedTask,
+  userRole,
 }: ColumnProp) {
   const handleClick = () => {
     onAdd(status);
@@ -44,7 +45,7 @@ export default function Column({
   const { takeTask, assignTask, unassignTask, changePriority, removeTask } =
     useTask();
 
-  const { userRole } = useProject();
+  //const { userRole } = useProject();
 
   const handleTaskClick = (taskId: string) => {
     onSelectedTask(taskId);
@@ -132,7 +133,7 @@ export default function Column({
             priorityOptions={TASK_PRIORITIES}
             assignedUserName={
               t.assgineeId && userMap
-                ? (userMap.get(t.assgineeId)?.userName ?? null)
+                ? (userMap.get(t.assgineeId)?.username ?? null)
                 : null
             }
             assignedUserImageUrl={
@@ -144,7 +145,7 @@ export default function Column({
               userMap
                 ? [...userMap.values()].map((u) => ({
                     id: u.id,
-                    label: u.userName,
+                    label: u.username,
                   }))
                 : []
             }
