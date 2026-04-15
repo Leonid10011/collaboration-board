@@ -1,12 +1,28 @@
 "use server";
-import { formatSupabaseError } from "@/lib/supabase-error";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export const deleteTaskRepo = async (taskId: string): Promise<void> => {
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("tasks").delete().eq("id", taskId);
+import { IdSchema } from "@/global-schema";
+import { deleteTaskRepo } from "../data/delete-task";
+import { createSupabaseServerClient } from "@/db/supabase/supabase-server";
+import { revalidatePath } from "next/cache";
 
-  if (error) {
-    throw new Error(`Error deleting task: ${formatSupabaseError(error)}`);
+export const deleteTaskAction = async (taskId: string): Promise<void> => {
+  const validated = IdSchema.safeParse(taskId);
+
+  if (!validated.success) {
+    throw new Error(validated.error.message);
   }
+
+  const supabase = await createSupabaseServerClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  await deleteTaskRepo(taskId);
+
+  revalidatePath("/");
 };

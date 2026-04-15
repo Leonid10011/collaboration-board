@@ -1,33 +1,35 @@
 "use server";
 
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { CreateTaskInput, Task, TaskDB } from "../types";
-import { formatSupabaseError } from "@/lib/supabase-error";
-import { mapTaskDBToTask } from "../mapper";
+import { CreateTaskPayload } from "../types";
+import { TaskSchema } from "../schema";
+import { insertTaskRepo } from "../data/insert-task";
+import { revalidatePath } from "next/cache";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const supabase = createSupabaseBrowserClient();
+export async function createTaskAction(input: CreateTaskPayload) {
+  //1. validate
+  const validated = TaskSchema.safeParse(input);
+  if (!validated.success) {
+    throw new Error(validated.error.message);
+  }
+  //2. get auth user id
+  const supabase = await createSupabaseServerClient();
 
-export const insertTaskRepo = async (task: CreateTaskInput): Promise<Task> => {
-  const dataToSend = {
-    project_id: task.projectId,
-    creator_id: task.creatorId,
-    assignee_id: task.assgineeId || null,
-    title: task.title,
-    description: task.description || null,
-    status: task.status,
-    priority: task.priority,
-  };
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const { data, error } = await supabase
-    .from("tasks")
-    .insert(dataToSend)
-    .select()
-    .returns<TaskDB>()
-    .single();
-
-  if (error) {
-    throw new Error(`Error inserting task: ${formatSupabaseError(error)}`);
+  if (!user) {
+    throw new Error("Unauthorized");
   }
 
-  return mapTaskDBToTask(data);
-};
+  //3. call insert repo
+  const task = await insertTaskRepo({
+    ...validated.data,
+    creatorId: user.id,
+  });
+
+  revalidatePath("/");
+
+  return task;
+}

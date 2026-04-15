@@ -1,7 +1,7 @@
 import { TaskSchemaDB } from "@/validation/task-schema";
-import { Task, TaskDB } from "./types";
+import { Task, TaskSupabaseRow, TaskSupabaseUpdate } from "./types";
 
-export function mapTaskDBToTask(task: TaskDB): Task {
+export function mapTaskDBToTask(task: TaskSupabaseRow): Task {
   const result = TaskSchemaDB.safeParse(task);
 
   if (!result.success) {
@@ -13,7 +13,7 @@ export function mapTaskDBToTask(task: TaskDB): Task {
     id: result.data.id,
     projectId: result.data.project_id,
     creatorId: result.data.creator_id,
-    assgineeId: result.data.assignee_id,
+    assigneeId: result.data.assignee_id,
     title: result.data.title,
     description: result.data.description,
     status: result.data.status,
