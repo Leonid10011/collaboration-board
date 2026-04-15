@@ -1,14 +1,9 @@
-import {
-  Task,
-  TaskPriority,
-  TaskStatus,
-  UpdateTaskInput,
-} from "@/domain/tasks";
 import ModalShell from "../../../components/ui/modal/ModalShell";
 import UpdateTaskModalForm from "./UpdateTaskModalForm";
 import { useEffect, useState } from "react";
 import { useTask } from "@/context/TaskContext";
 import { showError, showSuccess } from "@/lib/toast";
+import { Task, TaskPriority, TaskStatus, UpdateTaskInput } from "../types";
 
 type UpdateModalTask = {
   selectedTask: Task;

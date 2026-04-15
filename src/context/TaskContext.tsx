@@ -19,9 +19,10 @@ import { showError } from "@/lib/toast";
 import { IdSchema } from "@/global-schema";
 
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
-import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks";
+
 import { useSelectedProject } from "@/features/dashboard/context/SelectedProjectContext";
 import { useAuth } from "@/features/auth/AuthContext";
+import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks-by-project-id";
 
 type TaskContextType = {
   // For current project

@@ -1,24 +1,24 @@
-import {
-  Task,
-  TASK_PRIORITIES,
-  TaskPriority,
-  TaskStatus,
-} from "@/domain/tasks";
 import { Circle, CirclePlus } from "lucide-react";
 import TaskItem from "./TaskItem";
 import { showError, showSuccess } from "@/lib/toast";
-import { useTask } from "@/context/TaskContext";
 import { useDroppable } from "@dnd-kit/react";
 import { statusMap } from "../task-board.config";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
+import { Task, TASK_PRIORITIES, TaskPriority, TaskStatus } from "../types";
+import { assignTaskAction } from "../actions/assign-task";
+import { useAuth } from "@/features/auth/AuthContext";
+import { unassignTaskAction } from "../actions/unassign-task";
+import { changeTaskPriorityAction } from "../actions/change-priority-task";
+import { deleteTaskAction } from "../actions/delete-task";
 
 type ColumnProp = {
   statusColor: string;
   status: TaskStatus;
-  tasks: Task[];
+  taskIds: string[];
+  tasksById: Record<string, Task>;
   userMap: Map<string, ProjectMember> | null;
   onModalOpen: () => void;
-  onAdd: (s: TaskStatus) => void;
+  onAdd: (status: TaskStatus) => void;
   onUpdateModalOpen: () => void;
   onSelectedTask: (taskId: string) => void;
   userRole: ProjectRole | null;
@@ -27,7 +27,8 @@ type ColumnProp = {
 export default function Column({
   statusColor,
   status,
-  tasks,
+  taskIds,
+  tasksById,
   userMap,
   onModalOpen,
   onAdd,
@@ -42,10 +43,7 @@ export default function Column({
 
   const { isDropTarget, ref } = useDroppable({ id: status });
 
-  const { takeTask, assignTask, unassignTask, changePriority, removeTask } =
-    useTask();
-
-  //const { userRole } = useProject();
+  const { user } = useAuth();
 
   const handleTaskClick = (taskId: string) => {
     onSelectedTask(taskId);
@@ -53,8 +51,9 @@ export default function Column({
   };
 
   const handleTakeTask = async (taskId: string) => {
+    if (!user) return null;
     try {
-      await takeTask(taskId);
+      await assignTaskAction(taskId, user.id);
       showSuccess("Task assigned.");
     } catch (error) {
       showError(`Error ${error}`);
@@ -63,7 +62,7 @@ export default function Column({
 
   const handleAssignTask = async (taskId: string, userId: string) => {
     try {
-      await assignTask(taskId, userId);
+      await assignTaskAction(taskId, userId);
       showSuccess("Task assigned.");
     } catch (error) {
       showError(`Error ${error}`);
@@ -72,7 +71,7 @@ export default function Column({
 
   const handleUnassignTask = async (taskId: string) => {
     try {
-      await unassignTask(taskId);
+      await unassignTaskAction(taskId);
       showSuccess("Task unassigned.");
     } catch (error) {
       showError(`Error ${error}`);
@@ -85,7 +84,7 @@ export default function Column({
   ) => {
     try {
       showSuccess("Changing priority ... ");
-      await changePriority(taskId, taskPriority);
+      await changeTaskPriorityAction(taskId, taskPriority);
       showSuccess("Priotiy changed.");
     } catch (error) {
       showError(`Error ${error}`);
@@ -111,7 +110,7 @@ export default function Column({
             {statusMap[status]}
           </span>
           <span className="text-lg hover:cursor-default text-meta">
-            {"(" + tasks.length + ")"}
+            {"(" + taskIds.length + ")"}
           </span>
         </div>
         <CirclePlus
@@ -124,42 +123,45 @@ export default function Column({
       </div>
       <div className="flex flex-col gap-4">
         {/* Tasks */}
-        {tasks.map((t) => (
-          <TaskItem
-            key={t.id}
-            id={t.id}
-            title={t.title}
-            priority={t.priority}
-            priorityOptions={TASK_PRIORITIES}
-            assignedUserName={
-              t.assgineeId && userMap
-                ? (userMap.get(t.assgineeId)?.username ?? null)
-                : null
-            }
-            assignedUserImageUrl={
-              t.assgineeId && userMap
-                ? (userMap.get(t.assgineeId)?.imgUrl ?? null)
-                : null
-            }
-            availableAssignees={
-              userMap
-                ? [...userMap.values()].map((u) => ({
-                    id: u.id,
-                    label: u.username,
-                  }))
-                : []
-            }
-            onAction={() => handleTakeTask(t.id)}
-            onAssign={(userId) => handleAssignTask(t.id, userId)}
-            onUnassign={() => handleUnassignTask(t.id)}
-            onUpdate={() => handleTaskClick(t.id)}
-            onPriority={(taskPriority: TaskPriority) =>
-              handleChangePriority(t.id, taskPriority)
-            }
-            canAssign={userRole === "admin"}
-            onDelete={() => removeTask(t.id)}
-          />
-        ))}
+        {taskIds.map((id) => {
+          const t = tasksById[id];
+          return (
+            <TaskItem
+              key={t.id}
+              id={t.id}
+              title={t.title}
+              priority={t.priority}
+              priorityOptions={TASK_PRIORITIES}
+              assignedUserName={
+                t.assigneeId && userMap
+                  ? (userMap.get(t.assigneeId)?.username ?? null)
+                  : null
+              }
+              assignedUserImageUrl={
+                t.assigneeId && userMap
+                  ? (userMap.get(t.assigneeId)?.imgUrl ?? null)
+                  : null
+              }
+              availableAssignees={
+                userMap
+                  ? [...userMap.values()].map((u) => ({
+                      id: u.id,
+                      label: u.username,
+                    }))
+                  : []
+              }
+              onAction={() => handleTakeTask(t.id)}
+              onAssign={(userId) => handleAssignTask(t.id, userId)}
+              onUnassign={() => handleUnassignTask(t.id)}
+              onUpdate={() => handleTaskClick(t.id)}
+              onPriority={(taskPriority: TaskPriority) =>
+                handleChangePriority(t.id, taskPriority)
+              }
+              canAssign={userRole === "admin"}
+              onDelete={() => deleteTaskAction(t.id)}
+            />
+          );
+        })}
       </div>
     </div>
   );

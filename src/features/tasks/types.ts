@@ -74,3 +74,8 @@ export type UpdateTaskDetailsPayload = {
   status: TaskStatus;
   priority: TaskPriority;
 };
+
+export type TasksState = {
+  byId: Record<string, Task>;
+  allIds: string[];
+};

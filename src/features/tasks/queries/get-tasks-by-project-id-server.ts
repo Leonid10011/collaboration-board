@@ -1,23 +1,21 @@
-"use client";
+"use server";
 
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { Task, TaskDB } from "../types";
+import { Task } from "../types";
 import { formatSupabaseError } from "@/lib/supabase-error";
 import { mapTaskDBToTask } from "../mapper";
-
-const supabase = createSupabaseBrowserClient();
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const getTasksByProjectId = async (
   projectId: string,
 ): Promise<Task[]> => {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("tasks")
     .select("*")
     .eq("project_id", projectId)
     .order("created_at", { ascending: true })
     .order("id", { ascending: true })
-    .limit(30)
-    .returns<TaskDB[]>();
+    .limit(30);
 
   if (error) {
     throw new Error(
@@ -25,12 +23,5 @@ export const getTasksByProjectId = async (
     );
   }
 
-  try {
-    const validation = data.map((t) => mapTaskDBToTask(t));
-
-    return validation;
-  } catch (error) {
-    if (error instanceof Error) throw error;
-    else throw new Error("Unkown Error processing data from db.");
-  }
+  return data.map((t) => mapTaskDBToTask(t));
 };

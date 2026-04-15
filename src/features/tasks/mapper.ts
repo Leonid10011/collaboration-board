@@ -1,22 +1,21 @@
-import { TaskSchemaDB } from "@/validation/task-schema";
-import { Task, TaskSupabaseRow, TaskSupabaseUpdate } from "./types";
+import { TaskSchemaDB } from "./schema";
+import { Task, TaskSupabaseRow } from "./types";
 
 export function mapTaskDBToTask(task: TaskSupabaseRow): Task {
-  const result = TaskSchemaDB.safeParse(task);
+  const parsed = TaskSchemaDB.safeParse(task);
 
-  if (!result.success) {
-    console.log(result);
-    throw new Error("Invalid task data from db.");
+  if (!parsed.success) {
+    throw new Error(parsed.error.message);
   }
 
   return {
-    id: result.data.id,
-    projectId: result.data.project_id,
-    creatorId: result.data.creator_id,
-    assigneeId: result.data.assignee_id,
-    title: result.data.title,
-    description: result.data.description,
-    status: result.data.status,
-    priority: result.data.priority,
+    id: parsed.data.id,
+    projectId: parsed.data.project_id,
+    creatorId: parsed.data.creator_id,
+    assigneeId: parsed.data.assignee_id,
+    title: parsed.data.title,
+    description: parsed.data.description,
+    status: parsed.data.status,
+    priority: parsed.data.priority,
   };
 }

@@ -2,27 +2,28 @@
 
 import { useMemo, useState } from "react";
 import Column from "./Column";
-import { Task, TASK_STATUSES, TaskStatus } from "@/domain/tasks";
 import CreateTaskModal from "./CreateTaskModal";
-import { useTask } from "@/context/TaskContext";
 import UpdateTaskModal from "./UpdateTaskModal";
 import { FilterItem } from "./FilterItem";
 import { FILTER_CONFIG, FILTER_MODES, FilterMode } from "../task-board.config";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { useAuth } from "@/features/auth/AuthContext";
+import { Task, TASK_STATUSES, TasksState, TaskStatus } from "../types";
 
 type TaskBoardBasicProps = {
   members: ProjectMember[];
   userRole: ProjectRole | null;
+  tasksState: TasksState;
 };
 
 export default function TaskBoardBasic({
   members,
   userRole,
+  tasksState,
 }: TaskBoardBasicProps) {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
-  const { projectTasks: tasks } = useTask();
+  //const { projectTasks: tasks } = useTask();
   //const { projectMembers: members } = useProject();
   const { user } = useAuth();
 
@@ -50,8 +51,9 @@ export default function TaskBoardBasic({
   };
 
   const handleSelectedTask = (taskId: string) => {
-    const tmp = tasks.find((t) => t.id === taskId);
-    if (!tmp) return;
+    if (!tasksState) return null;
+    const tmp = tasksState.byId[taskId];
+
     setSelectedTask(tmp);
   };
 
@@ -64,25 +66,33 @@ export default function TaskBoardBasic({
     return new Map(members.map((member) => [member.id, member]));
   }, [members]);
 
-  const filteredTasks = useMemo(() => {
-    if (filterMode === "all") return tasks ?? [];
+  const filteredTasksId = useMemo(() => {
+    if (!tasksState) return [];
 
-    return (tasks ?? []).filter((task) => task.assgineeId === user?.id);
-  }, [tasks, filterMode, user]);
+    if (filterMode === "all") return tasksState.allIds;
+
+    const taskIdByStatus = tasksState.allIds.filter(
+      (id) => tasksState.byId[id].assigneeId === user?.id,
+    );
+
+    return taskIdByStatus;
+  }, [tasksState, filterMode, user?.id]);
 
   const tasksByStatus = useMemo(() => {
-    const map: Record<TaskStatus, Task[]> = {
+    const map: Record<TaskStatus, string[]> = {
       backlog: [],
       in_progress: [],
       done: [],
     };
 
-    filteredTasks?.forEach((task) => {
-      map[task.status].push(task);
+    if (!tasksState) return map;
+
+    filteredTasksId.forEach((id) => {
+      map[tasksState.byId[id].status].push(id);
     });
 
     return map;
-  }, [filteredTasks]);
+  }, [filteredTasksId, tasksState]);
 
   return (
     <div className="flex flex-col flex-1 gap-4 px-board-inline py-2">
@@ -107,7 +117,8 @@ export default function TaskBoardBasic({
             key={status}
             statusColor={STATUS_COLORS[i]}
             status={status}
-            tasks={tasksByStatus[status]}
+            taskIds={tasksByStatus[status]}
+            tasksById={tasksState.byId}
             userMap={memberMap}
             onModalOpen={() => handleModalOpen(true)}
             onUpdateModalOpen={() => handleUpdateModalOpen(true)}

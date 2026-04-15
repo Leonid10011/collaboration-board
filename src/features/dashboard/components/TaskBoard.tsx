@@ -3,19 +3,33 @@
 import { DragDropProvider } from "@dnd-kit/react";
 import TaskBoardBasic from "../../tasks/components/TaskBoardBasic";
 import { useTask } from "@/context/TaskContext";
-import { TaskStatus } from "@/domain/tasks";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
+import { Task, TasksState, TaskStatus } from "@/features/tasks/types";
+import { useSelectedProject } from "../context/SelectedProjectContext";
+import { TaskRealtimeSync } from "@/features/tasks/components/TaskRealtimeSync";
+import { useEffect, useState } from "react";
+import { normalizeTasks } from "@/features/tasks/utils";
 
 type TaskBoardProps = {
   userRole: ProjectRole | null;
   projectMembers: ProjectMember[];
+  tasksState: TasksState | null;
+  initialTasks: Task[];
 };
 
 export default function TaskBoard({
   userRole,
   projectMembers,
+  tasksState,
+  initialTasks,
 }: TaskBoardProps) {
   const { optimistic_changeStatus } = useTask();
+
+  const { selectedProjectId } = useSelectedProject();
+
+  const [tasks, setTasks] = useState<TasksState>(() =>
+    normalizeTasks(initialTasks),
+  );
 
   return (
     <DragDropProvider
@@ -44,7 +58,12 @@ export default function TaskBoard({
         }
       }}
     >
-      <TaskBoardBasic userRole={userRole} members={projectMembers} />
+      {selectedProjectId && <TaskRealtimeSync projectId={selectedProjectId} />}
+      <TaskBoardBasic
+        userRole={userRole}
+        members={projectMembers}
+        tasksState={tasks}
+      />
     </DragDropProvider>
   );
 }

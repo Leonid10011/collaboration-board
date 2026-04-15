@@ -10,12 +10,21 @@ import { useSelectedProject } from "../context/SelectedProjectContext";
 import { getMembershipsByProjectId } from "@/features/memberships/get-members-by-project-id";
 import { showError } from "@/lib/toast";
 import { getMemberRoleOfProject } from "@/features/memberships/get-member-role-of-project";
+import { Task, TasksState } from "@/features/tasks/types";
 
 interface HomePageProps {
   viewer: SessionUser;
+  projectId: string;
+  tasksState: TasksState;
+  initialTasks: Task[];
 }
 
-export default function HomePage({ viewer }: HomePageProps) {
+export default function HomePage({
+  viewer,
+  projectId,
+  tasksState,
+  initialTasks,
+}: HomePageProps) {
   // project related states
   const [userRole, setUserRole] = useState<ProjectRole | null>(null);
   const [projectMembers, setProjectMembers] = useState<ProjectMember[]>([]);
@@ -62,7 +71,12 @@ export default function HomePage({ viewer }: HomePageProps) {
       />
       <div className="flex flex-row flex-1">
         <Sidebar userId={viewer.id} userRole={userRole} />
-        <TaskBoard userRole={userRole} projectMembers={projectMembers} />
+        <TaskBoard
+          userRole={userRole}
+          projectMembers={projectMembers}
+          tasksState={tasksState}
+          initialTasks={initialTasks}
+        />
       </div>
     </div>
   );
