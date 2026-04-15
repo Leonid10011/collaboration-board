@@ -5,6 +5,7 @@ import { UpdateTaskSchema } from "../schema";
 import { TaskPriority } from "../types";
 import { updateTaskRepo } from "../data/update-task";
 import { revalidatePath } from "next/cache";
+import { getTaskProjectId } from "../queries/get-task-project-id";
 
 export async function changeTaskPriorityAction(
   taskId: string,
@@ -25,7 +26,9 @@ export async function changeTaskPriorityAction(
 
   const result = await updateTaskRepo(taskId, parsed.data);
 
-  revalidatePath("/");
+  const projectId = await getTaskProjectId(taskId);
+
+  revalidatePath(`/projects/${projectId}`);
 
   return result;
 }

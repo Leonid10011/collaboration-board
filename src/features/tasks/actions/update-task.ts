@@ -5,6 +5,7 @@ import { TaskSchema } from "../schema";
 import { TaskSupabaseUpdate, UpdateTaskDetailsPayload } from "../types";
 import { updateTaskRepo } from "../data/update-task";
 import { revalidatePath } from "next/cache";
+import { getTaskProjectId } from "../queries/get-task-project-id";
 
 export async function updateTaskAction(
   taskId: string,
@@ -34,7 +35,9 @@ export async function updateTaskAction(
 
   const result = await updateTaskRepo(taskId, supabaseUpdate);
 
-  revalidatePath("/");
+  const projectId = await getTaskProjectId(taskId);
+
+  revalidatePath(`/projects/${projectId}`);
 
   return result;
 }

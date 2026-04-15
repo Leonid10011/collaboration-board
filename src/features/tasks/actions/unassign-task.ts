@@ -4,6 +4,7 @@ import { IdSchema } from "@/global-schema";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { updateTaskRepo } from "../data/update-task";
 import { revalidatePath } from "next/cache";
+import { getTaskProjectId } from "../queries/get-task-project-id";
 
 export async function unassignTaskAction(taskId: string) {
   const parsed = IdSchema.safeParse(taskId);
@@ -22,7 +23,9 @@ export async function unassignTaskAction(taskId: string) {
     assignee_id: null,
   });
 
-  revalidatePath("/");
+  const projectId = await getTaskProjectId(taskId);
+
+  revalidatePath(`/projects/${projectId}`);
 
   return updatedTask;
 }
