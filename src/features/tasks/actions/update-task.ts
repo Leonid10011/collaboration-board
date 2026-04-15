@@ -1,3 +1,5 @@
+"use server";
+
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { TaskSchema } from "../schema";
 import { TaskSupabaseUpdate, UpdateTaskDetailsPayload } from "../types";
