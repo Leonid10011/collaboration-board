@@ -15,10 +15,6 @@ export default function ProjectList({
 }: ProjectListType) {
   const router = useRouter();
 
-  const handleClick = (id: string) => {
-    router.push(`/projects/${id}`);
-  };
-
   const projects = userProjectsIds.map((id) => projectsState.byId[id]);
 
   return (
@@ -27,8 +23,8 @@ export default function ProjectList({
         <ProjectItem
           key={p.id}
           title={p.title}
+          id={p.id}
           description={p.description}
-          onClick={() => handleClick(p.id)}
           onMouseEnter={() => router.prefetch(`/projects/${p.id}`)}
         />
       ))}
