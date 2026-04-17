@@ -61,14 +61,13 @@ export default function HomePage({
   }, [projectId, viewer.id]);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col flex-1">
       <Header
         userRole={userRole}
         projectMembers={projectMembers}
         selectedProjectTitle={selectedProject ? selectedProject.title : null}
       />
       <div className="flex flex-row flex-1">
-        <Sidebar userId={viewer.id} userRole={userRole} />
         <TaskBoard
           userRole={userRole}
           projectMembers={projectMembers}
