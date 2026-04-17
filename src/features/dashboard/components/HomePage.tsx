@@ -11,6 +11,7 @@ import { getMembershipsByProjectId } from "@/features/memberships/get-members-by
 import { showError } from "@/lib/toast";
 import { getMemberRoleOfProject } from "@/features/memberships/get-member-role-of-project";
 import { Task, TasksState } from "@/features/tasks/types";
+import { ProjectsState } from "@/features/projects/types";
 
 interface HomePageProps {
   viewer: SessionUser;
@@ -29,16 +30,16 @@ export default function HomePage({
   const [userRole, setUserRole] = useState<ProjectRole | null>(null);
   const [projectMembers, setProjectMembers] = useState<ProjectMember[]>([]);
 
-  const { selectedProjectId, selectedProject } = useSelectedProject();
+  const { selectedProject } = useSelectedProject();
 
   useEffect(() => {
-    if (!selectedProjectId) return;
+    if (!projectId) return;
 
     //set project members
     const fetchProjectMembers = async () => {
       console.log("Fetch");
       try {
-        const result = await getMembershipsByProjectId(selectedProjectId);
+        const result = await getMembershipsByProjectId(projectId);
         setProjectMembers([...result]);
       } catch (error) {
         showError("Error loading project members.");
@@ -48,10 +49,7 @@ export default function HomePage({
     //set user role
     const fetchUserRole = async () => {
       try {
-        const result = await getMemberRoleOfProject(
-          selectedProjectId,
-          viewer.id,
-        );
+        const result = await getMemberRoleOfProject(projectId, viewer.id);
         setUserRole(result);
       } catch (error) {
         showError("Error loading user role for project.");
@@ -60,7 +58,7 @@ export default function HomePage({
 
     fetchUserRole();
     fetchProjectMembers();
-  }, [selectedProjectId, viewer.id]);
+  }, [projectId, viewer.id]);
 
   return (
     <div className="flex min-h-screen flex-col">

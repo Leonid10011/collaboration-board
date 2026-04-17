@@ -3,7 +3,6 @@ import ModalShell from "../../../components/ui/modal/ModalShell";
 import { showError, showSuccess } from "@/lib/toast";
 import TaskModalForm from "./TaskModalForm";
 import { CreateTaskInput, TaskPriority, TaskStatus } from "@/domain/tasks";
-import { useTask } from "@/context/TaskContext";
 import { useSelectedProject } from "@/features/dashboard/context/SelectedProjectContext";
 import { useAuth } from "@/features/auth/AuthContext";
 
@@ -26,7 +25,6 @@ export default function CreateTaskModal({
 
   const { selectedProject } = useSelectedProject();
   const { user } = useAuth();
-  const { saveTask } = useTask();
 
   const handlePriority = (value: TaskPriority) => {
     setPriority(value);
@@ -60,7 +58,7 @@ export default function CreateTaskModal({
       priority: priority,
     };
     try {
-      await saveTask(dataToSend);
+      //await saveTask(dataToSend);
       showSuccess("Task Added!");
       onModalClose();
     } catch (error) {

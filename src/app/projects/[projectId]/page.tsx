@@ -1,10 +1,12 @@
 "use server";
-import { TaskProvider } from "@/context/TaskContext";
+
 import { AuthProvider } from "@/features/auth/AuthContext";
-// app/projects/[projectId]/page.tsx
+
 import { getSessionUser } from "@/features/auth/queries/get-session-user-server";
 import HomePage from "@/features/dashboard/components/HomePage";
+
 import { SelectedProjectProvider } from "@/features/dashboard/context/SelectedProjectContext";
+
 import { listProjects } from "@/features/projects/queries/get-projects-server";
 import { normalizeProjects } from "@/features/projects/utils";
 import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks-by-project-id-server";
@@ -29,16 +31,16 @@ export default async function Page({ params }: Props) {
 
   return (
     <AuthProvider>
-      <SelectedProjectProvider projectState={projectsState}>
-        <TaskProvider>
-          <HomePage
-            viewer={viewer}
-            projectId={projectId}
-            tasksState={tasksState}
-            initialTasks={tasks}
-          />
-          ;
-        </TaskProvider>
+      <SelectedProjectProvider
+        projectState={projectsState}
+        selectedProjectId={projectId}
+      >
+        <HomePage
+          viewer={viewer}
+          projectId={projectId}
+          initialTasks={tasks}
+          tasksState={tasksState}
+        />
       </SelectedProjectProvider>
     </AuthProvider>
   );

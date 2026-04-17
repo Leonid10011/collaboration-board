@@ -7,7 +7,6 @@ type SelectedProjectContextType = {
   projects: ProjectsState;
   selectedProjectId: string | null;
   selectedProject: Project | null;
-  selectProject: (id: string | null) => void;
 };
 
 export const SelectedProjectContext =
@@ -16,6 +15,7 @@ export const SelectedProjectContext =
 type SelectedProjectProviderType = {
   children: React.ReactNode;
   projectState: ProjectsState;
+  selectedProjectId: string;
 };
 
 export const useSelectedProject = () => {
@@ -31,11 +31,8 @@ export const useSelectedProject = () => {
 export function SelectedProjectProvider({
   children,
   projectState,
+  selectedProjectId,
 }: SelectedProjectProviderType) {
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
-    null,
-  );
-
   const selectedProject = useMemo(() => {
     if (!selectedProjectId) return null;
     console.log("select project: ", projectState);
@@ -47,7 +44,6 @@ export function SelectedProjectProvider({
       projects: projectState,
       selectedProjectId,
       selectedProject,
-      selectProject: setSelectedProjectId,
     }),
     [projectState, selectedProjectId, selectedProject],
   );

@@ -6,6 +6,7 @@ type ProjectProps = {
   description?: string;
   onClick?: () => void;
   onDelete: () => Promise<void>;
+  onMouseEnter: () => void;
 };
 
 export default function ProjectItem({
@@ -13,9 +14,14 @@ export default function ProjectItem({
   description,
   onClick,
   onDelete,
+  onMouseEnter,
 }: ProjectProps) {
   return (
-    <SurfaceRow className="text-sm group" onClick={onClick}>
+    <SurfaceRow
+      className="text-sm group"
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+    >
       <Book height={16} width={16} className="mr-2" strokeWidth={1.25} />
       <p className="w-[60%] text-nowrap truncate ">{title}</p>
       <Trash2

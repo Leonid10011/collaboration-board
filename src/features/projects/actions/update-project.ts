@@ -1,8 +1,14 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { Project, ProjectDB, UpdateProjectInput } from "../types";
+import { Project, UpdateProjectInput } from "../types";
 import { mapProjectDBToDomain } from "../mapper";
+
+function removeUndefinedFields<T extends Record<string, unknown>>(obj: T) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== undefined),
+  ) as Partial<T>;
+}
 
 /**
  *
@@ -16,14 +22,14 @@ export const updateProject = async (
   updates: UpdateProjectInput,
 ): Promise<Project> => {
   const supabase = await createSupabaseServerClient();
-  console.log("Updating project with ID:", projectId, "and updates:", updates);
+
+  const cleanUpdates = removeUndefinedFields(updates);
 
   const { data, error } = await supabase
     .from("projects")
-    .update(updates)
+    .update(cleanUpdates)
     .eq("id", projectId)
     .select()
-    .returns<ProjectDB>()
     .single();
 
   if (error) {

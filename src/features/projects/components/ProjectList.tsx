@@ -3,6 +3,7 @@ import ProjectItem from "./ProjectItem";
 import { ProjectRole } from "@/features/memberships/types";
 import { deleteProject } from "../actions/delete-project";
 import { useSelectedProject } from "@/features/dashboard/context/SelectedProjectContext";
+import { useRouter } from "next/navigation";
 
 type ProjectListType = {
   projects: Project[];
@@ -11,11 +12,16 @@ type ProjectListType = {
 
 export default function ProjectList({ projects, userRole }: ProjectListType) {
   //const { changeSelectedProject, removeProject, userRole } = useProject();
-  const { selectProject } = useSelectedProject();
+
+  const router = useRouter();
 
   const handleDelete = async (id: string) => {
     if (userRole !== "admin") return;
     await deleteProject(id);
+  };
+
+  const handleClick = (id: string) => {
+    router.push(`/projects/${id}`);
   };
 
   return (
@@ -25,8 +31,9 @@ export default function ProjectList({ projects, userRole }: ProjectListType) {
           key={p.id}
           title={p.title}
           description={p.description}
-          onClick={() => selectProject(p.id)}
+          onClick={() => handleClick(p.id)}
           onDelete={() => handleDelete(p.id)}
+          onMouseEnter={() => router.prefetch(`/projects/${p.id}`)}
         />
       ))}
     </div>

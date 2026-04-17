@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "A Collaboration Board for teams to work together on projects.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

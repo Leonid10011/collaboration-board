@@ -1,7 +1,6 @@
 import ModalShell from "../../../components/ui/modal/ModalShell";
 import UpdateTaskModalForm from "./UpdateTaskModalForm";
 import { useEffect, useState } from "react";
-import { useTask } from "@/context/TaskContext";
 import { showError, showSuccess } from "@/lib/toast";
 import { Task, TaskPriority, TaskStatus, UpdateTaskInput } from "../types";
 
@@ -17,8 +16,6 @@ export default function UpdateTaskModal({
   const handleClose = () => {
     onModalClose();
   };
-
-  const { patchTask } = useTask();
 
   const [title, setTitle] = useState<string>(selectedTask.title);
   const [description, setDescription] = useState<string | null>(
@@ -72,7 +69,7 @@ export default function UpdateTaskModal({
         setIsSaving(false);
         return;
       }
-      await patchTask(selectedTask.id, updates);
+      //await patchTask(selectedTask.id, updates);
       showSuccess("Task Updated!");
     } catch (error) {
       showError(`${error}`);

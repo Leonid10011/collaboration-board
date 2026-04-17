@@ -10,7 +10,6 @@ import { Field, FieldLabel } from "../../../components/ui/field";
 import { useState } from "react";
 import { MemberBadge } from "../../memberships/components/MemberBadge";
 import { Project } from "@/domain/projects";
-import { addMemberToProject } from "@/repository/repository-project-memberships";
 import { ProjectSchema } from "@/validation/project-schema";
 import { showError, showSuccess } from "@/lib/toast";
 import { User } from "@/domain/users";
@@ -78,9 +77,12 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
       if (!newProjectId) return;
 
       // if insert Projects failes, we go to catch clause, otherwise we add members
-      addedMembers.forEach(async (m) => {
-        await addMemberToProject(newProjectId, m.id, "member");
-      });
+      /**
+       addedMembers.forEach(async (m) => {
+         await addMemberToProject(newProjectId, m.id, "member");
+       });
+       * 
+       */
 
       showSuccess("Project created.");
     } catch (error) {

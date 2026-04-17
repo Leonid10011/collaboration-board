@@ -2,12 +2,11 @@
 
 import { DragDropProvider } from "@dnd-kit/react";
 import TaskBoardBasic from "../../tasks/components/TaskBoardBasic";
-import { useTask } from "@/context/TaskContext";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { Task, TasksState, TaskStatus } from "@/features/tasks/types";
 import { useSelectedProject } from "../context/SelectedProjectContext";
 import { TaskRealtimeSync } from "@/features/tasks/components/TaskRealtimeSync";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { normalizeTasks } from "@/features/tasks/utils";
 
 type TaskBoardProps = {
@@ -20,11 +19,8 @@ type TaskBoardProps = {
 export default function TaskBoard({
   userRole,
   projectMembers,
-  tasksState,
   initialTasks,
 }: TaskBoardProps) {
-  const { optimistic_changeStatus } = useTask();
-
   const { selectedProjectId } = useSelectedProject();
 
   const [tasks, setTasks] = useState<TasksState>(() =>
@@ -50,11 +46,14 @@ export default function TaskBoard({
           console.log(
             `Dropped ${event.operation.source?.id} onto ${event.operation.target.id}`,
           );
-          if (event.operation.source.id)
-            optimistic_changeStatus(
-              event.operation.source.id.toString(),
-              event.operation.target.id as TaskStatus,
-            );
+          /**
+           if (event.operation.source.id)
+             optimistic_changeStatus(
+               event.operation.source.id.toString(),
+               event.operation.target.id as TaskStatus,
+             );
+           * 
+           */
         }
       }}
     >

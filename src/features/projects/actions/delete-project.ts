@@ -12,6 +12,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const deleteProject = async (projectId: string) => {
   const supabase = await createSupabaseServerClient();
+
   const { error } = await supabase
     .from("projects")
     .delete()
