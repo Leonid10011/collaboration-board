@@ -9,14 +9,19 @@ import { listProjects } from "@/features/projects/queries/get-projects";
 import { Membership, ProjectRole } from "@/features/memberships/types";
 import { getMembershipsByUserId } from "@/features/memberships/get-memberships-by-user-id";
 import { showError } from "@/lib/toast";
+import CreateProject from "@/features/projects/components/CreateProject";
 
 type SidebarProps = {
   userId: string;
   userRole: ProjectRole | null;
 };
 
+//1a. Load projects on server (for now ok, later upgrade to 1b. for effeciency)
+
+//1b. Load user projects only
+
 export default function Sidebar({ userId, userRole }: SidebarProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Goes to create project client
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [userMemberships, setUserMemberships] = useState<Membership[]>([]);
@@ -65,18 +70,11 @@ export default function Sidebar({ userId, userRole }: SidebarProps) {
 
   return (
     <div className="flex flex-col px-page-inline py-4 w-sidebar gap-4 bg-main-2">
-      <InfoBlock title="Actions">
-        <SurfaceRow className="text-sm" onClick={handleCreateProjectClick}>
-          <Plus size={16} />
-          <span>Create Project</span>
-        </SurfaceRow>
-      </InfoBlock>
+      <CreateProject />
+      {/* Project List Server component */}
       <InfoBlock title="Projects">
         <ProjectList projects={userProjects} userRole={userRole} />
       </InfoBlock>
-      {isModalOpen && (
-        <CreateModalOpen onClose={() => handleModalOpen(false)} />
-      )}
     </div>
   );
 }
