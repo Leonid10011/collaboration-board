@@ -85,29 +85,6 @@ export default function Header({ userRole, projectMembers }: HeaderProps) {
 
   return (
     <div className="flex flex-row py-2 px-page-inline bg-main-2">
-      <div className="flex flex-row gap-16" ref={userMenuRef}>
-        <UserInfo
-          userName={user ? user.userName : null}
-          online={true}
-          isUserOpen={isUserOpen}
-          onUserClick={handleUserOpen}
-        >
-          {isUserOpen && (
-            <div className="absolute top-15 left-0 z-20 w-[calc(var(--sidebar-width)-var(--page-padding-inline))] rounded-md shadow bg-main-1 p-1">
-              <div
-                className={`max-h-44 overflow-y-auto ${isSigningOut ? "disabled" : ""}`}
-              >
-                <SurfaceRow
-                  className="text-sm font-regular"
-                  onClick={handleSignOut}
-                >
-                  <LogOutIcon strokeWidth={1.25} size={16} /> Logout
-                </SurfaceRow>
-              </div>
-            </div>
-          )}
-        </UserInfo>
-      </div>
       <div className="flex flex-row gap-4 px-board-inline">
         <ProjectInfo
           projectTitle={projectTitle ? projectTitle : null}

@@ -19,7 +19,11 @@ export default async function ProjectLayout({
   return (
     <AuthProvider>
       <div className="flex flex-row">
-        <Sidebar userId={viewer.id} projectState={projectsState} />
+        <Sidebar
+          userId={viewer.id}
+          userName={viewer.username}
+          projectState={projectsState}
+        />
         {children}
       </div>
       ;
