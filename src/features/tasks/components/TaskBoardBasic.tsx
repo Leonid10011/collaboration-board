@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Column from "./Column";
 import CreateTaskModal from "./CreateTaskModal";
 import UpdateTaskModal from "./UpdateTaskModal";
@@ -9,20 +9,17 @@ import { FILTER_CONFIG, FILTER_MODES, FilterMode } from "../task-board.config";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { useAuth } from "@/features/auth/AuthContext";
 import { Task, TASK_STATUSES, TasksState, TaskStatus } from "../types";
-import { normalizeTasks } from "../utils";
 
 type TaskBoardBasicProps = {
   members: ProjectMember[];
   userRole: ProjectRole | null;
   tasksState: TasksState;
-  initialTasks: Task[];
 };
 
 export default function TaskBoardBasic({
   members,
   userRole,
   tasksState,
-  initialTasks,
 }: TaskBoardBasicProps) {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
@@ -35,7 +32,7 @@ export default function TaskBoardBasic({
   const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>("backlog");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [filterMode, setFilterMode] = useState<FilterMode>("all");
-  const [tasks, setTasks] = useState<TasksState>(normalizeTasks(initialTasks));
+  const tasks = tasksState;
 
   const handleNewTaskStatus = (status: TaskStatus) => {
     setNewTaskStatus(status);
@@ -97,10 +94,6 @@ export default function TaskBoardBasic({
 
     return map;
   }, [filteredTasksId, tasks]);
-
-  useEffect(() => {
-    setTasks(normalizeTasks(initialTasks));
-  }, [initialTasks]);
 
   return (
     <div className="flex flex-col flex-1 gap-4 px-board-inline py-2">
