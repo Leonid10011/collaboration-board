@@ -2,16 +2,14 @@
 
 import { SessionUser } from "@/features/auth/types";
 import Header from "./Header";
-import Sidebar from "./Sidebar";
 import TaskBoard from "./TaskBoard";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { useEffect, useState } from "react";
 import { useSelectedProject } from "../context/SelectedProjectContext";
-import { getMembershipsByProjectId } from "@/features/memberships/get-members-by-project-id";
+import { getMembershipsByProjectId } from "@/features/memberships/queries/get-members-by-project-id";
+import { getMemberRoleOfProject } from "@/features/memberships/queries/get-member-role-of-project";
 import { showError } from "@/lib/toast";
-import { getMemberRoleOfProject } from "@/features/memberships/get-member-role-of-project";
 import { Task, TasksState } from "@/features/tasks/types";
-import { ProjectsState } from "@/features/projects/types";
 
 interface HomePageProps {
   viewer: SessionUser;

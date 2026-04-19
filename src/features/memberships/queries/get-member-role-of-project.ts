@@ -1,7 +1,7 @@
 "use client";
 
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { ProjectRole } from "./types";
+import { ProjectRole } from "../types";
 
 export async function getMemberRoleOfProject(
   projectId: string,

@@ -17,8 +17,6 @@ export const listProjects = async (): Promise<Project[]> => {
     .returns<ProjectDB[]>()
     .limit(10);
 
-  console.log("list Projects ", data?.map(mapProjectDBToDomain));
-
   if (error) {
     console.error("Error fetching projects:", error);
     return [];

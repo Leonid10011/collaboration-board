@@ -3,7 +3,7 @@
 import InfoBlock from "../../../components/ui/composed/InfoBlock";
 import ProjectList from "../../projects/components/ProjectList";
 import { ProjectsState } from "@/features/projects/types";
-import { getMembershipsByUserId } from "@/features/memberships/get-memberships-by-user-id-server";
+import { getMembershipsByUserId } from "@/features/memberships/queries/get-memberships-by-user-id-server";
 import CreateProject from "@/features/projects/components/CreateProject";
 import UserInfo from "@/features/users/components/UserInfo";
 

@@ -1,15 +1,15 @@
-"use server";
+"use client";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { mapMembershipDBToDomain } from "./mapper";
-import { Membership } from "./types";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { mapMembershipDBToDomain } from "../mapper";
+import { Membership } from "../types";
 
 export async function getMembershipsByUserId(
   userId: string,
 ): Promise<Membership[]> {
   if (!userId) return [];
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseBrowserClient();
 
   const { data, error } = await supabase
     .from("project_memberships")
