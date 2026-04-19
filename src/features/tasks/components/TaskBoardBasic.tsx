@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Column from "./Column";
 import CreateTaskModal from "./CreateTaskModal";
 import UpdateTaskModal from "./UpdateTaskModal";
@@ -9,17 +9,20 @@ import { FILTER_CONFIG, FILTER_MODES, FilterMode } from "../task-board.config";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { useAuth } from "@/features/auth/AuthContext";
 import { Task, TASK_STATUSES, TasksState, TaskStatus } from "../types";
+import { normalizeTasks } from "../utils";
 
 type TaskBoardBasicProps = {
   members: ProjectMember[];
   userRole: ProjectRole | null;
   tasksState: TasksState;
+  initialTasks: Task[];
 };
 
 export default function TaskBoardBasic({
   members,
   userRole,
   tasksState,
+  initialTasks,
 }: TaskBoardBasicProps) {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
@@ -32,6 +35,7 @@ export default function TaskBoardBasic({
   const [newTaskStatus, setNewTaskStatus] = useState<TaskStatus>("backlog");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [filterMode, setFilterMode] = useState<FilterMode>("all");
+  const [tasks, setTasks] = useState<TasksState>(normalizeTasks(initialTasks));
 
   const handleNewTaskStatus = (status: TaskStatus) => {
     setNewTaskStatus(status);
@@ -67,16 +71,16 @@ export default function TaskBoardBasic({
   }, [members]);
 
   const filteredTasksId = useMemo(() => {
-    if (!tasksState) return [];
+    if (!tasks) return [];
 
-    if (filterMode === "all") return tasksState.allIds;
+    if (filterMode === "all") return tasks.allIds;
 
-    const taskIdByStatus = tasksState.allIds.filter(
-      (id) => tasksState.byId[id].assigneeId === user?.id,
+    const taskIdByStatus = tasks.allIds.filter(
+      (id) => tasks.byId[id].assigneeId === user?.id,
     );
 
     return taskIdByStatus;
-  }, [tasksState, filterMode, user?.id]);
+  }, [tasks, filterMode, user?.id]);
 
   const tasksByStatus = useMemo(() => {
     const map: Record<TaskStatus, string[]> = {
@@ -85,14 +89,18 @@ export default function TaskBoardBasic({
       done: [],
     };
 
-    if (!tasksState) return map;
+    if (!tasks) return map;
 
     filteredTasksId.forEach((id) => {
-      map[tasksState.byId[id].status].push(id);
+      map[tasks.byId[id].status].push(id);
     });
 
     return map;
-  }, [filteredTasksId, tasksState]);
+  }, [filteredTasksId, tasks]);
+
+  useEffect(() => {
+    setTasks(normalizeTasks(initialTasks));
+  }, [initialTasks]);
 
   return (
     <div className="flex flex-col flex-1 gap-4 px-board-inline py-2">
@@ -118,7 +126,7 @@ export default function TaskBoardBasic({
             statusColor={STATUS_COLORS[i]}
             status={status}
             taskIds={tasksByStatus[status]}
-            tasksById={tasksState.byId}
+            tasksById={tasks.byId}
             userMap={memberMap}
             onModalOpen={() => handleModalOpen(true)}
             onUpdateModalOpen={() => handleUpdateModalOpen(true)}

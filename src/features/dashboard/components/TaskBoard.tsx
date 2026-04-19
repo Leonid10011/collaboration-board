@@ -62,6 +62,7 @@ export default function TaskBoard({
         userRole={userRole}
         members={projectMembers}
         tasksState={tasks}
+        initialTasks={initialTasks}
       />
     </DragDropProvider>
   );

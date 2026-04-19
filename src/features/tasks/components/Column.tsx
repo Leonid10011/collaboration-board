@@ -1,3 +1,5 @@
+"use client";
+
 import { Circle, CirclePlus } from "lucide-react";
 import TaskItem from "./TaskItem";
 import { showError, showSuccess } from "@/lib/toast";
