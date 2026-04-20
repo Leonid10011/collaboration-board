@@ -1,7 +1,7 @@
 "use client";
 
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { mapMemberhsipWithProfileDBToDomain } from "../mapper";
+import { mapMemberhsipWithProfileDBToDomain } from "../../mapper";
 
 export async function getMembershipsByProjectId(projectId: string) {
   const supabase = createSupabaseBrowserClient();

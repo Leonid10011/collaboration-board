@@ -1,10 +1,10 @@
+//src/features/dashboard/components/TaskBoard.tsx
 "use client";
 
 import { DragDropProvider } from "@dnd-kit/react";
 import TaskBoardBasic from "../../tasks/components/TaskBoardBasic";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { Task, TasksState } from "@/features/tasks/types";
-import { useSelectedProject } from "../context/SelectedProjectContext";
 import { TaskRealtimeSync } from "@/features/tasks/components/TaskRealtimeSync";
 import { useEffect, useState } from "react";
 import { normalizeTasks } from "@/features/tasks/utils";
@@ -12,21 +12,21 @@ import { TaskStatus } from "@/domain/tasks";
 import { changeTaskStatusAction } from "@/features/tasks/actions/change-status-task";
 import { showError } from "@/lib/toast";
 import { flushSync } from "react-dom";
+import { Project } from "@/features/projects/types";
 
 type TaskBoardProps = {
   userRole: ProjectRole | null;
   projectMembers: ProjectMember[];
-  tasksState: TasksState | null;
   initialTasks: Task[];
+  project: Project | null;
 };
 
 export default function TaskBoard({
   userRole,
   projectMembers,
   initialTasks,
+  project,
 }: TaskBoardProps) {
-  const { selectedProjectId } = useSelectedProject();
-
   const [tasks, setTasks] = useState<TasksState>(() =>
     normalizeTasks(initialTasks),
   );
@@ -34,10 +34,6 @@ export default function TaskBoard({
   useEffect(() => {
     setTasks(normalizeTasks(initialTasks));
   }, [initialTasks]);
-
-  useEffect(() => {
-    console.log("Trigger useEffect Tasks");
-  }, [tasks]);
 
   const handleTaskChange = async (taskId: string, targetStatus: TaskStatus) => {
     const oldTask = { ...tasks.byId[taskId] };
@@ -105,11 +101,12 @@ export default function TaskBoard({
         }
       }}
     >
-      {selectedProjectId && <TaskRealtimeSync projectId={selectedProjectId} />}
+      {project && <TaskRealtimeSync projectId={project.id} />}
       <TaskBoardBasic
         userRole={userRole}
         members={projectMembers}
         tasksState={tasks}
+        project={project}
       />
     </DragDropProvider>
   );

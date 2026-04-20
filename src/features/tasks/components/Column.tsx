@@ -84,6 +84,8 @@ export default function Column({
     taskId: string,
     taskPriority: TaskPriority,
   ) => {
+    //optimstic update
+
     try {
       showSuccess("Changing priority ... ");
       await changeTaskPriorityAction(taskId, taskPriority);

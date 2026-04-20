@@ -1,8 +1,8 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { mapMembershipDBToDomain } from "../mapper";
-import { Membership } from "../types";
+import { mapMembershipDBToDomain } from "../../mapper";
+import { Membership } from "../../types";
 
 export async function getMembershipsByUserId(
   userId: string,

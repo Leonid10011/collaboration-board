@@ -1,0 +1,42 @@
+//src/features/dashboard/components/Dashboard.tsx
+"use server";
+
+import { getSessionUser } from "@/features/auth/queries/get-session-user-server";
+import { getMemberRoleOfProject } from "@/features/memberships/queries/server/get-member-role-of-project";
+import { getMembershipsByProjectId } from "@/features/memberships/queries/server/get-members-by-project-id";
+import { listProjects } from "@/features/projects/queries/get-projects-server";
+import { normalizeProjects } from "@/features/projects/utils";
+
+import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks-by-project-id-server";
+import DashboardScreen from "./DashboardScreen";
+
+type Props = {
+  projectId: string | null;
+};
+
+export default async function Dashboard({ projectId }: Props) {
+  const projects = await listProjects();
+  const projectsState = normalizeProjects(projects);
+
+  const viewer = await getSessionUser();
+  const tasks = projectId ? await getTasksByProjectId(projectId) : [];
+
+  const project = projectId ? projectsState.byId[projectId] : null;
+
+  const userRole = projectId
+    ? await getMemberRoleOfProject(projectId, viewer.id)
+    : null;
+
+  const projectMembers = projectId
+    ? await getMembershipsByProjectId(projectId)
+    : [];
+
+  return (
+    <DashboardScreen
+      initialTasks={tasks}
+      project={project}
+      userRole={userRole}
+      projectMembers={projectMembers}
+    />
+  );
+}

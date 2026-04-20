@@ -1,27 +1,27 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { SurfaceRow } from "../../../components/ui/surface/SurfaceItem";
-import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { showError, showSuccess } from "@/lib/toast";
-import UserInfo from "../../users/components/UserInfo";
 import ProjectInfo from "../../projects/components/ProjectInfo";
 import MemberInfo from "../../memberships/components/MembersInfo";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
-import { useSelectedProject } from "../context/SelectedProjectContext";
 import { updateProject } from "@/features/projects/actions/update-project";
 import { useAuth } from "@/features/auth/AuthContext";
+import { Project } from "@/domain/projects";
 
 interface HeaderProps {
   userRole: ProjectRole | null;
   selectedProjectTitle: string | null;
   projectMembers: ProjectMember[];
+  project: Project | null;
 }
 
-export default function Header({ userRole, projectMembers }: HeaderProps) {
-  const { selectedProject } = useSelectedProject();
-
+export default function Header({
+  userRole,
+  projectMembers,
+  project,
+}: HeaderProps) {
   const { user, signout } = useAuth();
 
   const [isUserOpen, setIsUserOpen] = useState<boolean>(false);
@@ -34,8 +34,8 @@ export default function Header({ userRole, projectMembers }: HeaderProps) {
   const router = useRouter();
 
   useEffect(() => {
-    setProjectTitle(selectedProject ? selectedProject.title : "");
-  }, [selectedProject]);
+    setProjectTitle(project ? project.title : "");
+  }, [project]);
 
   const handleOnTitleChange = (title: string) => {
     setProjectTitle(title);
@@ -72,9 +72,9 @@ export default function Header({ userRole, projectMembers }: HeaderProps) {
   };
 
   const handleProjectTitle = async () => {
-    if (!selectedProject) return;
+    if (!project) return;
     try {
-      await updateProject(selectedProject?.id, {
+      await updateProject(project?.id, {
         title: projectTitle ? projectTitle : undefined,
       });
       showSuccess("Project Title updated");

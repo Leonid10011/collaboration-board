@@ -1,3 +1,4 @@
+//src/features/tasks/components/TaskBoardBasic.tsx
 "use client";
 
 import { useMemo, useState } from "react";
@@ -9,17 +10,20 @@ import { FILTER_CONFIG, FILTER_MODES, FilterMode } from "../task-board.config";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { useAuth } from "@/features/auth/AuthContext";
 import { Task, TASK_STATUSES, TasksState, TaskStatus } from "../types";
+import { Project } from "@/features/projects/types";
 
 type TaskBoardBasicProps = {
   members: ProjectMember[];
   userRole: ProjectRole | null;
   tasksState: TasksState;
+  project: Project | null;
 };
 
 export default function TaskBoardBasic({
   members,
   userRole,
   tasksState,
+  project,
 }: TaskBoardBasicProps) {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
@@ -134,6 +138,7 @@ export default function TaskBoardBasic({
           onModalClose={() => handleModalOpen(false)}
           newStatus={newTaskStatus}
           onStatus={handleNewTaskStatus}
+          project={project}
         />
       )}
       {isUpdateModalOpen && selectedTask && (

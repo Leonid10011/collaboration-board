@@ -1,13 +1,14 @@
-"use client";
+//src/features/memberships/queries/server/get-member-role-of-project.ts
+"use server";
 
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { ProjectRole } from "../types";
+import { ProjectRole } from "../../types";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function getMemberRoleOfProject(
   projectId: string,
   userId: string,
 ): Promise<ProjectRole> {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = await createSupabaseServerClient();
 
   const result = await supabase
     .from("project_memberships")
