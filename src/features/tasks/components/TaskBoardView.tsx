@@ -1,7 +1,7 @@
 //src/features/tasks/components/TaskBoardBasic.tsx
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Column from "./Column";
 import CreateTaskModal from "./CreateTaskModal";
 import UpdateTaskModal from "./UpdateTaskModal";
@@ -9,7 +9,13 @@ import { FilterItem } from "./FilterItem";
 import { FILTER_CONFIG, FILTER_MODES, FilterMode } from "../task-board.config";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { useAuth } from "@/features/auth/AuthContext";
-import { Task, TASK_STATUSES, TasksState, TaskStatus } from "../types";
+import {
+  Task,
+  TASK_STATUSES,
+  TaskPriority,
+  TasksState,
+  TaskStatus,
+} from "../types";
 import { Project } from "@/features/projects/types";
 
 type TaskBoardBasicProps = {
@@ -17,13 +23,29 @@ type TaskBoardBasicProps = {
   userRole: ProjectRole | null;
   tasksState: TasksState;
   project: Project | null;
+  handleStatusChange: (
+    taskId: string,
+    targetStatus: TaskStatus,
+  ) => Promise<void>;
+  handleAssignTask: (taskId: string, assigneeId: string) => Promise<void>;
+  handleUnassignTask: (taskId: string) => Promise<void>;
+  handleChangePriority: (
+    taskId: string,
+    nextPriority: TaskPriority,
+  ) => Promise<void>;
+  handleDeleteTask: (taskId: string) => Promise<void>;
 };
 
-export default function TaskBoardBasic({
+export default function TaskBoardView({
   members,
   userRole,
   tasksState,
   project,
+  handleStatusChange,
+  handleAssignTask,
+  handleUnassignTask,
+  handleChangePriority,
+  handleDeleteTask,
 }: TaskBoardBasicProps) {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
@@ -90,6 +112,8 @@ export default function TaskBoardBasic({
       done: [],
     };
 
+    console.log("tasks", tasks);
+
     if (!tasks) return map;
 
     filteredTasksId.forEach((id) => {
@@ -130,6 +154,10 @@ export default function TaskBoardBasic({
             onAdd={handleNewTaskStatus}
             onSelectedTask={handleSelectedTask}
             userRole={userRole}
+            handleAssignTask={handleAssignTask}
+            handleUnassignTask={handleUnassignTask}
+            handleChangePriority={handleChangePriority}
+            handleDeleteTask={handleDeleteTask}
           />
         ))}
       </div>

@@ -2,15 +2,12 @@
 
 import { Circle, CirclePlus } from "lucide-react";
 import TaskItem from "./TaskItem";
-import { showError, showSuccess } from "@/lib/toast";
+import { showError } from "@/lib/toast";
 import { useDroppable } from "@dnd-kit/react";
 import { statusMap } from "../task-board.config";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { Task, TASK_PRIORITIES, TaskPriority, TaskStatus } from "../types";
-import { assignTaskAction } from "../actions/assign-task";
 import { useAuth } from "@/features/auth/AuthContext";
-import { unassignTaskAction } from "../actions/unassign-task";
-import { changeTaskPriorityAction } from "../actions/change-priority-task";
 import { deleteTaskAction } from "../actions/delete-task";
 
 type ColumnProp = {
@@ -24,6 +21,13 @@ type ColumnProp = {
   onUpdateModalOpen: () => void;
   onSelectedTask: (taskId: string) => void;
   userRole: ProjectRole | null;
+  handleAssignTask: (taskId: string, assigneeId: string) => Promise<void>;
+  handleUnassignTask: (taskId: string) => Promise<void>;
+  handleChangePriority: (
+    taskId: string,
+    nextPriority: TaskPriority,
+  ) => Promise<void>;
+  handleDeleteTask: (taskId: string) => Promise<void>;
 };
 
 export default function Column({
@@ -37,6 +41,10 @@ export default function Column({
   onUpdateModalOpen,
   onSelectedTask,
   userRole,
+  handleAssignTask,
+  handleUnassignTask,
+  handleChangePriority,
+  handleDeleteTask,
 }: ColumnProp) {
   const handleClick = () => {
     onAdd(status);
@@ -50,49 +58,6 @@ export default function Column({
   const handleTaskClick = (taskId: string) => {
     onSelectedTask(taskId);
     onUpdateModalOpen();
-  };
-
-  const handleTakeTask = async (taskId: string) => {
-    if (!user) return null;
-    try {
-      await assignTaskAction(taskId, user.id);
-      showSuccess("Task assigned.");
-    } catch (error) {
-      showError(`Error ${error}`);
-    }
-  };
-
-  const handleAssignTask = async (taskId: string, userId: string) => {
-    try {
-      await assignTaskAction(taskId, userId);
-      showSuccess("Task assigned.");
-    } catch (error) {
-      showError(`Error ${error}`);
-    }
-  };
-
-  const handleUnassignTask = async (taskId: string) => {
-    try {
-      await unassignTaskAction(taskId);
-      showSuccess("Task unassigned.");
-    } catch (error) {
-      showError(`Error ${error}`);
-    }
-  };
-
-  const handleChangePriority = async (
-    taskId: string,
-    taskPriority: TaskPriority,
-  ) => {
-    //optimstic update
-
-    try {
-      showSuccess("Changing priority ... ");
-      await changeTaskPriorityAction(taskId, taskPriority);
-      showSuccess("Priotiy changed.");
-    } catch (error) {
-      showError(`Error ${error}`);
-    }
   };
 
   return (
@@ -154,7 +119,11 @@ export default function Column({
                     }))
                   : []
               }
-              onAction={() => handleTakeTask(t.id)}
+              onAction={() =>
+                user
+                  ? handleAssignTask(t.id, user.id)
+                  : showError("You must be logged in to assign tasks")
+              }
               onAssign={(userId) => handleAssignTask(t.id, userId)}
               onUnassign={() => handleUnassignTask(t.id)}
               onUpdate={() => handleTaskClick(t.id)}

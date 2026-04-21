@@ -52,7 +52,6 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
           [taskId]: oldTask,
         },
       }));
-      console.error(error);
       showError("Error updating task status.");
     }
   };
@@ -63,6 +62,7 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
   ) => {
     //optimstic update
     const oldTask = { ...tasks.byId[taskId] };
+
     if (oldTask.priority === nextPriority) return;
 
     setTasks((prev) => ({
@@ -82,6 +82,7 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
       setTasks((prev) => ({
         ...prev,
         byId: {
+          ...prev.byId,
           [taskId]: {
             ...prev.byId[taskId],
             priority: updatedTask.priority,
@@ -92,24 +93,27 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
       setTasks((prev) => ({
         ...prev,
         byId: {
+          ...prev.byId,
           [taskId]: {
             ...prev.byId[taskId],
             priority: oldTask.priority,
           },
         },
       }));
+
       showError(`Error ${error}`);
     }
   };
 
   const handleAssignTask = async (taskId: string, userId: string) => {
-    if (!userId) return null;
+    if (!userId) return;
 
     const oldTask = tasks.byId[taskId];
 
     setTasks((prev) => ({
       ...prev,
       byId: {
+        ...prev.byId,
         [taskId]: {
           ...prev.byId[taskId],
           assigneeId: userId,
@@ -123,6 +127,7 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
       setTasks((prev) => ({
         ...prev,
         byId: {
+          ...prev.byId,
           [taskId]: {
             ...prev.byId[taskId],
             assigneeId: updatedTask.assigneeId,
@@ -133,6 +138,7 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
       setTasks((prev) => ({
         ...prev,
         byId: {
+          ...prev.byId,
           [taskId]: {
             ...prev.byId[taskId],
             assigneeId: oldTask.assigneeId,
@@ -149,6 +155,7 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
     setTasks((prev) => ({
       ...prev,
       byId: {
+        ...prev.byId,
         [taskId]: {
           ...prev.byId[taskId],
           assigneeId: null,
@@ -161,6 +168,7 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
       setTasks((prev) => ({
         ...prev,
         byId: {
+          ...prev.byId,
           [taskId]: {
             ...prev.byId[taskId],
             assigneeId: oldTask.assigneeId,

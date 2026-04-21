@@ -2,7 +2,7 @@
 "use client";
 
 import { DragDropProvider } from "@dnd-kit/react";
-import TaskBoardBasic from "../../tasks/components/TaskBoardBasic";
+import TaskBoardView from "../../tasks/components/TaskBoardView";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { Task } from "@/features/tasks/types";
 import { TaskStatus } from "@/domain/tasks";
@@ -26,7 +26,13 @@ export default function TaskBoard({
 }: TaskBoardProps) {
   const { tasks, setTasks } = useTaskBoardState({ initialTasks });
 
-  const { handleStatusChange } = useTaskBoardStateActions({ tasks, setTasks });
+  const {
+    handleStatusChange,
+    handleAssignTask,
+    handleChangePriority,
+    handleDeleteTask,
+    handleUnassignTask,
+  } = useTaskBoardStateActions({ tasks, setTasks });
 
   useRealTimeSync({ projectId: project ? project.id : "", setTasks });
 
@@ -55,11 +61,16 @@ export default function TaskBoard({
         }
       }}
     >
-      <TaskBoardBasic
+      <TaskBoardView
         userRole={userRole}
         members={projectMembers}
         tasksState={tasks}
         project={project}
+        handleStatusChange={handleStatusChange}
+        handleAssignTask={handleAssignTask}
+        handleUnassignTask={handleUnassignTask}
+        handleChangePriority={handleChangePriority}
+        handleDeleteTask={handleDeleteTask}
       />
     </DragDropProvider>
   );
