@@ -12,8 +12,11 @@ type Props = {
   setTasks: React.Dispatch<React.SetStateAction<TasksState>>;
 };
 
-export default function useTaskBoardState({ tasks, setTasks }: Props) {
-  const handleTaskChange = async (taskId: string, targetStatus: TaskStatus) => {
+export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
+  const handleStatusChange = async (
+    taskId: string,
+    targetStatus: TaskStatus,
+  ) => {
     const oldTask = { ...tasks.byId[taskId] };
     if (oldTask.status === targetStatus) return;
 
@@ -197,7 +200,7 @@ export default function useTaskBoardState({ tasks, setTasks }: Props) {
   };
 
   return {
-    handleTaskChange,
+    handleStatusChange,
     handleAssignTask,
     handleUnassignTask,
     handleChangePriority,

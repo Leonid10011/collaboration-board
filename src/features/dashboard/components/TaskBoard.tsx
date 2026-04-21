@@ -4,15 +4,12 @@
 import { DragDropProvider } from "@dnd-kit/react";
 import TaskBoardBasic from "../../tasks/components/TaskBoardBasic";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
-import { Task, TasksState } from "@/features/tasks/types";
-import { TaskRealtimeSync } from "@/features/tasks/components/TaskRealtimeSync";
-import { useEffect, useState } from "react";
-import { normalizeTasks } from "@/features/tasks/utils";
+import { Task } from "@/features/tasks/types";
 import { TaskStatus } from "@/domain/tasks";
-import { changeTaskStatusAction } from "@/features/tasks/actions/change-status-task";
-import { showError } from "@/lib/toast";
-import { flushSync } from "react-dom";
 import { Project } from "@/features/projects/types";
+import useTaskBoardState from "@/features/tasks/hooks/useTaskBoardstate";
+import useRealTimeSync from "@/features/tasks/hooks/useRealTimeSync";
+import useTaskBoardStateActions from "@/features/tasks/hooks/useTaskBoardActions";
 
 type TaskBoardProps = {
   userRole: ProjectRole | null;
@@ -27,54 +24,11 @@ export default function TaskBoard({
   initialTasks,
   project,
 }: TaskBoardProps) {
-  const [tasks, setTasks] = useState<TasksState>(() =>
-    normalizeTasks(initialTasks),
-  );
+  const { tasks, setTasks } = useTaskBoardState({ initialTasks });
 
-  useEffect(() => {
-    setTasks(normalizeTasks(initialTasks));
-  }, [initialTasks]);
+  const { handleStatusChange } = useTaskBoardStateActions({ tasks, setTasks });
 
-  const handleTaskChange = async (taskId: string, targetStatus: TaskStatus) => {
-    const oldTask = { ...tasks.byId[taskId] };
-    if (oldTask.status === targetStatus) return;
-
-    //optimistic update
-    flushSync(() => {
-      setTasks((prev) => ({
-        ...prev,
-        byId: {
-          ...prev.byId,
-          [taskId]: {
-            ...prev.byId[taskId],
-            status: targetStatus,
-          },
-        },
-      }));
-    });
-
-    try {
-      const updatedTask = await changeTaskStatusAction(taskId, targetStatus);
-
-      setTasks((prev) => ({
-        ...prev,
-        byId: {
-          ...prev.byId,
-          [taskId]: updatedTask,
-        },
-      }));
-    } catch (error) {
-      setTasks((prev) => ({
-        ...prev,
-        byId: {
-          ...prev.byId,
-          [taskId]: oldTask,
-        },
-      }));
-      console.error(error);
-      showError("Error updating task status.");
-    }
-  };
+  useRealTimeSync({ projectId: project ? project.id : "", setTasks });
 
   return (
     <DragDropProvider
@@ -96,12 +50,11 @@ export default function TaskBoard({
           const targetStatus = event.operation.target.id as TaskStatus;
 
           if (taskId) {
-            void handleTaskChange(taskId, targetStatus);
+            void handleStatusChange(taskId, targetStatus);
           }
         }
       }}
     >
-      {project && <TaskRealtimeSync projectId={project.id} />}
       <TaskBoardBasic
         userRole={userRole}
         members={projectMembers}
