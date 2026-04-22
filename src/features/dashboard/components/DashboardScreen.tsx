@@ -1,26 +1,29 @@
 //src/features/dashboard/components/HomePage.tsx
 "use client";
 
-import { SessionUser } from "@/features/auth/types";
+import { useProjects } from "@/features/projects/context/ProjectContext";
 import Header from "./Header";
 import TaskBoard from "./TaskBoard";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { Task } from "@/features/tasks/types";
-import { Project } from "@/features/projects/types";
 
 interface HomePageProps {
   initialTasks: Task[];
-  project: Project | null;
   userRole: ProjectRole | null;
   projectMembers: ProjectMember[];
+  projectId: string | null;
 }
 
 export default function DashboardScreen({
   initialTasks,
-  project,
   userRole,
   projectMembers,
+  projectId,
 }: HomePageProps) {
+  const { projectsState } = useProjects();
+
+  const project = projectId ? projectsState.byId[projectId] : null;
+
   return (
     <div className="flex min-h-screen flex-col flex-1">
       <Header

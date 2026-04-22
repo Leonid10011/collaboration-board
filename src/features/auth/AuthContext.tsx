@@ -1,11 +1,13 @@
 "use client";
 
 import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
-import { User } from "@/domain/users";
+
 import { showError } from "@/lib/toast";
-import { getUserById, getUsers } from "@/repository/repository-users";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { getUserById } from "./queries/get-user-id";
+import { User } from "./types";
+import { getUsers } from "./queries/get-users";
 
 type AuthContextType = {
   user: User | null;
@@ -45,8 +47,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const result = await getUserById(data.user.id);
         const userData: User = {
           id: result.id,
-          userName: result.user_name,
-          imgUrl: result.image_url,
+          username: result.user_name,
+          imageUrl: result.img_url,
+          email: result.email,
           lastActive: new Date(),
         };
         setUser(userData);

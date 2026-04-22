@@ -15,13 +15,8 @@ type Props = {
 };
 
 export default async function Dashboard({ projectId }: Props) {
-  const projects = await listProjects();
-  const projectsState = normalizeProjects(projects);
-
   const viewer = await getSessionUser();
   const tasks = projectId ? await getTasksByProjectId(projectId) : [];
-
-  const project = projectId ? projectsState.byId[projectId] : null;
 
   const userRole = projectId
     ? await getMemberRoleOfProject(projectId, viewer.id)
@@ -34,9 +29,9 @@ export default async function Dashboard({ projectId }: Props) {
   return (
     <DashboardScreen
       initialTasks={tasks}
-      project={project}
       userRole={userRole}
       projectMembers={projectMembers}
+      projectId={projectId}
     />
   );
 }

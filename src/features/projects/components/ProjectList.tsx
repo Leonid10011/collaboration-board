@@ -2,18 +2,21 @@
 
 import ProjectItem from "./ProjectItem";
 import { useRouter } from "next/navigation";
-import { ProjectsState } from "../types";
+import { Membership } from "@/features/memberships/types";
+import { useProjects } from "../context/ProjectContext";
 
 type ProjectListType = {
-  projectsState: ProjectsState;
-  userProjectsIds: string[];
+  memberships: Membership[];
 };
 
-export default function ProjectList({
-  projectsState,
-  userProjectsIds,
-}: ProjectListType) {
+export default function ProjectList({ memberships }: ProjectListType) {
   const router = useRouter();
+
+  const { projectsState } = useProjects();
+
+  const userProjectsIds = projectsState.allIds.filter((id) =>
+    memberships.some((membership) => membership.projectId === id),
+  );
 
   const projects = userProjectsIds.map((id) => projectsState.byId[id]);
 
