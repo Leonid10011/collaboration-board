@@ -1,4 +1,4 @@
-import { SessionUser } from "./types";
+import { SessionUser, User } from "./types";
 
 type ProfileDB = {
   created_at: string | null;
@@ -15,5 +15,17 @@ export const mapProfileDBtoDomain = (profile: ProfileDB): SessionUser => {
     username: profile.user_name,
     imageUrl: profile.img_url,
     email: profile.email,
+  };
+};
+
+export const mapUserBtoDomain = (profile: ProfileDB): User => {
+  return {
+    id: profile.id,
+    username: profile.user_name,
+    imageUrl: profile.img_url,
+    email: profile.email,
+    lastActive: profile.last_active
+      ? new Date(profile.last_active)
+      : new Date(),
   };
 };

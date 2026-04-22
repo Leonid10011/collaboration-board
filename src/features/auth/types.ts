@@ -4,3 +4,7 @@ export interface SessionUser {
   email: string;
   imageUrl: string | null;
 }
+
+export interface User extends SessionUser {
+  lastActive: Date;
+}
