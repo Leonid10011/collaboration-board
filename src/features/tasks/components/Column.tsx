@@ -8,7 +8,6 @@ import { statusMap } from "../task-board.config";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { Task, TASK_PRIORITIES, TaskPriority, TaskStatus } from "../types";
 import { useAuth } from "@/features/auth/AuthContext";
-import { deleteTaskAction } from "../actions/delete-task";
 
 type ColumnProp = {
   statusColor: string;
@@ -131,7 +130,7 @@ export default function Column({
                 handleChangePriority(t.id, taskPriority)
               }
               canAssign={userRole === "admin"}
-              onDelete={() => deleteTaskAction(t.id)}
+              onDelete={() => handleDeleteTask(t.id)}
             />
           );
         })}

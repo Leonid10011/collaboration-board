@@ -2,10 +2,16 @@ import { showError } from "@/lib/toast";
 import { assignTaskAction } from "../actions/assign-task";
 import { unassignTaskAction } from "../actions/unassign-task";
 import { changeTaskPriorityAction } from "../actions/change-priority-task";
-import { TaskPriority, TasksState, TaskStatus } from "../types";
+import {
+  TaskPriority,
+  TasksState,
+  TaskStatus,
+  UpdateTaskDetailsPayload,
+} from "../types";
 import { flushSync } from "react-dom";
 import { changeTaskStatusAction } from "../actions/change-status-task";
 import { deleteTaskAction } from "../actions/delete-task";
+import { updateTaskAction } from "../actions/update-task";
 
 type Props = {
   tasks: TasksState;
@@ -179,6 +185,51 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
     }
   };
 
+  const handleUpdateTask = async (
+    taskId: string,
+    updates: UpdateTaskDetailsPayload,
+  ) => {
+    const oldTask = tasks.byId[taskId];
+
+    setTasks((prev) => ({
+      ...prev,
+      byId: {
+        ...prev.byId,
+        [taskId]: {
+          ...prev.byId[taskId],
+          ...updates,
+        },
+      },
+    }));
+
+    try {
+      const updatedTask = await updateTaskAction(taskId, updates);
+
+      setTasks((prev) => ({
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [taskId]: {
+            ...prev.byId[taskId],
+            ...updatedTask,
+          },
+        },
+      }));
+    } catch (error) {
+      setTasks((prev) => ({
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [taskId]: {
+            ...prev.byId[taskId],
+            ...oldTask,
+          },
+        },
+      }));
+      showError(`Error updating task`);
+    }
+  };
+
   const handleDeleteTask = async (taskId: string) => {
     const oldTask = tasks.byId[taskId];
 
@@ -203,7 +254,7 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
         allIds: [...prev.allIds, taskId],
       }));
 
-      showError(`Error deleting task: ${error}`);
+      showError(`Error deleting task`);
     }
   };
 
@@ -213,5 +264,6 @@ export default function useTaskBoardStateActions({ tasks, setTasks }: Props) {
     handleUnassignTask,
     handleChangePriority,
     handleDeleteTask,
+    handleUpdateTask,
   };
 }

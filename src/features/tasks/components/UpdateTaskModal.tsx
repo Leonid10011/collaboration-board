@@ -7,11 +7,13 @@ import { Task, TaskPriority, TaskStatus, UpdateTaskInput } from "../types";
 type UpdateModalTask = {
   selectedTask: Task;
   onModalClose: () => void;
+  onUpdateTask: (taskId: string, updates: UpdateTaskInput) => Promise<void>;
 };
 
 export default function UpdateTaskModal({
   selectedTask,
   onModalClose,
+  onUpdateTask,
 }: UpdateModalTask) {
   const handleClose = () => {
     onModalClose();
@@ -69,7 +71,7 @@ export default function UpdateTaskModal({
         setIsSaving(false);
         return;
       }
-      //await patchTask(selectedTask.id, updates);
+      await onUpdateTask(selectedTask.id, updates);
       showSuccess("Task Updated!");
     } catch (error) {
       showError(`${error}`);

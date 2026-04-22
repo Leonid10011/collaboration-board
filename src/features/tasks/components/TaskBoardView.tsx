@@ -1,7 +1,7 @@
 //src/features/tasks/components/TaskBoardBasic.tsx
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Column from "./Column";
 import CreateTaskModal from "./CreateTaskModal";
 import UpdateTaskModal from "./UpdateTaskModal";
@@ -15,6 +15,7 @@ import {
   TaskPriority,
   TasksState,
   TaskStatus,
+  UpdateTaskInput,
 } from "../types";
 import { Project } from "@/features/projects/types";
 
@@ -23,10 +24,6 @@ type TaskBoardBasicProps = {
   userRole: ProjectRole | null;
   tasksState: TasksState;
   project: Project | null;
-  handleStatusChange: (
-    taskId: string,
-    targetStatus: TaskStatus,
-  ) => Promise<void>;
   handleAssignTask: (taskId: string, assigneeId: string) => Promise<void>;
   handleUnassignTask: (taskId: string) => Promise<void>;
   handleChangePriority: (
@@ -34,6 +31,7 @@ type TaskBoardBasicProps = {
     nextPriority: TaskPriority,
   ) => Promise<void>;
   handleDeleteTask: (taskId: string) => Promise<void>;
+  handleUpdateTask: (taskId: string, updates: UpdateTaskInput) => Promise<void>;
 };
 
 export default function TaskBoardView({
@@ -41,16 +39,14 @@ export default function TaskBoardView({
   userRole,
   tasksState,
   project,
-  handleStatusChange,
   handleAssignTask,
   handleUnassignTask,
   handleChangePriority,
   handleDeleteTask,
+  handleUpdateTask,
 }: TaskBoardBasicProps) {
   const STATUS_COLORS = ["gray", "yellow", "green"] as const;
 
-  //const { projectTasks: tasks } = useTask();
-  //const { projectMembers: members } = useProject();
   const { user } = useAuth();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -112,8 +108,6 @@ export default function TaskBoardView({
       done: [],
     };
 
-    console.log("tasks", tasks);
-
     if (!tasks) return map;
 
     filteredTasksId.forEach((id) => {
@@ -173,6 +167,7 @@ export default function TaskBoardView({
         <UpdateTaskModal
           onModalClose={handleUpdateModalClose}
           selectedTask={selectedTask}
+          onUpdateTask={handleUpdateTask}
         />
       )}
     </div>

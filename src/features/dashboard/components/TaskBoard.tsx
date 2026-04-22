@@ -32,6 +32,7 @@ export default function TaskBoard({
     handleChangePriority,
     handleDeleteTask,
     handleUnassignTask,
+    handleUpdateTask,
   } = useTaskBoardStateActions({ tasks, setTasks });
 
   useRealTimeSync({ projectId: project ? project.id : "", setTasks });
@@ -66,11 +67,11 @@ export default function TaskBoard({
         members={projectMembers}
         tasksState={tasks}
         project={project}
-        handleStatusChange={handleStatusChange}
         handleAssignTask={handleAssignTask}
         handleUnassignTask={handleUnassignTask}
         handleChangePriority={handleChangePriority}
         handleDeleteTask={handleDeleteTask}
+        handleUpdateTask={handleUpdateTask}
       />
     </DragDropProvider>
   );

@@ -69,10 +69,10 @@ export type InsertTaskInput = {
 };
 
 export type UpdateTaskDetailsPayload = {
-  title: string;
-  description: string;
-  status: TaskStatus;
-  priority: TaskPriority;
+  title?: string;
+  description?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
 };
 
 export type TasksState = {
