@@ -4,8 +4,6 @@
 import { getSessionUser } from "@/features/auth/queries/get-session-user-server";
 import { getMemberRoleOfProject } from "@/features/memberships/queries/server/get-member-role-of-project";
 import { getMembershipsByProjectId } from "@/features/memberships/queries/server/get-members-by-project-id";
-import { listProjects } from "@/features/projects/queries/get-projects-server";
-import { normalizeProjects } from "@/features/projects/utils";
 
 import { getTasksByProjectId } from "@/features/tasks/queries/get-tasks-by-project-id-server";
 import DashboardScreen from "./DashboardScreen";

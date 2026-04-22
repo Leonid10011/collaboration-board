@@ -17,6 +17,7 @@ import { useAuth } from "@/features/auth/AuthContext";
 import { ProjectSchema } from "../schema";
 import { User } from "@/features/auth/types";
 import { Project } from "../types";
+import { addMemberToProject } from "../actions/add-member-to-project";
 
 type CreateModalOpenProps = {
   onClose: () => void;
@@ -81,7 +82,7 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
       // if insert Projects failes, we go to catch clause, otherwise we add members
 
       addedMembers.forEach(async (m) => {
-        await addMemberToProject(newProjectId, m.id, "member");
+        addMemberToProject(newProjectId, m.id, "member");
       });
 
       showSuccess("Project created.");

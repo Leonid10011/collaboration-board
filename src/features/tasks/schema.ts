@@ -1,5 +1,5 @@
-import { TASK_PRIORITIES, TASK_STATUSES } from "@/domain/tasks";
 import { z } from "zod";
+import { TASK_PRIORITIES, TASK_STATUSES } from "./types";
 
 const DateSchema = z.preprocess(
   (val) => (typeof val === "string" ? new Date(val) : val),

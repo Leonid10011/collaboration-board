@@ -9,13 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-
-import {
-  TASK_PRIORITIES,
-  TASK_STATUSES,
-  TaskPriority,
-  TaskStatus,
-} from "@/domain/tasks";
+import { TASK_PRIORITIES, TASK_STATUSES, TaskStatus } from "../types";
 
 type TaskModalFormProps = {
   description: string;
