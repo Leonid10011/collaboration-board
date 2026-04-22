@@ -2,12 +2,20 @@ import ModalShell from "../../../components/ui/modal/ModalShell";
 import UpdateTaskModalForm from "./UpdateTaskModalForm";
 import { useEffect, useState } from "react";
 import { showError, showSuccess } from "@/lib/toast";
-import { Task, TaskPriority, TaskStatus, UpdateTaskInput } from "../types";
+import {
+  Task,
+  TaskPriority,
+  TaskStatus,
+  UpdateTaskDetailsPayload,
+} from "../types";
 
 type UpdateModalTask = {
   selectedTask: Task;
   onModalClose: () => void;
-  onUpdateTask: (taskId: string, updates: UpdateTaskInput) => Promise<void>;
+  onUpdateTask: (
+    taskId: string,
+    updates: UpdateTaskDetailsPayload,
+  ) => Promise<void>;
 };
 
 export default function UpdateTaskModal({
@@ -41,7 +49,7 @@ export default function UpdateTaskModal({
     setIsSaving(true);
 
     try {
-      const updates: UpdateTaskInput = {};
+      const updates: UpdateTaskDetailsPayload = {};
 
       const nextTitle = title.trim();
       if (!nextTitle) {
@@ -56,7 +64,7 @@ export default function UpdateTaskModal({
       const currentDescription = selectedTask.description ?? null;
 
       if (nextDescription !== currentDescription) {
-        updates.description = nextDescription;
+        if (nextDescription) updates.description = nextDescription;
       }
 
       if (priority !== selectedTask.priority) {

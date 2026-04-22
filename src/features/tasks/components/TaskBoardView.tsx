@@ -15,7 +15,7 @@ import {
   TaskPriority,
   TasksState,
   TaskStatus,
-  UpdateTaskInput,
+  UpdateTaskDetailsPayload,
 } from "../types";
 import { Project } from "@/features/projects/types";
 
@@ -31,7 +31,10 @@ type TaskBoardBasicProps = {
     nextPriority: TaskPriority,
   ) => Promise<void>;
   handleDeleteTask: (taskId: string) => Promise<void>;
-  handleUpdateTask: (taskId: string, updates: UpdateTaskInput) => Promise<void>;
+  handleUpdateTask: (
+    taskId: string,
+    updates: UpdateTaskDetailsPayload,
+  ) => Promise<void>;
 };
 
 export default function TaskBoardView({
