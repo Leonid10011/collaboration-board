@@ -9,12 +9,14 @@ import { Field, FieldLabel } from "../../../components/ui/field";
 
 import { useState } from "react";
 import { MemberBadge } from "../../memberships/components/MemberBadge";
-import { Project } from "@/domain/projects";
-import { ProjectSchema } from "@/validation/project-schema";
+
 import { showError, showSuccess } from "@/lib/toast";
-import { User } from "@/domain/users";
+
 import { insertProject } from "../actions/create-project";
 import { useAuth } from "@/features/auth/AuthContext";
+import { ProjectSchema } from "../schema";
+import { User } from "@/features/auth/types";
+import { Project } from "../types";
 
 type CreateModalOpenProps = {
   onClose: () => void;
@@ -77,12 +79,10 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
       if (!newProjectId) return;
 
       // if insert Projects failes, we go to catch clause, otherwise we add members
-      /**
-       addedMembers.forEach(async (m) => {
-         await addMemberToProject(newProjectId, m.id, "member");
-       });
-       * 
-       */
+
+      addedMembers.forEach(async (m) => {
+        await addMemberToProject(newProjectId, m.id, "member");
+      });
 
       showSuccess("Project created.");
     } catch (error) {
@@ -118,7 +118,7 @@ export default function CreateModalOpen({ onClose }: CreateModalOpenProps) {
           <SearchInputField
             items={users}
             getId={(p) => p.id}
-            getTextField={(p) => p.userName}
+            getTextField={(p) => p.username}
             onSelect={handleAddMember}
           />
         </Field>
