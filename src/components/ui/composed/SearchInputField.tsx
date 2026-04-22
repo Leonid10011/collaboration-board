@@ -26,7 +26,7 @@ export default function SearchInputField<T>({
 }: SearchInputFieldProp<T>) {
   return (
     <Combobox items={items ? items : []}>
-      <ComboboxInput placeholder="Select a framework" />
+      <ComboboxInput placeholder="Select a member" />
       <ComboboxContent>
         <ComboboxEmpty>No profiles found.</ComboboxEmpty>
         <ComboboxList>

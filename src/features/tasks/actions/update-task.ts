@@ -1,0 +1,43 @@
+"use server";
+
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { TaskSchema, UpdateTaskSchema } from "../schema";
+import { TaskSupabaseUpdate, UpdateTaskDetailsPayload } from "../types";
+import { updateTaskRepo } from "../data/update-task";
+import { revalidatePath } from "next/cache";
+import { getTaskProjectId } from "../queries/get-task-project-id";
+
+export async function updateTaskAction(
+  taskId: string,
+  input: UpdateTaskDetailsPayload,
+) {
+  const parsed = UpdateTaskSchema.safeParse(input);
+
+  if (!parsed.success) {
+    throw new Error(parsed.error.message);
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const supabaseUpdate: TaskSupabaseUpdate = {
+    title: parsed.data.title,
+    description: parsed.data.description,
+    status: parsed.data.status,
+    priority: parsed.data.priority,
+  };
+
+  const result = await updateTaskRepo(taskId, supabaseUpdate);
+
+  const projectId = await getTaskProjectId(taskId);
+
+  revalidatePath(`/projects/${projectId}`);
+
+  return result;
+}

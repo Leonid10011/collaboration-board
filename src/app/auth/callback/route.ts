@@ -1,3 +1,5 @@
+"use server";
+
 import { createSupabaseServerClient } from "@/db/supabase/supabase-server";
 import { NextResponse } from "next/server";
 
