@@ -51,7 +51,7 @@ export type UpdateTaskPayload = {
 
 export type CreateTaskPayload = {
   projectId: string;
-  assigneeId?: string | null;
+  assigneeId: string | null;
   title: string;
   description?: string | null;
   status: TaskStatus;

@@ -24,7 +24,7 @@ describe("mapTaskDBTask", () => {
       id: validUuid,
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Fix login",
       description: "Investigate auth flow",
       status: "in_progress",
@@ -47,7 +47,7 @@ describe("mapTaskDBTask", () => {
 
     const result = mapTaskDBToTask(dbTask);
 
-    expect(result.assgineeId).toBeNull();
+    expect(result.assigneeId).toBeNull();
     expect(result.description).toBeNull();
   });
   it("throws on invalid database task", () => {
