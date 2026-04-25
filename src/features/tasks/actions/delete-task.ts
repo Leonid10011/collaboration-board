@@ -23,9 +23,8 @@ export const deleteTaskAction = async (taskId: string): Promise<void> => {
     throw new Error("Unauthorized");
   }
 
-  await deleteTaskRepo(taskId);
-
   const projectId = await getTaskProjectId(taskId);
+  await deleteTaskRepo(taskId);
 
   revalidatePath(`/projects/${projectId}`);
 };
