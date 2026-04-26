@@ -1,6 +1,6 @@
-import { TaskPriority, TaskStatus } from "@/domain/tasks";
 import { describe, it, expect } from "vitest";
 import { TaskSchema, TaskSchemaDB, UpdateTaskSchema } from "../schema";
+import { TaskStatus } from "../types";
 
 const validUuid = "123e4567-e89b-12d3-a456-426614174000";
 
@@ -9,7 +9,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Test Title",
       description: "Test Description",
       status: "in_progress" as TaskStatus,
@@ -23,7 +23,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid + "abc",
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Test Title",
       description: "Test Description",
       status: "in_progress" as TaskStatus,
@@ -37,7 +37,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid + "abc",
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Test Title",
       description: "Test Description",
       status: "in_progress" as TaskStatus,
@@ -51,7 +51,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid + "abc",
+      assigneeId: validUuid + "abc",
       title: "Test Title",
       description: "Test Description",
       status: "in_progress" as TaskStatus,
@@ -65,7 +65,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "",
       description: "Test Description",
       status: "in_progress" as TaskStatus,
@@ -79,7 +79,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: null,
+      assigneeId: null,
       title: "Test Title",
       description: "Test Description",
       status: "in_progress" as TaskStatus,
@@ -93,7 +93,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Test Title",
       description: null,
       status: "in_progress" as TaskStatus,
@@ -107,7 +107,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Test Title",
       description: "Test Description",
       status: "wrong_status" as TaskStatus,
@@ -121,7 +121,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Test Title",
       description: "Test Description",
       status: "in_progress" as TaskStatus,
@@ -135,7 +135,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Test Title",
       description: "Test Description",
       status: null,
@@ -149,7 +149,7 @@ describe("TaskSchema", () => {
     const data = {
       projectId: validUuid,
       creatorId: validUuid,
-      assgineeId: validUuid,
+      assigneeId: validUuid,
       title: "Test Title",
       description: "Test Description",
       status: "backlog" as TaskStatus,
@@ -194,7 +194,7 @@ describe("UpdateTaskSchema", () => {
       UpdateTaskSchema.parse({
         projectId: validUuid,
         creatorId: validUuid,
-        assgineeId: validUuid,
+        assigneeId: validUuid,
       }),
     ).not.toThrow();
   });

@@ -5,8 +5,6 @@ import { TaskSchema } from "../schema";
 import { insertTaskRepo } from "../data/insert-task";
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getTaskProjectId } from "../queries/get-task-project-id";
-
 export async function createTaskAction(input: CreateTaskPayload) {
   //1. validate
   const validated = TaskSchema.safeParse(input);
@@ -30,9 +28,7 @@ export async function createTaskAction(input: CreateTaskPayload) {
     creatorId: user.id,
   });
 
-  const projectId = await getTaskProjectId(task.projectId);
-
-  revalidatePath(`/projects/${projectId}`);
+  revalidatePath(`/projects/${task.projectId}`);
 
   return task;
 }

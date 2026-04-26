@@ -1,6 +1,6 @@
-import { Task } from "@/domain/tasks";
+import { TaskSchemaDB } from "@/features/tasks/schema";
 import { TaskDB } from "./task-db";
-import { TaskSchemaDB } from "@/validation/task-schema";
+import { Task } from "@/features/tasks/types";
 
 export function mapTaskDBToTask(task: TaskDB): Task {
   const result = TaskSchemaDB.safeParse(task);
@@ -14,7 +14,7 @@ export function mapTaskDBToTask(task: TaskDB): Task {
     id: result.data.id,
     projectId: result.data.project_id,
     creatorId: result.data.creator_id,
-    assgineeId: result.data.assignee_id,
+    assigneeId: result.data.assignee_id,
     title: result.data.title,
     description: result.data.description,
     status: result.data.status,

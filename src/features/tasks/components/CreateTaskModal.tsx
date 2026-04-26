@@ -4,9 +4,11 @@ import { useState } from "react";
 import ModalShell from "../../../components/ui/modal/ModalShell";
 import { showError, showSuccess } from "@/lib/toast";
 import TaskModalForm from "./TaskModalForm";
-import { CreateTaskInput, TaskPriority, TaskStatus } from "@/domain/tasks";
+import { TaskPriority, TaskStatus } from "../types";
+import { CreateTaskInput } from "../types";
 import { useAuth } from "@/features/auth/AuthContext";
 import { Project } from "@/features/projects/types";
+import { createTaskAction } from "../actions/create-task";
 
 type CreateTaskItemProps = {
   onModalClose: () => void;
@@ -55,13 +57,13 @@ export default function CreateTaskModal({
       projectId: project.id,
       creatorId: user.id,
       title: title,
-      assgineeId: null,
+      assigneeId: null,
       description: description,
       status: newStatus,
       priority: priority,
     };
     try {
-      //await saveTask(dataToSend);
+      await createTaskAction(dataToSend);
       showSuccess("Task Added!");
       onModalClose();
     } catch (error) {
