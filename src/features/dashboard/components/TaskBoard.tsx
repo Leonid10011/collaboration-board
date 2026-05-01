@@ -4,8 +4,7 @@
 import { DragDropProvider } from "@dnd-kit/react";
 import TaskBoardView from "../../tasks/components/TaskBoardView";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
-import { Task } from "@/features/tasks/types";
-import { TaskStatus } from "@/domain/tasks";
+import { Task, TaskStatus } from "@/features/tasks/types";
 import { Project } from "@/features/projects/types";
 import useTaskBoardState from "@/features/tasks/hooks/useTaskBoardstate";
 import useRealTimeSync from "@/features/tasks/hooks/useRealTimeSync";
