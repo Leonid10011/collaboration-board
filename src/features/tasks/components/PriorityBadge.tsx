@@ -1,10 +1,10 @@
-import { TaskPriority } from "@/domain/tasks";
 import {
   SignalHigh,
   SignalLow,
   SignalMedium,
   type LucideIcon,
 } from "lucide-react";
+import { TaskPriority } from "../types";
 
 type PriorityBadgeProps = {
   type: TaskPriority;

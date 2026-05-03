@@ -1,4 +1,4 @@
-import { TaskPriority } from "@/domain/tasks";
+import { TaskPriority } from "../types";
 import PriorityBadge from "./PriorityBadge";
 import { SurfaceRow } from "@/components/ui/surface/SurfaceItem";
 

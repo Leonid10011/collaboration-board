@@ -1,5 +1,5 @@
-import { TaskStatus } from "@/domain/tasks";
 import { User, Users } from "lucide-react";
+import { TaskStatus } from "./types";
 
 export const FILTER_MODES = ["all", "owner"] as const;
 

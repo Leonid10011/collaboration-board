@@ -1,13 +1,12 @@
 "use client";
 
-import { createSupabaseBrowserClient } from "@/db/supabase/supabase-client";
-
 import { showError } from "@/lib/toast";
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { getUserById } from "./queries/get-user-id";
 import { User } from "./types";
 import { getUsers } from "./queries/get-users";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 type AuthContextType = {
   user: User | null;

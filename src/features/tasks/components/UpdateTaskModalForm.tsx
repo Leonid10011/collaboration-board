@@ -10,7 +10,12 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { toUpper } from "@/lib/utils";
-import { TASK_PRIORITIES, TASK_STATUSES, TaskStatus } from "../types";
+import {
+  TASK_PRIORITIES,
+  TASK_STATUSES,
+  TaskPriority,
+  TaskStatus,
+} from "../types";
 
 type UpdateTaskModalForm = {
   title: string;

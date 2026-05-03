@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card/Card";
 import PriorityBadge from "./PriorityBadge";
 import { useDraggable } from "@dnd-kit/react";
+import { TaskPriority } from "../types";
 
 type TaskItemProps = {
   id: string;
