@@ -5,8 +5,9 @@ import ProjectInfo from "../../projects/components/ProjectInfo";
 import MemberInfo from "../../memberships/components/MembersInfo";
 import { ProjectMember, ProjectRole } from "@/features/memberships/types";
 import { updateProject } from "@/features/projects/actions/update-project";
-import { Project } from "@/domain/projects";
+
 import { useProjects } from "@/features/projects/context/ProjectContext";
+import { Project } from "@/features/projects/types";
 
 interface HeaderProps {
   userRole: ProjectRole | null;
