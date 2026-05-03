@@ -1,6 +1,5 @@
 import { Database } from "@/lib/database.types";
 import { Membership, ProjectMember } from "./types";
-import { Member } from "@/domain/users";
 
 type MembershipWithProfileProps = {
   created_at: string | null;
