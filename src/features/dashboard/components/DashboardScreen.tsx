@@ -12,6 +12,7 @@ interface HomePageProps {
   userRole: ProjectRole | null;
   projectMembers: ProjectMember[];
   projectId: string | null;
+  userId: string;
 }
 
 export default function DashboardScreen({
@@ -19,6 +20,7 @@ export default function DashboardScreen({
   userRole,
   projectMembers,
   projectId,
+  userId,
 }: HomePageProps) {
   const { projectsState } = useProjects();
 
@@ -38,6 +40,7 @@ export default function DashboardScreen({
           projectMembers={projectMembers}
           initialTasks={initialTasks}
           project={project}
+          userId={userId}
         />
       </div>
     </div>

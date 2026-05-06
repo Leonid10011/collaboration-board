@@ -30,6 +30,7 @@ export default async function Dashboard({ projectId }: Props) {
       userRole={userRole}
       projectMembers={projectMembers}
       projectId={projectId}
+      userId={viewer.id}
     />
   );
 }
