@@ -121,7 +121,7 @@ export default function TaskBoardView({
   }, [filteredTasksId, tasks]);
 
   return (
-    <div className="flex flex-col flex-1 gap-4 px-board-inline py-2">
+    <div className="flex flex-col flex-1 gap-4 px-board-inline py-2 overflow-auto">
       <div className="flex flex-row gap-2">
         {FILTER_MODES.map((mode, i) => (
           <div key={mode}>
@@ -137,7 +137,7 @@ export default function TaskBoardView({
           </div>
         ))}
       </div>
-      <div className="flex flex-row gap-x-8 h-full">
+      <div className="flex flex-row gap-x-8">
         {TASK_STATUSES.map((status, i) => (
           <Column
             key={status}
