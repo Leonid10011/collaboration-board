@@ -15,6 +15,7 @@ type TaskBoardProps = {
   projectMembers: ProjectMember[];
   initialTasks: Task[];
   project: Project | null;
+  userId: string;
 };
 
 export default function TaskBoard({
@@ -22,6 +23,7 @@ export default function TaskBoard({
   projectMembers,
   initialTasks,
   project,
+  userId,
 }: TaskBoardProps) {
   const { tasks, setTasks } = useTaskBoardState({ initialTasks });
 
@@ -38,17 +40,16 @@ export default function TaskBoard({
 
   return (
     <DragDropProvider
-      onDragStart={(event) => {
-        console.log("Started dragging", event.operation.source?.id);
-      }}
-      onDragMove={({ operation }) => {
-        const { position } = operation;
-        console.log("Current position:", position);
-      }}
-      onDragOver={(event) => {
-        console.log(
-          `${event.operation.source?.id} is over ${event.operation.target?.id}`,
-        );
+      onBeforeDragStart={(event) => {
+        // check if task assignee Id matches current user id, if not prevent dragging
+        const eventSource = event.operation.source;
+        if (!eventSource) return;
+
+        const taskId = eventSource.id;
+        const task = tasks.byId[taskId];
+
+        if (task.assigneeId !== userId && userRole !== ("admin" as ProjectRole))
+          event.preventDefault();
       }}
       onDragEnd={(event) => {
         if (event.operation.target && event.operation.source) {
