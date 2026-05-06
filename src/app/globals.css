@@ -102,6 +102,8 @@
 
 body {
   color: var(--text);
+  height: 100vh;
+  overflow-y: hidden;
 }
 
 .dark {

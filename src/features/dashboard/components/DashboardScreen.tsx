@@ -27,14 +27,14 @@ export default function DashboardScreen({
   const project = projectId ? projectsState.byId[projectId] : null;
 
   return (
-    <div className="flex min-h-screen flex-col flex-1">
+    <div className="flex h-full flex-col flex-1 overflow-auto">
       <Header
         userRole={userRole}
         projectMembers={projectMembers}
         selectedProjectTitle={project ? project.title : null}
         project={project}
       />
-      <div className="flex flex-row flex-1">
+      <div className="flex flex-row flex-1 h-full overflow-auto">
         <TaskBoard
           userRole={userRole}
           projectMembers={projectMembers}

@@ -9,7 +9,7 @@ export default async function ProjectLayout({
   const viewer = await getSessionUser();
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row h-screen overflow-hidden">
       <Sidebar userId={viewer.id} userName={viewer.username} />
       {children}
     </div>
