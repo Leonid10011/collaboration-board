@@ -26,11 +26,13 @@ type UpdateTaskModalForm = {
   onPriorityChange: (value: TaskPriority) => void;
   status: TaskStatus;
   onStatusChange: (value: TaskStatus) => void;
+  onBlur: () => Promise<void>;
 };
 
 export default function UpdateTaskModalForm({
   title,
   onTitleChange,
+  onBlur,
   description,
   onDescriptionChange,
   priority,
@@ -45,6 +47,7 @@ export default function UpdateTaskModalForm({
         <Input
           value={title}
           onChange={(e) => onTitleChange(e.currentTarget.value)}
+          onBlur={onBlur}
         />
       </Field>
       <Field>
@@ -52,12 +55,13 @@ export default function UpdateTaskModalForm({
         <Textarea
           value={description}
           onChange={(e) => onDescriptionChange(e.currentTarget.value)}
+          onBlur={onBlur}
         />
       </Field>
       <Field>
         <FieldLabel>Priority</FieldLabel>
         <Select value={priority} onValueChange={onPriorityChange}>
-          <SelectTrigger className="w-full max-w-48">
+          <SelectTrigger className="w-full max-w-48" onBlur={onBlur}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent position="popper">
@@ -72,7 +76,7 @@ export default function UpdateTaskModalForm({
       <Field>
         <FieldLabel>Status</FieldLabel>
         <Select value={status} onValueChange={onStatusChange}>
-          <SelectTrigger className="w-full max-w-48">
+          <SelectTrigger className="w-full max-w-48" onBlur={onBlur}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent position="popper">

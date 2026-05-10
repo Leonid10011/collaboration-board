@@ -7,7 +7,7 @@ type ProjectInfo = {
   projectTitle: string | null;
   role: string | null;
   onTitleChange: (text: string) => void;
-  onBlur: () => void;
+  onBlur: () => Promise<void>;
 };
 
 export default function ProjectInfo({
@@ -22,11 +22,11 @@ export default function ProjectInfo({
     initialProjectTitleRef.current = projectTitle ?? "";
   };
 
-  const handleBlur = () => {
+  const handleBlur = async () => {
     const currentProjectTitle = projectTitle ?? "";
 
     if (currentProjectTitle !== initialProjectTitleRef.current) {
-      onBlur();
+      await onBlur();
       initialProjectTitleRef.current = currentProjectTitle;
     }
   };

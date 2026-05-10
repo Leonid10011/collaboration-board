@@ -75,7 +75,6 @@ export default function UpdateTaskModal({
       }
 
       if (Object.keys(updates).length === 0) {
-        onModalClose();
         setIsSaving(false);
         return;
       }
@@ -105,6 +104,7 @@ export default function UpdateTaskModal({
           onPriorityChange={setPriority}
           status={status}
           onStatusChange={setStatus}
+          onBlur={handleConfirm}
         />
       </ModalShell>
     </>
