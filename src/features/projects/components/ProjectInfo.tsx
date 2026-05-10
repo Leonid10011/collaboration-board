@@ -1,7 +1,11 @@
 import { toUpper } from "@/lib/utils";
 import InfoBlock from "../../../components/ui/composed/InfoBlock";
-import { SurfaceItem } from "../../../components/ui/surface/SurfaceItem";
+import {
+  SurfaceItem,
+  SurfaceRow,
+} from "../../../components/ui/surface/SurfaceItem";
 import { useRef } from "react";
+import { SquarePen } from "lucide-react";
 
 type ProjectInfo = {
   projectTitle: string | null;
@@ -41,7 +45,8 @@ export default function ProjectInfo({
         </SurfaceItem>
       </InfoBlock>
       <InfoBlock title="Title" className="w-[240px] justify-between">
-        <SurfaceItem>
+        <SurfaceRow>
+          <SquarePen size={16} className="mr-1 text-label" />
           <input
             className="text-label  text-nowrap truncate hover:cursor-default"
             value={projectTitle ?? ""}
@@ -51,7 +56,7 @@ export default function ProjectInfo({
             onBlur={handleBlur}
             disabled={role !== "admin"}
           />
-        </SurfaceItem>
+        </SurfaceRow>
       </InfoBlock>
     </div>
   );
