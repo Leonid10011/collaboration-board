@@ -1,7 +1,7 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { TaskSchema, UpdateTaskSchema } from "../schema";
+import { UpdateTaskSchema } from "../schema";
 import { TaskSupabaseUpdate, UpdateTaskDetailsPayload } from "../types";
 import { updateTaskRepo } from "../data/update-task";
 import { revalidatePath } from "next/cache";
