@@ -6,6 +6,7 @@ import { SurfaceRow } from "../../../components/ui/surface/SurfaceItem";
 import React, { useRef, useState } from "react";
 import { useAuth } from "@/features/auth/AuthContext";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type UserInfoProps = {
   userName: string | null;
@@ -16,7 +17,7 @@ export default function UserInfo({ userName }: UserInfoProps) {
   const [isUserOpen, setIsUserOpen] = useState<boolean>(false);
   const [isSigningOut, setIsSigningOut] = useState<boolean>(false);
 
-  const { signout } = useAuth();
+  const { user, signout } = useAuth();
 
   const router = useRouter();
 
@@ -37,6 +38,15 @@ export default function UserInfo({ userName }: UserInfoProps) {
         title="User"
       >
         <SurfaceRow onClick={() => setIsUserOpen((prev) => !prev)}>
+          {user?.imageUrl && (
+            <Image
+              width={24}
+              height={24}
+              src={user.imageUrl}
+              alt="User-Image"
+              className="rounded-full"
+            />
+          )}
           <span className="text-label">
             {userName ? userName : "Not logged in"}{" "}
           </span>
