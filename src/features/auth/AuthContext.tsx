@@ -48,7 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           id: result.id,
           username: result.user_name,
           imageUrl: result.img_url,
-          email: result.email,
           lastActive: new Date(),
         };
         setUser(userData);

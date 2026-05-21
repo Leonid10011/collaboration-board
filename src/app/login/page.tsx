@@ -1,6 +1,7 @@
 "use client";
 
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { showSuccess } from "@/lib/toast";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -20,7 +21,8 @@ export default function Login() {
       password,
     });
     if (!error) {
-      router.push("/");
+      showSuccess("Login Successful");
+      router.push("/projects");
     }
     setError(`${error instanceof Error ? error.message : String(error)}`);
     console.log("Login response error:", error);
@@ -33,7 +35,7 @@ export default function Login() {
         router.push("/");
       }
     };
-    checkUser();
+    //checkUser();
   });
 
   return (
