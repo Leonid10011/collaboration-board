@@ -3,68 +3,74 @@
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { showError, showSuccess } from "@/lib/toast";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function SignUp() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const supabase = createSupabaseBrowserClient();
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const router = useRouter();
 
   const handleSignup = async () => {
-    if (!username.trim()) {
-      showError("Username is required");
-      setError("Username is required");
+    setError(null);
+
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+
+    if (!trimmedUsername) {
+      const message = "Username is required";
+      showError(message);
+      setError(message);
       return;
     }
 
-    setIsLoading(true);
+    if (!trimmedEmail) {
+      const message = "Email is required";
+      showError(message);
+      setError(message);
+      return;
+    }
+
+    if (!password) {
+      const message = "Password is required";
+      showError(message);
+      setError(message);
+      return;
+    }
+
+    if (password.length < 6) {
+      const message = "Password must be at least 6 characters";
+      showError(message);
+      setError(message);
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
+      const emailRedirectTo = process.env.NEXT_PUBLIC_AUTH_CALLBACK_URL;
+
+      const { error } = await supabase.auth.signUp({
+        email: trimmedEmail,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          ...(emailRedirectTo ? { emailRedirectTo } : {}),
           data: {
-            user_name: username,
+            user_name: trimmedUsername,
           },
         },
       });
 
-      if (authError) {
+      if (error) {
         const errorMessage =
-          authError instanceof Error ? authError.message : String(authError);
+          error instanceof Error ? error.message : String(error);
         showError(errorMessage);
         setError(errorMessage);
-        setIsLoading(false);
-        return;
-      }
-
-      if (!authData.user) {
-        showError("Failed to create user account");
-        setError("Failed to create user account");
-        setIsLoading(false);
-        return;
-      }
-
-      // Create profile in the profiles table
-      const { error: profileError } = await supabase.from("profiles").insert({
-        id: authData.user.id,
-        email,
-        user_name: username,
-      });
-
-      if (profileError) {
-        const errorMessage =
-          profileError instanceof Error ? profileError.message : String(profileError);
-        showError(errorMessage);
-        setError(errorMessage);
-        setIsLoading(false);
         return;
       }
 
@@ -76,7 +82,7 @@ export default function SignUp() {
       showError(errorMessage);
       setError(errorMessage);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -86,17 +92,18 @@ export default function SignUp() {
         <h1>Sign Up</h1>
         <input
           className="border-1 p-1 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="email"
-          disabled={isLoading}
-        />
-        <input
-          className="border-1 p-1 rounded"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="username"
-          disabled={isLoading}
+          autoComplete="username"
+        />
+        <input
+          className="border-1 p-1 rounded"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email"
+          type="email"
+          autoComplete="email"
         />
         <input
           className="border-1 p-1 rounded"
@@ -104,15 +111,15 @@ export default function SignUp() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="password"
           type="password"
-          disabled={isLoading}
+          autoComplete="new-password"
         />
 
         <button
-          className="border-2 p-2 hover:cursor-default rounded disabled:opacity-50"
+          className="border-2 p-2 hover:cursor-default rounded"
           onClick={handleSignup}
-          disabled={isLoading}
+          disabled={isSubmitting}
         >
-          {isLoading ? "Signing up..." : "SignUp"}
+          {isSubmitting ? "Signing up..." : "SignUp"}
         </button>
         {error && <div className="text-red-500">{error}</div>}
       </div>
