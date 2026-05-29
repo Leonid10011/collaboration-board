@@ -14,12 +14,20 @@ export default function Page() {
           Test without registriation
         </Link>
         <h1 className="self-center text-lg font-bold">OR</h1>
-        <Link
-          className="bg-blue-600 hover:bg-blue-500 hover:cursor-default p-2 rounded text-white text-center text-lg"
-          href={"/signup"}
-        >
-          Sign-in / Sign-up{" "}
-        </Link>
+        <div className="flex flex-row w-full gap-4">
+          <Link
+            className="bg-blue-600 flex-1 hover:bg-blue-500 hover:cursor-default p-2 rounded text-white text-center text-lg"
+            href={"/login"}
+          >
+            Sign-in{" "}
+          </Link>
+          <Link
+            className="bg-blue-600 flex-1 hover:bg-blue-500 hover:cursor-default p-2 rounded text-white text-center text-lg"
+            href={"/signup"}
+          >
+            Sign-up{" "}
+          </Link>
+        </div>
       </div>
     </div>
   );
