@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  basePath: "/collaboration-board",
 };
 
 export default nextConfig;
